@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
    <head>
       <meta charset="utf-8">
@@ -79,7 +79,7 @@
                </tbody>
             </table>
          </div>
-
+         
          <div id="signature">
             @if($setting['is_invoice_footer'] && $setting['invoice_footer'] !==null)
                <p>{{$setting['invoice_footer']}}</p>

@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
    <head>
       <meta charset="utf-8">
@@ -11,7 +11,7 @@
          <div id="logo">
          <img src="{{asset('/images/'.$setting['logo'])}}">
          </div>
-
+        
          <div id="Title-heading">
                Supplier  : {{$provider['provider_name']}}
          </div>
