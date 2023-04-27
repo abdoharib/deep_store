@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
    <head>
       <meta charset="utf-8">
@@ -41,7 +41,7 @@
                            <div><strong>Email :</strong>  {{$return_sale['client_email']}}</div>
                            <div><strong>Address :</strong>   {{$return_sale['client_adr']}}</div>
                            @if($return_sale['client_tax'])<div><strong>Tax Number :</strong>  {{$return_sale['client_tax']}}</div>@endif
-                           
+
                         </td>
                      </tr>
                   </tbody>
@@ -80,7 +80,7 @@
                   </tr>
                </thead>
                <tbody>
-                  @foreach ($details as $detail)    
+                  @foreach ($details as $detail)
                   <tr>
                      <td>
                         <span>{{$detail['code']}} ({{$detail['name']}})</span>

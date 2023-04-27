@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
    <head>
       <meta charset="utf-8">
@@ -78,7 +78,7 @@
                   </tr>
                </thead>
                <tbody>
-                  @foreach ($details as $detail)    
+                  @foreach ($details as $detail)
                   <tr>
                      <td>
                         <span>{{$detail['code']}} ({{$detail['name']}})</span>
