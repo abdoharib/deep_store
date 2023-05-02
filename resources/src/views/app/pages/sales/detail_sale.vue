@@ -90,6 +90,10 @@
                   v-else-if="sale.statut == 'pending'"
                   class="badge badge-outline-info"
                 >{{$t('Pending')}}</span>
+                  <span
+                      v-else-if="sale.statut == 'canceled'"
+                      class="badge badge-outline-danger"
+                  >{{$t('Canceled')}}</span>
                 <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
               </div>
             </b-col>
@@ -218,7 +222,7 @@ export default {
   },
 
   methods: {
-   
+
 
     //----------------------------------- Invoice Sale PDF  -------------------------\\
     Sale_PDF() {
@@ -226,7 +230,7 @@ export default {
       NProgress.start();
       NProgress.set(0.1);
       let id = this.$route.params.id;
-     
+
        axios
         .get(`sale_pdf/${id}`, {
           responseType: "blob", // important

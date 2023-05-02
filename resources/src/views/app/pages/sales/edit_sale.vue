@@ -68,11 +68,11 @@
                 <!-- Product -->
                 <b-col md="12" class="mb-5">
                   <h6>{{$t('ProductName')}}</h6>
-                 
+
                   <div id="autocomplete" class="autocomplete">
-                    <input 
+                    <input
                      :placeholder="$t('Scan_Search_Product_by_Code_Name')"
-                      @input='e => search_input = e.target.value' 
+                      @input='e => search_input = e.target.value'
                       @keyup="search(search_input)"
                       @focus="handleFocus"
                       @blur="handleBlur"
@@ -112,14 +112,14 @@
                           v-for="detail in details"
                           :class="{'row_deleted': detail.del === 1 || detail.no_unit === 0}"
                           :key="detail.detail_id"
-                           
+
                           >
                           <td>{{detail.detail_id}}</td>
                           <td>
                             <span>{{detail.code}}</span>
                             <br>
                             <span class="badge badge-success">{{detail.name}}</span>
-                           
+
                           </td>
                           <td>{{currentUser.currency}} {{formatNumber(detail.Net_price, 3)}}</td>
                           <td>
@@ -283,7 +283,9 @@
                                 [
                                   {label: 'completed', value: 'completed'},
                                   {label: 'Pending', value: 'pending'},
-                                  {label: 'ordered', value: 'ordered'}
+                                  {label: 'ordered', value: 'ordered'},
+                                  {label: 'canceled', value: 'canceled'}
+
                                 ]"
                       ></v-select>
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
@@ -532,7 +534,7 @@ export default {
     handleBlur() {
       this.focused = false
     },
-    
+
 
     //--- Submit Validate Update Sale
     Submit_Sale() {

@@ -68,11 +68,11 @@
                 <!-- Product -->
                 <b-col md="12" class="mb-5">
                   <h6>{{$t('ProductName')}}</h6>
-                 
+
                   <div id="autocomplete" class="autocomplete">
-                    <input 
+                    <input
                      :placeholder="$t('Scan_Search_Product_by_Code_Name')"
-                      @input='e => search_input = e.target.value' 
+                      @input='e => search_input = e.target.value'
                       @keyup="search(search_input)"
                       @focus="handleFocus"
                       @blur="handleBlur"
@@ -114,7 +114,7 @@
                             <span>{{detail.code}}</span>
                             <br>
                             <span class="badge badge-success">{{detail.name}}</span>
-                           
+
                           </td>
                           <td>{{currentUser.currency}} {{formatNumber(detail.Net_price, 3)}}</td>
                           <td>
@@ -278,7 +278,9 @@
                                 [
                                   {label: 'completed', value: 'completed'},
                                   {label: 'Pending', value: 'pending'},
-                                  {label: 'ordered', value: 'ordered'}
+                                  {label: 'ordered', value: 'ordered'},
+                                  {label: 'canceled', value: 'canceled'}
+
                                 ]"
                       ></v-select>
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
@@ -670,7 +672,7 @@ export default {
     ...mapGetters(["currentUser"])
   },
 
- 
+
 
   methods: {
 
@@ -696,7 +698,7 @@ export default {
     handleBlur() {
       this.focused = false
     },
-    
+
 
      //---------------------- Event Select Payment Method ------------------------------\\
 
@@ -733,7 +735,7 @@ export default {
             this.$t("Warning")
           );
           this.payment.amount = 0;
-      } 
+      }
       else if (this.payment.amount > this.GrandTotal) {
         this.makeToast(
           "warning",
@@ -749,11 +751,11 @@ export default {
     Verified_Received_Amount() {
       if (isNaN(this.payment.received_amount)) {
         this.payment.received_amount = 0;
-      } 
+      }
     },
 
 
-  
+
     //--- Submit Validate Create Sale
     Submit_Sale() {
       this.$refs.create_sale.validate().then(success => {
@@ -870,7 +872,7 @@ export default {
             } else {
               this.details[i].quantity =1;
             }
-                      
+
           this.details[i].Unit_price = this.detail.Unit_price;
           this.details[i].tax_percent = this.detail.tax_percent;
           this.details[i].tax_method = this.detail.tax_method;

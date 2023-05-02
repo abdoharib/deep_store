@@ -464,6 +464,7 @@ export default {
     EditTransfer: 'تحرير النقل',
     TransferDetail: 'تفاصيل النقل',
     Pending: 'قيد الانتظار',
+    Canceled:'ألغيت',
     Received: 'تم الاستلام',
     Ordered: 'طلب',
     PermissionsManager: 'مدير الأذونات',
@@ -782,7 +783,7 @@ export default {
      view_employee:'مشاهدة الموظفين',
      edit_employee:'تحرير الموظفين',
      delete_employee:'حذف الموظفين',
-     
+
     Created_by : 'تمت الإضافة بواسطة',
     Add_product_IMEI_Serial_number:'أضف الرقم التسلسلي للمنتج',
     Product_Has_Imei_Serial_number:'المنتج له رقم تسلسلي',
@@ -896,5 +897,5 @@ export default {
     Qty_purchased:'الكمية المشتراة',
     Filter_by_warehouse:'تصفية بالمستودع',
     Enable_Print_Invoice:'قم بتمكين طباعة الفاتورة تلقائيًا',
-    
+
 };
