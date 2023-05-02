@@ -33,15 +33,31 @@
                 <b-col lg="4" md="4" sm="12" class="mb-3">
                   <validation-provider name="Customer" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('Customer') + ' ' + '*'">
-                      <v-select
-                        :class="{'is-invalid': !!errors.length}"
-                        :state="errors[0] ? false : (valid ? true : null)"
-                        v-model="sale.client_id"
-                        :reduce="label => label.value"
-                        :placeholder="$t('Choose_Customer')"
-                        :options="clients.map(clients => ({label: clients.name, value: clients.id}))"
-                      />
-                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                        <b-row>
+                            <b-col md="10">
+                                <v-select
+                                    :class="{'is-invalid': !!errors.length}"
+                                    :state="errors[0] ? false : (valid ? true : null)"
+                                    v-model="sale.client_id"
+                                    :reduce="label => label.value"
+                                    :placeholder="$t('Choose_Customer')"
+                                    :options="clients.map(clients => ({label: clients.name, value: clients.id}))"
+                                />
+                                <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                            </b-col>
+                            <b-col md="2">
+                                <b-input-group-append style="display: inline">
+                                    <b-button variant="primary" @click="New_Client()">
+                              <span>
+                                <i class="i-Add-User"></i>
+                              </span>
+                                    </b-button>
+                                </b-input-group-append>
+                            </b-col>
+
+                        </b-row>
+
+
                     </b-form-group>
                   </validation-provider>
                 </b-col>
@@ -585,6 +601,107 @@
         </b-form>
       </b-modal>
     </validation-observer>
+
+      <validation-observer ref="Create_Customer">
+          <b-modal hide-footer size="lg" id="New_Customer" :title="$t('Add')">
+              <b-form @submit.prevent="Submit_Customer">
+                  <b-row>
+                      <!-- Customer Name -->
+                      <b-col md="6" sm="12">
+                          <validation-provider
+                              name="Name Customer"
+                              :rules="{ required: true}"
+                              v-slot="validationContext"
+                          >
+                              <b-form-group :label="$t('CustomerName') + ' ' + '*'">
+                                  <b-form-input
+                                      :state="getValidationState(validationContext)"
+                                      aria-describedby="name-feedback"
+                                      label="name"
+                                      v-model="client.name"
+                                      :placeholder="$t('CustomerName')"
+                                  ></b-form-input>
+                                  <b-form-invalid-feedback id="name-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                              </b-form-group>
+                          </validation-provider>
+                      </b-col>
+
+                      <!-- Customer Email -->
+                      <b-col md="6" sm="12">
+                          <b-form-group :label="$t('Email')">
+                              <b-form-input
+                                  label="email"
+                                  v-model="client.email"
+                                  :placeholder="$t('Email')"
+                              ></b-form-input>
+                          </b-form-group>
+                      </b-col>
+
+                      <!-- Customer Phone -->
+                      <b-col md="6" sm="12">
+                          <b-form-group :label="$t('Phone')">
+                              <b-form-input
+                                  label="Phone"
+                                  v-model="client.phone"
+                                  :placeholder="$t('Phone')"
+                              ></b-form-input>
+                          </b-form-group>
+                      </b-col>
+
+                      <!-- Customer Country -->
+                      <b-col md="6" sm="12">
+                          <b-form-group :label="$t('Country')">
+                              <b-form-input
+                                  label="Country"
+                                  v-model="client.country"
+                                  :placeholder="$t('Country')"
+                              ></b-form-input>
+                          </b-form-group>
+                      </b-col>
+
+                      <!-- Customer City -->
+                      <b-col md="6" sm="12">
+                          <b-form-group :label="$t('City')">
+                              <b-form-input
+                                  label="City"
+                                  v-model="client.city"
+                                  :placeholder="$t('City')"
+                              ></b-form-input>
+                          </b-form-group>
+                      </b-col>
+
+                      <!-- Customer Tax Number -->
+                      <b-col md="6" sm="12">
+                          <b-form-group :label="$t('Tax_Number')">
+                              <b-form-input
+                                  label="Tax Number"
+                                  v-model="client.tax_number"
+                                  :placeholder="$t('Tax_Number')"
+                              ></b-form-input>
+                          </b-form-group>
+                      </b-col>
+
+
+                      <!-- Customer Adress -->
+                      <b-col md="12" sm="12">
+                          <b-form-group :label="$t('Adress')">
+                      <textarea
+                          label="Adress"
+                          class="form-control"
+                          rows="4"
+                          v-model="client.adresse"
+                          :placeholder="$t('Adress')"
+                      ></textarea>
+                          </b-form-group>
+                      </b-col>
+
+                      <b-col md="12" class="mt-3">
+                          <b-button variant="primary" type="submit">{{$t('submit')}}</b-button>
+                      </b-col>
+                  </b-row>
+              </b-form>
+          </b-modal>
+      </validation-observer>
   </div>
 </template>
 
@@ -698,6 +815,76 @@ export default {
     handleBlur() {
       this.focused = false
     },
+
+      //------------------------------ New Model (create Customer) -------------------------------\\
+      New_Client() {
+          this.reset_Form_client();
+          this.$bvModal.show("New_Customer");
+      },
+      //-------------------------------- reset Form -------------------------------\\
+      reset_Form_client() {
+          this.client = {
+              id: "",
+              name: "",
+              email: "",
+              phone: "",
+              tax_number: "",
+              country: "",
+              city: "",
+              adresse: ""
+          };
+      },
+      //------------- Submit Validation Create & Edit Customer
+      Submit_Customer() {
+          // Start the progress bar.
+          NProgress.start();
+          NProgress.set(0.1);
+          this.$refs.Create_Customer.validate().then(success => {
+              if (!success) {
+                  NProgress.done();
+                  this.makeToast(
+                      "danger",
+                      this.$t("Please_fill_the_form_correctly"),
+                      this.$t("Failed")
+                  );
+              } else {
+                  this.Create_Client();
+              }
+          });
+      },
+      Create_Client() {
+          axios
+              .post("clients", {
+                  name: this.client.name,
+                  email: this.client.email,
+                  phone: this.client.phone,
+                  tax_number: this.client.tax_number,
+                  country: this.client.country,
+                  city: this.client.city,
+                  adresse: this.client.adresse
+              })
+              .then(response => {
+                  NProgress.done();
+                  this.makeToast(
+                      "success",
+                      this.$t("Create.TitleCustomer"),
+                      this.$t("Success")
+                  );
+                  this.Get_Client_Without_Paginate();
+                  this.$bvModal.hide("New_Customer");
+              })
+              .catch(error => {
+                  console.log(error)
+                  NProgress.done();
+                  this.makeToast("danger", this.$t("InvalidData"), this.$t("Failed"));
+              });
+      },
+      //--
+      Get_Client_Without_Paginate() {
+          axios
+              .get("get_clients_without_paginate")
+              .then(({ data }) => (this.clients = data));
+      },
 
 
      //---------------------- Event Select Payment Method ------------------------------\\
