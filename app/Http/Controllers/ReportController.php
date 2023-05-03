@@ -1530,6 +1530,12 @@ class ReportController extends BaseController
                 DB::raw("count(*) as nmbr")
             )->first();
 
+        $item['completed_sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))->where('statut','completed')
+            ->select(
+                DB::raw('SUM(GrandTotal) AS sum'),
+                DB::raw("count(*) as nmbr")
+            )->first();
+
         $item['purchases'] = Purchase::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))
             ->select(
                 DB::raw('SUM(GrandTotal) AS sum'),
@@ -1607,8 +1613,8 @@ class ReportController extends BaseController
             $item['product_cost_fifo'] = $cogs;
             $item['total_average_cost'] = $total_average_cost;
 
-            $item['profit_fifo'] = $item['sales']['sum'] - $cogs;
-            $item['profit_average_cost'] = $item['sales']['sum'] - $total_average_cost;
+            $item['profit_fifo'] = $item['completed_sales']['sum'] - $cogs;
+            $item['profit_average_cost'] = $item['completed_sales']['sum'] - $total_average_cost;
 
 
             $item['payment_received'] = $item['paiement_sales']['sum'] + $item['PaymentPurchaseReturns']['sum'];
