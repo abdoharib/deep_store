@@ -1613,8 +1613,8 @@ class ReportController extends BaseController
             $item['product_cost_fifo'] = $cogs;
             $item['total_average_cost'] = $total_average_cost;
 
-            $item['profit_fifo'] = $item['completed_sales']['nmbr'] - $cogs;
-            $item['profit_average_cost'] = $item['completed_sales']['nmbr'] - $total_average_cost;
+            $item['profit_fifo'] = $item['completed_sales']['sum'] - $cogs;
+            $item['profit_average_cost'] = $item['completed_sales']['sum'] - $total_average_cost;
 
 
             $item['payment_received'] = $item['paiement_sales']['sum'] + $item['PaymentPurchaseReturns']['sum'];
