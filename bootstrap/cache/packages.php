@@ -39,6 +39,13 @@
       'Image' => 'Intervention\\Image\\Facades\\Image',
     ),
   ),
+  'joelbutcher/laravel-facebook-graph' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'JoelButcher\\Facebook\\FacebookServiceProvider',
+    ),
+  ),
   'laravel/passport' => 
   array (
     'providers' => 

@@ -623,11 +623,11 @@ const routes = [
                                         "./views/app/pages/hrm/leaves/leave_type"
                                     )
                             },
-                           
+
                         ]
                     },
 
-                    
+
                 ]
             },
 
@@ -809,7 +809,7 @@ const routes = [
                                 /* webpackChunkName: "System_settings" */ "./views/app/pages/settings/system_settings"
                             )
                     }
-                  
+
                 ]
             },
 
@@ -1018,6 +1018,16 @@ const routes = [
                                 /* webpackChunkName: "detail_stock_report" */
                                 "./views/app/pages/reports/detail_stock_report"
                             )
+                    },
+
+                    {
+                        name: "ads_performance_report",
+                        path: "ads_performance_report",
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "ads_performance_report" */
+                                "./views/app/pages/reports/ads_performance_report"
+                                )
                     },
 
                     {

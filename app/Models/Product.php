@@ -31,6 +31,8 @@ class Product extends Model
         'TaxNet' => 'double',
     ];
 
+    protected $appends = ['profit'];
+
     public function ProductVariant()
     {
         return $this->belongsTo('App\Models\ProductVariant');
@@ -74,6 +76,10 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo('App\Models\Brand');
+    }
+
+    public function getProfitAttribute(){
+        return ($this->price - $this->cost);
     }
 
 }

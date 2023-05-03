@@ -25,12 +25,12 @@
             </router-link>
           </li>
           <li
-            v-show="currentUserPermissions 
+            v-show="currentUserPermissions
             && (currentUserPermissions.includes('products_add')
-            || currentUserPermissions.includes('products_view') 
+            || currentUserPermissions.includes('products_view')
             || currentUserPermissions.includes('barcode_view')
-             || currentUserPermissions.includes('brand') 
-             || currentUserPermissions.includes('unit')  
+             || currentUserPermissions.includes('brand')
+             || currentUserPermissions.includes('unit')
              || currentUserPermissions.includes('category'))"
             @mouseenter="toggleSubMenu"
             class="nav-item"
@@ -45,7 +45,7 @@
             <div class="triangle"></div>
           </li>
           <li
-            v-show="currentUserPermissions 
+            v-show="currentUserPermissions
               && (currentUserPermissions.includes('adjustment_view')
               || currentUserPermissions.includes('adjustment_add'))"
             @mouseenter="toggleSubMenu"
@@ -61,11 +61,11 @@
             <div class="triangle"></div>
           </li>
 
-        
 
-         
+
+
           <li
-            v-show="currentUserPermissions && (currentUserPermissions.includes('Quotations_view') 
+            v-show="currentUserPermissions && (currentUserPermissions.includes('Quotations_view')
                       || currentUserPermissions.includes('Quotations_add'))"
             @mouseenter="toggleSubMenu"
             class="nav-item"
@@ -80,7 +80,7 @@
             <div class="triangle"></div>
           </li>
           <li
-            v-show="currentUserPermissions && (currentUserPermissions.includes('Purchases_view') 
+            v-show="currentUserPermissions && (currentUserPermissions.includes('Purchases_view')
                         || currentUserPermissions.includes('Purchases_add'))"
             @mouseenter="toggleSubMenu"
             class="nav-item"
@@ -95,7 +95,7 @@
             <div class="triangle"></div>
           </li>
           <li
-            v-show="currentUserPermissions && (currentUserPermissions.includes('Sales_view') 
+            v-show="currentUserPermissions && (currentUserPermissions.includes('Sales_view')
                         || currentUserPermissions.includes('Sales_add')
                         || currentUserPermissions.includes('Pos_view')
                         || currentUserPermissions.includes('shipment'))"
@@ -148,7 +148,7 @@
                      || currentUserPermissions.includes('attendance')
                      || currentUserPermissions.includes('leave')
                      || currentUserPermissions.includes('holiday'))"
-                     
+
             @mouseenter="toggleSubMenu"
             :class="{ active: selectedParentMenu == 'hrm' }"
             class="nav-item"
@@ -195,7 +195,7 @@
 
 
           <li
-            v-show="currentUserPermissions && (currentUserPermissions.includes('Customers_view') 
+            v-show="currentUserPermissions && (currentUserPermissions.includes('Customers_view')
                         ||currentUserPermissions.includes('Suppliers_view')
                         ||currentUserPermissions.includes('users_view'))"
             @mouseenter="toggleSubMenu"
@@ -211,17 +211,17 @@
             <div class="triangle"></div>
           </li>
 
-         
+
 
           <li
-            v-show="currentUserPermissions && (currentUserPermissions.includes('setting_system') 
+            v-show="currentUserPermissions && (currentUserPermissions.includes('setting_system')
                         || currentUserPermissions.includes('sms_settings')
                         || currentUserPermissions.includes('pos_settings')
                         || currentUserPermissions.includes('payment_gateway')
                         || currentUserPermissions.includes('mail_settings')
-                        || currentUserPermissions.includes('warehouse') 
-                        || currentUserPermissions.includes('backup') 
-                        || currentUserPermissions.includes('currency') 
+                        || currentUserPermissions.includes('warehouse')
+                        || currentUserPermissions.includes('backup')
+                        || currentUserPermissions.includes('currency')
                         || currentUserPermissions.includes('permissions_view'))"
             @mouseenter="toggleSubMenu"
             :class="{ active: selectedParentMenu == 'settings' }"
@@ -237,16 +237,16 @@
           </li>
 
           <li
-            v-show="currentUserPermissions && 
-                     (currentUserPermissions.includes('Reports_payments_Sales') 
+            v-show="currentUserPermissions &&
+                     (currentUserPermissions.includes('Reports_payments_Sales')
                      || currentUserPermissions.includes('Reports_payments_Purchases')
                      || currentUserPermissions.includes('Reports_payments_Sale_Returns')
                      || currentUserPermissions.includes('Reports_payments_purchase_Return')
                      || currentUserPermissions.includes('Warehouse_report')
                      || currentUserPermissions.includes('Reports_profit')
-                     || currentUserPermissions.includes('Reports_purchase') 
+                     || currentUserPermissions.includes('Reports_purchase')
                      || currentUserPermissions.includes('Reports_quantity_alerts')
-                     || currentUserPermissions.includes('Reports_sales') 
+                     || currentUserPermissions.includes('Reports_sales')
                      || currentUserPermissions.includes('product_sales_report')
                      || currentUserPermissions.includes('product_purchases_report')
                      || currentUserPermissions.includes('Reports_suppliers')
@@ -267,8 +267,8 @@
               <span class="nav-text">{{$t('Reports')}}</span>
             </a>
             <div class="triangle"></div>
-          </li>    
-                
+          </li>
+
         </ul>
       </div>
     </vue-perfect-scrollbar>
@@ -517,9 +517,9 @@
           </li>
         </ul>
 
-      
 
-       
+
+
       <!-- hrm -->
         <ul
           class="childNav d-none"
@@ -607,10 +607,10 @@
                   <span class="item-name">{{$t('Leave_type')}}</span>
                 </router-link>
               </li>
-              
+
             </ul>
           </li>
-           
+
           <li
             class="nav-item"
             v-if="currentUserPermissions && currentUserPermissions.includes('holiday')"
@@ -749,7 +749,7 @@
               <span class="item-name">{{$t('Currencies')}}</span>
             </router-link>
           </li>
-         
+
           <li
             class="nav-item"
             v-if="currentUserPermissions && currentUserPermissions.includes('backup')"
@@ -769,7 +769,7 @@
         >
           <li
             v-if="currentUserPermissions &&
-             (currentUserPermissions.includes('Reports_payments_Purchases') 
+             (currentUserPermissions.includes('Reports_payments_Purchases')
            || currentUserPermissions.includes('Reports_payments_Sales')
            || currentUserPermissions.includes('Reports_payments_Sale_Returns')
            || currentUserPermissions.includes('Reports_payments_purchase_Return'))"
@@ -881,6 +881,15 @@
               <span class="item-name">{{$t('product_sales_report')}}</span>
             </router-link>
           </li>
+            <li
+                class="nav-item"
+                v-if="currentUserPermissions"
+            >
+                <router-link tag="a" class to="/app/reports/ads_performance_report">
+                    <i class="nav-icon i-Line-Chart"></i>
+                    <span class="item-name">{{$t('ads_performance_report')}}</span>
+                </router-link>
+            </li>
 
           <li
             class="nav-item"
@@ -951,7 +960,7 @@
             </router-link>
           </li>
 
-          
+
 
 
         </ul>

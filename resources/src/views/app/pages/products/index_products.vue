@@ -12,14 +12,14 @@
         @on-per-page-change="onPerPageChange"
         @on-sort-change="onSortChange"
         @on-search="onSearch"
-        :select-options="{ 
+        :select-options="{
           enabled: true ,
           clearSelectionText: '',
         }"
         @on-selected-rows-change="selectionChanged"
         :search-options="{
           enabled: true,
-          placeholder: $t('Search_this_table'),  
+          placeholder: $t('Search_this_table'),
         }"
         :pagination-options="{
         enabled: true,
@@ -344,6 +344,14 @@ export default {
     ...mapGetters(["currentUserPermissions"]),
     columns() {
       return [
+          {
+              label: this.$t("id"),
+              field: "id",
+              html: true,
+              tdClass: "text-left",
+              thClass: "text-left",
+              sortable: false
+          },
         {
           label: this.$t("image"),
           field: "image",
@@ -403,7 +411,8 @@ export default {
           tdClass: "text-right",
           thClass: "text-right",
           sortable: false
-        }
+        },
+
       ];
     }
   },

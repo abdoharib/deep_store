@@ -2,6 +2,12 @@
 
 
 export default {
+    id:'ر.ق',
+    must_be_stopped:'حالة الأعلان',
+    total_spent:'إجمالي المصروف ',
+    total_sale_profit:'مجموع ربح المبيعات',
+    sales:'المبيعات',
+    ads_performance_report:'تقرير أداء اﻷعلانات',
     Pos_Settings:'إعدادات نقاط البيع',
     Receipt:'الإيصال',
     Note_to_customer:'ملاحظة للعميل',

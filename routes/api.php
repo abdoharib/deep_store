@@ -71,6 +71,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::get("report/sale_products_details", "ReportController@sale_products_details");
     Route::get("report/product_sales_report", "ReportController@product_sales_report");
     Route::get("report/product_purchases_report", "ReportController@product_purchases_report");
+    Route::get("report/ads_performance_report", "ReportController@ads_performance_report");
 
     Route::get("report/users", "ReportController@users_Report");
     Route::get("report/stock", "ReportController@stock_Report");
@@ -105,13 +106,13 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     //------------------------------- Employee Experience ----------------\\
     //--------------------------------------------------------------------\\
-    
+
     Route::resource('work_experience', 'hrm\EmployeeExperienceController');
 
 
     //------------------------------- Employee Accounts bank ----------------\\
     //--------------------------------------------------------------------\\
-    
+
     Route::resource('employee_account', 'hrm\EmployeeAccountController');
 
 
@@ -149,7 +150,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post("attendances/delete/by_selection", "hrm\AttendancesController@delete_by_selection");
 
 
-    
+
     //------------------------------- Request leave  -----------------------\\
     //----------------------------------------------------------------\\
 
@@ -332,7 +333,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post('returns/purchase/delete/by_selection', 'PurchasesReturnController@delete_by_selection');
     Route::get('returns/purchase/create_purchase_return/{id}', 'PurchasesReturnController@create_purchase_return');
     Route::get('returns/purchase/edit_purchase_return/{id}/{purchase_id}', 'PurchasesReturnController@edit_purchase_return');
-    
+
     //------------------------------- Payment Sale Returns --------------------------\\
     //--------------------------------------------------------------------------------\\
 
@@ -377,9 +378,9 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::resource('roles/check/create_page', 'PermissionsController@Check_Create_Page');
     Route::post('roles/delete/by_selection', 'PermissionsController@delete_by_selection');
 
-    
+
     //------------------------------- Settings ------------------------\\
-    //------------------------------------------------------------------\\    
+    //------------------------------------------------------------------\\
     Route::resource('settings', 'SettingsController');
     Route::get('get_Settings_data', 'SettingsController@getSettings');
     Route::put('pos_settings/{id}', 'SettingsController@update_pos_settings');
@@ -404,10 +405,10 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------- Update Settings ------------------------\\
 
     Route::get('get_version_info', 'UpdateController@get_version_info');
-    
+
     //------------------------------- Backup --------------------------\\
     //------------------------------------------------------------------\\
-    
+
     Route::get("get_backup", "BackupController@Get_Backup");
     Route::get("generate_new_backup", "BackupController@Generate_Backup");
     Route::delete("delete_backup/{name}", "BackupController@Delete_Backup");

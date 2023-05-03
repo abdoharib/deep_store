@@ -103,6 +103,11 @@ class ProductPolicy
         return $user->hasRole($permission->roles);
     }
 
+    public function ads_performance(User $user){
+        $permission = Permission::where('name', 'ads_performance')->first();
+        return $user->hasRole($permission->roles);
+    }
+
     public function product_report(User $user)
     {
         $permission = Permission::where('name', 'product_report')->first();

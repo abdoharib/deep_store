@@ -4,16 +4,16 @@
     <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
 
      <b-col md="12" class="text-center" v-if="!isLoading">
-        <date-range-picker 
-          v-model="dateRange" 
-          :startDate="startDate" 
-          :endDate="endDate" 
+        <date-range-picker
+          v-model="dateRange"
+          :startDate="startDate"
+          :endDate="endDate"
            @update="Submit_filter_dateRange"
-          :locale-data="locale" > 
+          :locale-data="locale" >
 
           <template v-slot:input="picker" style="min-width: 350px;">
               {{ picker.startDate.toJSON().slice(0, 10)}} - {{ picker.endDate.toJSON().slice(0, 10)}}
-          </template>        
+          </template>
         </date-range-picker>
       </b-col>
 
@@ -36,7 +36,7 @@
           enabled: true,
           headerPosition: 'bottom',
         }"
-       
+
         :pagination-options="{
         enabled: true,
         mode: 'records',
@@ -45,7 +45,8 @@
       }"
         :styleClass="showDropdown?'tableOne table-hover vgt-table full-height':'tableOne table-hover vgt-table non-height'"
       >
-       
+
+
         <div slot="table-actions" class="mt-2 mb-3">
           <b-button variant="outline-info ripple m-1" size="sm" v-b-toggle.sidebar-right>
             <i class="i-Filter-2"></i>
@@ -64,8 +65,29 @@
               >
               <i class="i-File-Excel"></i> EXCEL
           </vue-excel-xlsx>
-         
+
         </div>
+
+          <template slot="table-row" slot-scope="props">
+              <div v-if="props.column.field == 'status'">
+            <span
+                v-if="props.row.status == 'completed'"
+                class="badge badge-outline-success"
+            >{{$t('complete')}}</span>
+                  <span
+                      v-else-if="props.row.status == 'pending'"
+                      class="badge badge-outline-info"
+                  >{{$t('Pending')}}</span>
+                  <span
+                      v-else-if="props.row.status == 'canceled'"
+                      class="badge badge-outline-danger"
+                  >{{$t('Canceled')}}</span>
+                  <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
+              </div>
+
+          </template>
+
+
 
       </vue-good-table>
     </div>
@@ -98,6 +120,20 @@
               />
             </b-form-group>
           </b-col>
+
+            <!-- Status  -->
+            <b-col md="12">
+                <b-form-group :label="$t('Status')">
+                    <select v-model="Filter_status" type="text" class="form-control">
+                        <option value selected>All</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="ordered">Ordered</option>
+                        <option value="canceled">Canceled</option>
+
+                    </select>
+                </b-form-group>
+            </b-col>
 
           <b-col md="6" sm="12">
             <b-button
@@ -139,21 +175,21 @@ export default {
   components: { DateRangePicker },
   data() {
     return {
-      startDate: "", 
-      endDate: "", 
-      dateRange: { 
-       startDate: "", 
-       endDate: "" 
-      }, 
-      locale:{ 
+      startDate: "",
+      endDate: "",
+      dateRange: {
+       startDate: "",
+       endDate: ""
+      },
+      locale:{
           //separator between the two ranges apply
-          Label: "Apply", 
-          cancelLabel: "Cancel", 
-          weekLabel: "W", 
-          customRangeLabel: "Custom Range", 
-          daysOfWeek: moment.weekdaysMin(), 
-          //array of days - see moment documenations for details 
-          monthNames: moment.monthsShort(), //array of month names - see moment documenations for details 
+          Label: "Apply",
+          cancelLabel: "Cancel",
+          weekLabel: "W",
+          customRangeLabel: "Custom Range",
+          daysOfWeek: moment.weekdaysMin(),
+          //array of days - see moment documenations for details
+          monthNames: moment.monthsShort(), //array of month names - see moment documenations for details
           firstDay: 1 //ISO first day of week - see moment documenations for details
         },
       isLoading: true,
@@ -166,10 +202,10 @@ export default {
         perPage: 10
       },
       rows: [{
-          statut: 'Total',
-         
+          status: 'Total',
+
           children: [
-             
+
           ],
       },],
       search: "",
@@ -177,7 +213,8 @@ export default {
       showDropdown: false,
       Filter_Client: "",
       Filter_warehouse: "",
-      customers: [],
+        Filter_status: "",
+        customers: [],
       warehouses: [],
       sales: [],
       limit: "10",
@@ -222,7 +259,14 @@ export default {
           tdClass: "text-left",
           thClass: "text-left"
         },
-      
+          {
+              label: this.$t("Status"),
+              field: "status",
+              html: true,
+              tdClass: "text-left",
+              thClass: "text-left"
+          },
+
         {
           label: this.$t("Name_product"),
           field: "product_name",
@@ -254,7 +298,7 @@ export default {
   methods: {
 
     sumCount(rowObj) {
-     
+
     	let sum = 0;
       for (let i = 0; i < rowObj.children.length; i++) {
         sum += rowObj.children[i].quantity;
@@ -262,7 +306,7 @@ export default {
       return sum;
     },
     sumCount2(rowObj) {
-     
+
     	let sum = 0;
       for (let i = 0; i < rowObj.children.length; i++) {
         sum += rowObj.children[i].total;
@@ -312,7 +356,7 @@ export default {
       this.Get_Sales(this.serverParams.page);
     },
 
-    
+
     onSearch(value) {
       this.search = value.searchTerm;
       this.Get_Sales(this.serverParams.page);
@@ -337,7 +381,8 @@ export default {
       this.search = "";
       this.Filter_Client = "";
       this.Filter_warehouse = "";
-      this.Get_Sales(this.serverParams.page);
+        this.Filter_status = "";
+         this.Get_Sales(this.serverParams.page);
     },
 
 
@@ -375,7 +420,7 @@ export default {
     },
 
 
-  
+
     //---------------------------------------- Set To Strings-------------------------\\
     setToStrings() {
       // Simply replaces null values with strings=''
@@ -383,10 +428,13 @@ export default {
         this.Filter_Client = "";
       } else if (this.Filter_warehouse === null) {
         this.Filter_warehouse = "";
-      } 
+      }
+      else if (this.Filter_status === null) {
+          this.Filter_status = "";
+      }
     },
 
-    
+
      //----------------------------- Submit Date Picker -------------------\\
     Submit_filter_dateRange() {
       var self = this;
@@ -406,7 +454,7 @@ export default {
 
         self.dateRange.startDate = today.getFullYear();
         self.dateRange.endDate = new Date().toJSON().slice(0, 10);
-        
+
       }
     },
 
@@ -422,6 +470,8 @@ export default {
         .get(
           "report/product_sales_report?page=" +
             page +
+            "&status=" +
+            this.Filter_status +
             "&client_id=" +
             this.Filter_Client +
             "&warehouse_id=" +
@@ -460,9 +510,9 @@ export default {
         });
     },
 
-  
-  
-  
+
+
+
   },
   //----------------------------- Created function-------------------\\
   created() {
