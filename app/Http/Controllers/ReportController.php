@@ -4167,6 +4167,8 @@ class ReportController extends BaseController
 
                 $total_sale_profit = $completed_sales * $product->profit;
                 $total_spent = ((int)$ad['lifetime_budget'] - (int)$ad['budget_remaining'])/100;
+                //convert to lyd
+                $total_spent = $total_spent * 5;
                 $max_risk = 50;
 
                 $status = (($total_sale_profit - $total_spent) < $max_risk) && ($total_spent < 50);
