@@ -4171,6 +4171,7 @@ class ReportController extends BaseController
                 $total_spent = $total_spent * 5;
                 $max_risk = 50;
 
+
                 $status = (($total_sale_profit - $total_spent) < 0) && ($total_spent < 50);
 
                 $data[] = [
@@ -4178,6 +4179,7 @@ class ReportController extends BaseController
                     'total_sale_profit' => $total_sale_profit,
                     'total_spent' => $total_spent,
                     'product_profit' => $product->profit,
+                    'test' => ($total_sale_profit - $total_spent),
                     'product_name' => $product->name,
                     'must_be_stopped' => (bool)$status,
                     'start_time' => Carbon::make($ad['start_time'])->format('Y-m-d')
