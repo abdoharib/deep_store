@@ -4171,7 +4171,7 @@ class ReportController extends BaseController
                 $total_spent = $total_spent * 5;
                 $max_risk = 50;
 
-                $status = (($total_sale_profit - $total_spent) < $max_risk) && ($total_spent < 50);
+                $status = (($total_sale_profit - $total_spent) < 0) && ($total_spent < 50);
 
                 $data[] = [
                     'completed_sales' => $completed_sales,
