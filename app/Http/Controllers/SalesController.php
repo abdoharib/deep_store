@@ -101,7 +101,9 @@ class SalesController extends BaseController
                             return $query->whereHas('warehouse', function ($q) use ($request) {
                                 $q->where('name', 'LIKE', "%{$request->search}%");
                             });
-                        });
+                        })
+                        ->orWhere('notes', 'LIKE', "%{$request->search}%");
+
                 });
             });
 

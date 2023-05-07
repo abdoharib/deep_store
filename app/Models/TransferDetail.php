@@ -10,12 +10,13 @@ class TransferDetail extends Model
 
     protected $fillable = [
         'id', 'transfer_id', 'quantity', 'purchase_unit_id', 'product_id', 'total', 'product_variant_id',
-        'cost', 'TaxNet', 'discount', 'discount_method', 'tax_method',
+        'cost', 'TaxNet', 'discount', 'discount_method', 'tax_method','price',
     ];
 
     protected $casts = [
         'total' => 'double',
         'cost' => 'double',
+        'price' => 'double',
         'TaxNet' => 'double',
         'discount' => 'double',
         'quantity' => 'double',
@@ -24,6 +25,8 @@ class TransferDetail extends Model
         'product_id' => 'integer',
         'product_variant_id' => 'integer',
     ];
+
+    protected $appends = ['price_total'];
 
     public function transfer()
     {
@@ -35,4 +38,8 @@ class TransferDetail extends Model
         return $this->belongsTo('App\Models\Product');
     }
 
+    public function getPriceTotalAttribute()
+    {
+        return $this->price * $this->quantity;
+    }
 }

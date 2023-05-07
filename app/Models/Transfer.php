@@ -28,6 +28,9 @@ class Transfer extends Model
 
     ];
 
+    protected $appends = ['grand_price_total'];
+
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');
@@ -47,5 +50,12 @@ class Transfer extends Model
     {
         return $this->belongsTo('App\Models\Warehouse', 'to_warehouse_id');
     }
+
+
+    public function getGrandPriceTotalAttribute()
+    {
+        return $this->details->sum('price_total');
+    }
+
 
 }

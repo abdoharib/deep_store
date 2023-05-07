@@ -87,6 +87,7 @@ class TransferController extends BaseController
             $item['from_warehouse'] = $transfer['from_warehouse']->name;
             $item['to_warehouse'] = $transfer['to_warehouse']->name;
             $item['GrandTotal'] = $transfer->GrandTotal;
+            $item['GrandSaleTotal'] = $transfer->grand_price_total;
             $item['items'] = $transfer->items;
             $item['statut'] = $transfer->statut;
             $data[] = $item;
@@ -245,12 +246,15 @@ class TransferController extends BaseController
                     }
                 }
 
+                $product = Product::find($value['product_id']);
+
                 $orderDetails['transfer_id'] = $order->id;
                 $orderDetails['quantity'] = $value['quantity'];
                 $orderDetails['purchase_unit_id'] = $value['purchase_unit_id'];
                 $orderDetails['product_id'] = $value['product_id'];
                 $orderDetails['product_variant_id'] = $value['product_variant_id'];
                 $orderDetails['cost'] = $value['Unit_cost'];
+                $orderDetails['price'] = $product->price;
                 $orderDetails['TaxNet'] = $value['tax_percent'];
                 $orderDetails['tax_method'] = $value['tax_method'];
                 $orderDetails['discount'] = $value['discount'];

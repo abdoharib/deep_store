@@ -1524,7 +1524,7 @@ class ReportController extends BaseController
 
         $data = [];
 
-        $item['sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))
+        $item['sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))->where('statut','completed')
             ->select(
                 DB::raw('SUM(GrandTotal) AS sum'),
                 DB::raw("count(*) as nmbr")
