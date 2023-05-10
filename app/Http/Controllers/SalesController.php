@@ -71,6 +71,7 @@ class SalesController extends BaseController
             4 => 'warehouse_id',
             5 => 'date',
             6 => 'shipping_status',
+            7 => 'created_at'
         );
         $data = array();
 
@@ -123,6 +124,8 @@ class SalesController extends BaseController
             $item['date'] = $Sale['date'];
             $item['Ref'] = $Sale['Ref'];
             $item['created_by'] = $Sale['user']->username;
+            $item['created_at'] = $Sale['created_at'];
+
             $item['statut'] = $Sale['statut'];
             $item['shipping_status'] =  $Sale['shipping_status'];
             $item['discount'] = $Sale['discount'];
