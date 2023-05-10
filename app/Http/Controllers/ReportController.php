@@ -1627,7 +1627,7 @@ class ReportController extends BaseController
     }
 
     // Calculating the cost of goods sold (COGS)
-    public function CalculeCogsAndAverageCost(request $request)
+    public function CalculeCogsAndAverageCost(request $request, $product_id = null)
     {
 
         // Initialize variable to store total COGS averageCost and for all products
@@ -1635,7 +1635,13 @@ class ReportController extends BaseController
         $total_average_cost = 0;
 
         // Get all distinct product IDs for sales between start and end date
-        $productIds = SaleDetail::whereBetween('date', array($request->from, $request->to))->select('product_id')->distinct()->get();
+        $productIdsQuery = SaleDetail::whereBetween('date', array($request->from, $request->to));
+        
+        if($product_id){
+            $productIdsQuery->where('product_id',$product_id);
+        }
+        $productIds = $productIdsQuery->select('product_id')->distinct()->get();
+
 
         // Loop through each product
         foreach ($productIds as $productId) {
@@ -3938,6 +3944,8 @@ class ReportController extends BaseController
                  $product_name = $detail['product']['name'];
              }
 
+             
+
              $item['date'] = $detail->date;
              $item['status'] = $detail->sale->statut;
              $item['Ref'] = $detail['sale']->Ref;
@@ -3946,6 +3954,7 @@ class ReportController extends BaseController
              $item['quantity'] = $detail->quantity;
              $item['total'] = $detail->total;
              $item['product_name'] = $product_name;
+             $item['avg_purchase_price'] = $this->CalculeCogsAndAverageCost($request, $detail->product_id);;
              $item['unit_sale'] = $unit->ShortName;
 
              $data[] = $item;
