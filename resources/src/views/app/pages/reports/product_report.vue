@@ -168,6 +168,13 @@ export default {
           sortable: false
         },
         {
+          label: this.$t("avg_purchase_price"),
+          field: "avg_purchase_price",
+          tdClass: "text-left",
+          thClass: "text-left",
+          sortable: false
+        },
+        {
           label: this.$t("Action"),
           field: "actions",
           html: true,

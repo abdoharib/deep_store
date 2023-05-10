@@ -3570,7 +3570,7 @@ class ReportController extends BaseController
                 $nestedData['id'] = $product->id;
                 $nestedData['name'] = $product->name;
                 $nestedData['code'] = $product->code;
-
+                $nestedData['avg_purchase_price'] = $this->CalculeCogsAndAverageCost($request,$product->id);
                 $nestedData['sold_amount'] = SaleDetail::with('sale')->where('product_id', $product->id)
                 ->where(function ($query) use ($view_records) {
                     if (!$view_records) {
@@ -3954,7 +3954,7 @@ class ReportController extends BaseController
              $item['quantity'] = $detail->quantity;
              $item['total'] = $detail->total;
              $item['product_name'] = $product_name;
-             $item['avg_purchase_price'] = $this->CalculeCogsAndAverageCost($request, $detail->product_id);;
+            //  $item['avg_purchase_price'] = $this->CalculeCogsAndAverageCost($request, $detail->product_id);;
              $item['unit_sale'] = $unit->ShortName;
 
              $data[] = $item;
