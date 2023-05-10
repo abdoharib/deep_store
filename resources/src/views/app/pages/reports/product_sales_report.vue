@@ -284,6 +284,15 @@ export default {
           sortable: false
         },
         {
+          label: this.$t("avg_purchase_price"),
+          field: "avg_purchase_price",
+          type: "decimal",
+          headerField: this.sumCount2,
+          tdClass: "text-left",
+          thClass: "text-left",
+          sortable: false
+        },
+        {
           label: this.$t("Total"),
           field: "total",
           type: "decimal",
@@ -291,7 +300,7 @@ export default {
           tdClass: "text-left",
           thClass: "text-left",
           sortable: false
-        },
+        }
       ];
     }
   },
