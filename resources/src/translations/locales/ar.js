@@ -792,6 +792,8 @@ export default {
      delete_employee:'حذف الموظفين',
 
     Created_by : 'تمت الإضافة بواسطة',
+    Created_at : 'تمت الإضافة في',
+
     Add_product_IMEI_Serial_number:'أضف الرقم التسلسلي للمنتج',
     Product_Has_Imei_Serial_number:'المنتج له رقم تسلسلي',
     IMEI_SN:'الرقم التسلسلي',

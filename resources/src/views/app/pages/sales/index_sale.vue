@@ -898,6 +898,12 @@ export default {
           thClass: "text-left"
         },
         {
+          label: this.$t("Created_at"),
+          field: "created_at",
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
           label: this.$t("Customer"),
           field: "client_name",
           tdClass: "text-left",

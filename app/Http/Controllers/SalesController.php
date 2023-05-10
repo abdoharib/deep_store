@@ -62,6 +62,8 @@ class SalesController extends BaseController
             4 => '=',
             5 => '=',
             6 => 'like',
+            7 => '=',
+
         );
         $columns = array(
             0 => 'Ref',
