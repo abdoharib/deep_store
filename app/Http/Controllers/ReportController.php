@@ -3502,6 +3502,9 @@ class ReportController extends BaseController
                             if (!$view_records) {
                                 return $query->whereHas('sale', function ($q) use ($request) {
                                     $q->where('user_id', '=', Auth::user()->id);
+                                    $q->where('statut', '=', 'completed');
+                                    $q->where('payment_statut', '=', 'paid');
+
                                 });
 
                             }
@@ -3526,6 +3529,10 @@ class ReportController extends BaseController
                         if (!$view_records) {
                             return $query->whereHas('sale', function ($q) use ($request) {
                                 $q->where('user_id', '=', Auth::user()->id);
+                            
+                                $q->where('statut', '=', 'completed');
+                                $q->where('payment_statut', '=', 'paid');
+                                
                             });
 
                         }
@@ -3534,6 +3541,7 @@ class ReportController extends BaseController
                         ['product_variant_id', $variant_id]
                     ])
                     ->where(function ($query) use ($request, $array_warehouses_id) {
+                        
                         if ($request->warehouse_id) {
                             return $query->whereHas('sale', function ($q) use ($request, $array_warehouses_id) {
                                 $q->where('warehouse_id', $request->warehouse_id);
