@@ -3494,14 +3494,14 @@ class ReportController extends BaseController
                     $nestedData['name'] = ' [' . $variant_data->name . ']' . $product->name;
                     $nestedData['code'] = $product->code;
 
-                    $nestedData['sold_amount'] = SaleDetail::with('sale')->where([
+                    $nestedData['sold_amount'] = SaleDetail::with('sale')
+                    ->where([
                             ['product_id', $product->id],
                             ['product_variant_id', $variant_id]
                         ])->where(function ($query) use ($view_records) {
                             if (!$view_records) {
                                 return $query->whereHas('sale', function ($q) use ($request) {
-                                    $q->where('user_id', '=', Auth::user()->id)
-                                    ->where('statut', 'canceled');
+                                    $q->where('user_id', '=', Auth::user()->id);
                                     // $q->where('payment_statut', 'paid');
 
                                 });
@@ -3520,6 +3520,9 @@ class ReportController extends BaseController
 
                             }
                         })
+                    ->whereHas('sale',function($q){
+                        $q->where('statut','canceled');
+                    })
                     ->whereBetween('date', array($request->from, $request->to))
                     ->sum('total');
 
@@ -3527,8 +3530,8 @@ class ReportController extends BaseController
                     ->where(function ($query) use ($view_records) {
                         if (!$view_records) {
                             return $query->whereHas('sale', function ($q) use ($request) {
-                                $q->where('user_id', '=', Auth::user()->id)
-                                ->where('statut','canceled');
+                                $q->where('user_id', '=', Auth::user()->id);
+                               
 
                             });
 
@@ -3578,17 +3581,18 @@ class ReportController extends BaseController
                 $nestedData['total_avg_cost'] = $this->CalculeCogsAndAverageCost($request,$product->id)['total_average_cost'];
                
                
+                dd('fafsaf');
                 $nestedData['sold_amount'] = SaleDetail::with('sale')->where('product_id', $product->id)
                 ->where(function ($query) use ($view_records) {
                     if (!$view_records) {
                         return $query->whereHas('sale', function ($q) use ($request) {
                             $q->where('user_id', '=', Auth::user()->id)
-                            ->where('statut','canceled');
                             // ->where('payment_statut','paid');
                         });
 
                     }
                 })
+               
                 ->where(function ($query) use ($request, $array_warehouses_id) {
                     if ($request->warehouse_id) {
                         return $query->whereHas('sale', function ($q) use ($request, $array_warehouses_id) {
@@ -3600,6 +3604,9 @@ class ReportController extends BaseController
                         });
 
                     }
+                })
+                ->whereHas('sale',function($q){
+                    $q->where('statut','canceled');
                 })
                 ->whereBetween('date', array($request->from, $request->to))
                 ->sum('total');
@@ -3628,6 +3635,9 @@ class ReportController extends BaseController
                             });
 
                         }
+                    })
+                    ->whereHas('sale',function($q){
+                        $q->where('statut','canceled');
                     })
                 ->whereBetween('date', array($request->from, $request->to))
                 ->get();
