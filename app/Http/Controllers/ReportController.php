@@ -3500,7 +3500,7 @@ class ReportController extends BaseController
                         ])->where(function ($query) use ($view_records) {
                             if (!$view_records) {
                                 return $query->whereHas('sale', function ($q) use ($request) {
-                                    $q->where('user_id', '=', Auth::user()->id);
+                                    $q->where('user_id', '=', Auth::user()->id)
                                     ->where('statut', 'canceled');
                                     // $q->where('payment_statut', 'paid');
 
