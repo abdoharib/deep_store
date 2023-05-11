@@ -1682,6 +1682,9 @@ class ReportController extends BaseController
 
             // Get sale details for current product between start and end date, ordered by date in ascending order
             $sales = SaleDetail::where('product_id', $productId['product_id'])
+            ->whereHas('sale',function($q){
+                $q->where('statut','completed')
+            })
             ->whereBetween('date', array($request->from, $request->to))
             ->orderBy('date', 'asc')
             ->get();
