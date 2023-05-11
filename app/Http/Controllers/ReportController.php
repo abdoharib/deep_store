@@ -3502,8 +3502,8 @@ class ReportController extends BaseController
                             if (!$view_records) {
                                 return $query->whereHas('sale', function ($q) use ($request) {
                                     $q->where('user_id', '=', Auth::user()->id);
-                                    $q->where('statut', '=', 'completed');
-                                    $q->where('payment_statut', '=', 'paid');
+                                    $q->where('statut', 'completed');
+                                    $q->where('payment_statut', 'paid');
 
                                 });
 
@@ -3530,8 +3530,8 @@ class ReportController extends BaseController
                             return $query->whereHas('sale', function ($q) use ($request) {
                                 $q->where('user_id', '=', Auth::user()->id);
                             
-                                $q->where('statut', '=', 'completed');
-                                $q->where('payment_statut', '=', 'paid');
+                                $q->where('statut','completed');
+                                $q->where('payment_statut', 'paid');
 
                             });
 
@@ -3579,13 +3579,15 @@ class ReportController extends BaseController
                 $nestedData['name'] = $product->name;
                 $nestedData['code'] = $product->code;
                 $nestedData['total_avg_cost'] = $this->CalculeCogsAndAverageCost($request,$product->id)['total_average_cost'];
+               
+               
                 $nestedData['sold_amount'] = SaleDetail::with('sale')->where('product_id', $product->id)
                 ->where(function ($query) use ($view_records) {
                     if (!$view_records) {
                         return $query->whereHas('sale', function ($q) use ($request) {
                             $q->where('user_id', '=', Auth::user()->id);
-                            $q->where('statut', '=', 'completed');
-                            $q->where('payment_statut', '=', 'paid');
+                            $q->where('statut','completed');
+                            $q->where('payment_statut','paid');
                         });
 
                     }
@@ -3605,13 +3607,15 @@ class ReportController extends BaseController
                 ->whereBetween('date', array($request->from, $request->to))
                 ->sum('total');
 
+
+
                 $lims_product_sale_data = SaleDetail::select('sale_unit_id', 'quantity')->with('sale')->where('product_id', $product->id)
                     ->where(function ($query) use ($view_records) {
                         if (!$view_records) {
                             return $query->whereHas('sale', function ($q) use ($request) {
                                 $q->where('user_id', '=', Auth::user()->id);
-                                $q->where('statut', '=', 'completed');
-                                $q->where('payment_statut', '=', 'paid');
+                                $q->where('statut', 'completed');
+                                $q->where('payment_statut','paid');
                             });
 
                         }
@@ -3630,6 +3634,8 @@ class ReportController extends BaseController
                     })
                 ->whereBetween('date', array($request->from, $request->to))
                 ->get();
+
+
 
                 $sold_qty = 0;
                 if(count($lims_product_sale_data)) {
@@ -3889,7 +3895,7 @@ class ReportController extends BaseController
              ->where(function ($query) use ($request) {
                  return $query->when($request->filled('status'), function ($query) use ($request) {
                      return $query->whereHas('sale', function ($q) use ($request) {
-                         $q->where('statut', '=', $request->status);
+                         $q->where('statut', $request->status);
                      });
                  });
              })
