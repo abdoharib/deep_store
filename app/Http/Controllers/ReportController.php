@@ -3462,7 +3462,6 @@ class ReportController extends BaseController
 
 
         $products_data = Product::select('id', 'name','code', 'is_variant','unit_id')
-
         ->where(function ($query) use ($request) {
             return $query->when($request->filled('search'), function ($query) use ($request) {
                 return $query->where('name','LIKE', "%{$request->search}%")
@@ -3502,8 +3501,8 @@ class ReportController extends BaseController
                             if (!$view_records) {
                                 return $query->whereHas('sale', function ($q) use ($request) {
                                     $q->where('user_id', '=', Auth::user()->id);
-                                    $q->where('statut', 'completed');
-                                    $q->where('payment_statut', 'paid');
+                                    ->where('statut', 'canceled');
+                                    // $q->where('payment_statut', 'paid');
 
                                 });
 
@@ -3528,10 +3527,8 @@ class ReportController extends BaseController
                     ->where(function ($query) use ($view_records) {
                         if (!$view_records) {
                             return $query->whereHas('sale', function ($q) use ($request) {
-                                $q->where('user_id', '=', Auth::user()->id);
-                            
-                                $q->where('statut','completed');
-                                $q->where('payment_statut', 'paid');
+                                $q->where('user_id', '=', Auth::user()->id)
+                                ->where('statut','canceled');
 
                             });
 
@@ -3585,9 +3582,9 @@ class ReportController extends BaseController
                 ->where(function ($query) use ($view_records) {
                     if (!$view_records) {
                         return $query->whereHas('sale', function ($q) use ($request) {
-                            $q->where('user_id', '=', Auth::user()->id);
-                            $q->where('statut','completed');
-                            $q->where('payment_statut','paid');
+                            $q->where('user_id', '=', Auth::user()->id)
+                            ->where('statut','canceled');
+                            // ->where('payment_statut','paid');
                         });
 
                     }
@@ -3613,9 +3610,9 @@ class ReportController extends BaseController
                     ->where(function ($query) use ($view_records) {
                         if (!$view_records) {
                             return $query->whereHas('sale', function ($q) use ($request) {
-                                $q->where('user_id', '=', Auth::user()->id);
-                                $q->where('statut', 'completed');
-                                $q->where('payment_statut','paid');
+                                $q->where('user_id', '=', Auth::user()->id)
+                                ->where('statut', 'canceled');
+                                // ->where('payment_statut','paid');
                             });
 
                         }
