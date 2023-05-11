@@ -3532,7 +3532,7 @@ class ReportController extends BaseController
                             
                                 $q->where('statut', '=', 'completed');
                                 $q->where('payment_statut', '=', 'paid');
-                                
+
                             });
 
                         }
@@ -3584,6 +3584,8 @@ class ReportController extends BaseController
                     if (!$view_records) {
                         return $query->whereHas('sale', function ($q) use ($request) {
                             $q->where('user_id', '=', Auth::user()->id);
+                            $q->where('statut', '=', 'completed');
+                            $q->where('payment_statut', '=', 'paid');
                         });
 
                     }
@@ -3608,6 +3610,8 @@ class ReportController extends BaseController
                         if (!$view_records) {
                             return $query->whereHas('sale', function ($q) use ($request) {
                                 $q->where('user_id', '=', Auth::user()->id);
+                                $q->where('statut', '=', 'completed');
+                                $q->where('payment_statut', '=', 'paid');
                             });
 
                         }
