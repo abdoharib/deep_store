@@ -3581,7 +3581,7 @@ class ReportController extends BaseController
                 $nestedData['total_avg_cost'] = $this->CalculeCogsAndAverageCost($request,$product->id)['total_average_cost'];
                
                
-                dd('fafsaf');
+                // dd('fafsaf');
                 $nestedData['sold_amount'] = SaleDetail::with('sale')->where('product_id', $product->id)
                 ->where(function ($query) use ($view_records) {
                     if (!$view_records) {
