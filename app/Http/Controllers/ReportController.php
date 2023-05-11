@@ -3521,7 +3521,7 @@ class ReportController extends BaseController
                             }
                         })
                     ->whereHas('sale',function($q){
-                        $q->where('statut','canceled');
+                        $q->where('statut','completed');
                     })
                     ->whereBetween('date', array($request->from, $request->to))
                     ->sum('total');
@@ -3552,6 +3552,9 @@ class ReportController extends BaseController
                             });
 
                         }
+                    })
+                    ->whereHas('sale',function($q){
+                        $q->where('statut','completed');
                     })
                 ->whereBetween('date', array($request->from, $request->to))->get();
 
@@ -3606,7 +3609,7 @@ class ReportController extends BaseController
                     }
                 })
                 ->whereHas('sale',function($q){
-                    $q->where('statut','canceled');
+                    $q->where('statut','completed');
                 })
                 ->whereBetween('date', array($request->from, $request->to))
                 ->sum('total');
@@ -3637,7 +3640,7 @@ class ReportController extends BaseController
                         }
                     })
                     ->whereHas('sale',function($q){
-                        $q->where('statut','canceled');
+                        $q->where('statut','completed');
                     })
                 ->whereBetween('date', array($request->from, $request->to))
                 ->get();
