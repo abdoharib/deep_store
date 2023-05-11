@@ -2,7 +2,7 @@
 
 
 export default {
-    avg_purchase_price:'متوسط سعر التكلفة',
+    total_avg_cost:'أجمالي متوسط التكلفة',
     id:'ر.ق',
     must_be_stopped:'حالة الأعلان',
     total_spent:'إجمالي المصروف ',
