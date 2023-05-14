@@ -85,6 +85,18 @@
                   <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
               </div>
 
+              <div v-else-if="props.column.field == 'payment_status'">
+            <span
+              v-if="props.row.payment_status == 'paid'"
+              class="badge badge-outline-success"
+            >{{$t('Paid')}}</span>
+            <span
+              v-else-if="props.row.payment_status == 'partial'"
+              class="badge badge-outline-primary"
+            >{{$t('partial')}}</span>
+            <span v-else class="badge badge-outline-warning">{{$t('Unpaid')}}</span>
+          </div>
+
           </template>
 
 
@@ -134,6 +146,17 @@
                     </select>
                 </b-form-group>
             </b-col>
+            <!-- Payment Status  -->
+          <b-col md="12">
+            <b-form-group :label="$t('PaymentStatus')">
+              <select v-model="Filter_Payment" type="text" class="form-control">
+                <option value selected>All</option>
+                <option value="paid">Paid</option>
+                <option value="partial">partial</option>
+                <option value="unpaid">UnPaid</option>
+              </select>
+            </b-form-group>
+          </b-col>
 
           <b-col md="6" sm="12">
             <b-button
@@ -214,6 +237,7 @@ export default {
       Filter_Client: "",
       Filter_warehouse: "",
         Filter_status: "",
+        Filter_Payment:"",
         customers: [],
       warehouses: [],
       sales: [],
@@ -266,6 +290,13 @@ export default {
               tdClass: "text-left",
               thClass: "text-left"
           },
+          {
+          label: this.$t("PaymentStatus"),
+          field: "payment_status",
+          html: true,
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
 
         {
           label: this.$t("Name_product"),
@@ -382,6 +413,8 @@ export default {
       this.Filter_Client = "";
       this.Filter_warehouse = "";
         this.Filter_status = "";
+        this.Filter_Payment = "";
+
          this.Get_Sales(this.serverParams.page);
     },
 
@@ -472,6 +505,8 @@ export default {
             page +
             "&status=" +
             this.Filter_status +
+            "&payment_status=" +
+            this.Filter_Payment +
             "&client_id=" +
             this.Filter_Client +
             "&warehouse_id=" +

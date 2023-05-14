@@ -3875,7 +3875,8 @@ class ReportController extends BaseController
          $columns = array(
              0 => 'client_id',
              1 => 'warehouse_id',
-             2 => 'status'
+             2 => 'status',
+             3 => 'payment_status'
          );
          $data = array();
 
@@ -3912,6 +3913,14 @@ class ReportController extends BaseController
                      });
                  });
              })
+
+             ->where(function ($query) use ($request) {
+                return $query->when($request->filled('payment_status'), function ($query) use ($request) {
+                    return $query->whereHas('sale', function ($q) use ($request) {
+                        $q->where('payment_statut', $request->payment_status);
+                    });
+                });
+            })
 
         // Search With Multiple Param
         ->where(function ($query) use ($request) {
@@ -3979,6 +3988,7 @@ class ReportController extends BaseController
 
              $item['date'] = $detail->date;
              $item['status'] = $detail->sale->statut;
+             $item['payment_status'] = $detail->sale->payment_statut;
              $item['Ref'] = $detail['sale']->Ref;
              $item['client_name'] = $detail['sale']['client']->name;
              $item['warehouse_name'] = $detail['sale']['warehouse']->name;
