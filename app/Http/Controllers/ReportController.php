@@ -4232,7 +4232,7 @@ class ReportController extends BaseController
                     'test' => ($total_sale_profit - $total_spent),
                     'product_name' => $product->name,
                     'must_be_stopped' => (bool)$status,
-                    'start_time' => Carbon::make($ad['start_time'])->format('Y-m-d')
+                    'start_time' => Carbon::make($ad['created_time'])->format('Y-m-d')
                 ];
             }
 
