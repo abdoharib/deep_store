@@ -4211,14 +4211,14 @@ class ReportController extends BaseController
                     ->where('product_id', $product->id)
                     ->whereHas('sale', function ($q) use ($ad) {
                         $q->where('statut', 'completed');
-                        $q->whereDate('created_at', '>', Carbon::make($ad['start_time'])->toDateString() );
+                        $q->whereDate('created_at', '>', Carbon::make($ad['created_time'])->toDateString() );
                     })
                     ->sum('quantity');
 
                 $total_sale_profit = $completed_sales * $product->profit;
-                $total_spent = ((int)$ad['lifetime_budget'] - (int)$ad['budget_remaining'])/100;
+                // $total_spent = ((int)$ad['lifetime_budget'] - (int)$ad['budget_remaining'])/100;
                 //convert to lyd
-                $total_spent = $total_spent * 5;
+                $total_spent =  $ad['total_spent'] * 5;
                 $max_risk = 50;
 
 
