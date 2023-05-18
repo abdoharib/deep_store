@@ -71,7 +71,7 @@ class TransferController extends BaseController
                         ->orWhere(function ($query) use ($request) {
                             return $query->whereHas('details', function ($q) use ($request) {
                                 $q->whereHas('product',function($query){
-                                    $q->where('name', 'LIKE', "%{$request->search}%");
+                                    $query->where('name', 'LIKE', "%{$request->search}%");
                                 });
                             });
                         });
