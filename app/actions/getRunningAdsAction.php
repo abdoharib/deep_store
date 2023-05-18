@@ -23,7 +23,7 @@ class getRunningAdsAction
             return false;
         });
 
-        dd($ads)
+        dd($ads);
 
         $ads = array_map(function ($item) use($facebook) {
 
