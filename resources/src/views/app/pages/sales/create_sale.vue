@@ -85,7 +85,7 @@
                 <b-col md="12" class="mb-5">
                   <h6>{{$t('ProductName')}}</h6>
 
-                  <div id="autocomplete" class="autocomplete">
+                  <!-- <div id="autocomplete" class="autocomplete">
                     <input
                      :placeholder="$t('Scan_Search_Product_by_Code_Name')"
                       @input='e => search_input = e.target.value'
@@ -95,8 +95,17 @@
                       ref="product_autocomplete"
                       class="autocomplete-input" />
                     <ul class="autocomplete-result-list" v-show="focused">
-                      <li class="autocomplete-result" v-for="product_fil in product_filter" @mousedown="SearchProduct(product_fil)">{{getResultValue(product_fil)}}</li>
+                      <li class="autocomplete-result" v-for="product_fil in product_filter" @mousedown="SearchProduct(product_fil)">
+                        {{getResultValue(product_fil)}}
+                      </li>
                     </ul>
+                </div> -->
+
+                <div class="row">
+                  <div class="col-md-3" v-for="product_fil in product_filter">
+                    {{ product_filter }}
+                  </div>
+
                 </div>
                 </b-col>
 
@@ -1132,7 +1141,9 @@ export default {
       }
       if (this.sale.warehouse_id != "" &&  this.sale.warehouse_id != null) {
         this.timer = setTimeout(() => {
+
           const product_filter = this.products.filter(product => product.code === this.search_input || product.barcode.includes(this.search_input));
+
             if(product_filter.length === 1){
                 this.SearchProduct(product_filter[0])
             }else{
