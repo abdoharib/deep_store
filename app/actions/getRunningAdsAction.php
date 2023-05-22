@@ -5,8 +5,10 @@ use Carbon\Carbon;
 
 class getRunningAdsAction
 {
-    dd(env('ACCESS_TOKEN','EAACvZBNxYE3EBAJx7ImHFVXFpt7N3brmMcHMnFA6BWZCmzkZBbnGZCz48jIB345DWyHZBf42lKqGoU5wB3ni0WSRUYW3esZB3ykbZClt6Vme9ZAIlvUHXWzWZBvsotu9uQj430TkOJT7eZCn3nIvpqCPk9TsMkPExpEbIrJ4YcaoUn8LMUhlnfrB75'));
     public function invoke(){
+        
+        dd(env('ACCESS_TOKEN','EAACvZBNxYE3EBAJx7ImHFVXFpt7N3brmMcHMnFA6BWZCmzkZBbnGZCz48jIB345DWyHZBf42lKqGoU5wB3ni0WSRUYW3esZB3ykbZClt6Vme9ZAIlvUHXWzWZBvsotu9uQj430TkOJT7eZCn3nIvpqCPk9TsMkPExpEbIrJ4YcaoUn8LMUhlnfrB75'));
+
         $facebook = new \JoelButcher\Facebook\Facebook([
             'app_id' => env('FACEBOOK_APP_ID','193483383509873'),
             'app_secret' => env('FACEBOOK_APP_SECRET','a5819237862894e7c0871fb1953a2bff'),
