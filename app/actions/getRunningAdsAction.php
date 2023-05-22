@@ -7,23 +7,16 @@ class getRunningAdsAction
 {
     public function invoke(){
 
-    try{
+
         $facebook = new \JoelButcher\Facebook\Facebook([
             'app_id' => env('FACEBOOK_APP_ID','193483383509873'),
             'app_secret' => env('FACEBOOK_APP_SECRET','a5819237862894e7c0871fb1953a2bff'),
             'default_access_token' => env('ACCESS_TOKEN','EAACvZBNxYE3EBAP12UFZCwnqQ7YZAVGB1WAZAu0C6CHIB7CTcoKpCtmP0vO2HfeBDJXamumZBmrHOD04pZCQ84uKlJDAPrYuzBj27s0z3OmHDJ5pTKJZCsNopBOEJDQqo6eXhhDZCqGRVZCTWnzWxX04zoxaLmlXnBkiXXpr7dqiqcfT9MEtY4bJESpx3S1qigdpJEpysZB9ZB6ZBkcZB1zL3Xf6u'),
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
+     
 
-    }catch(\Exception $err) {
-        $response = $facebook->get('/oauth/access_token');
-        $body = $response->getDecodedBody()['data'];
-        
-        dd($body);
-    }
-
-    $response = $facebook->get('/act_724531662792327/ads?fields=campaign{name,lifetime_budget,budget_remaining},name,status,created_time,adset{name,budget_remaining,lifetime_budget,daily_budget,end_time}');
-
+        $response = $facebook->get('/act_724531662792327/ads?fields=campaign{name,lifetime_budget,budget_remaining},name,status,created_time,adset{name,budget_remaining,lifetime_budget,daily_budget,end_time}');
         $ads = $response->getDecodedBody()['data'];
         $ads = array_filter($ads,function($ad){
             if( $ad['status']=='ACTIVE' ){
