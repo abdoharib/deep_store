@@ -16,9 +16,8 @@ class getRunningAdsAction
         ]);
      
 
-        $response = $facebook->get('/act_724531662792327/ads?fields=campaign{name,lifetime_budget,budget_remaining},name,status,created_time,adset{name,budget_remaining,lifetime_budget,daily_budget,end_time}');
+        $response = $facebook->get('/act_724531662792327/ads?limit=100&fields=campaign{name,lifetime_budget,budget_remaining},name,status,created_time,adset{name,budget_remaining,lifetime_budget,daily_budget,end_time}');
         $ads = $response->getDecodedBody()['data'];
-        dd($ads);
 
         $ads = array_filter($ads,function($ad){
             if( $ad['status']=='ACTIVE' ){
