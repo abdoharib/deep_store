@@ -4207,6 +4207,7 @@ class ReportController extends BaseController
         foreach ($ads as $ad) {
             if (!is_null($ad['product_id'])) {
                 $product = Product::find($ad['product_id']);
+               
                 $completed_sales = SaleDetail::query()
                     ->where('product_id', $product->id)
                     ->whereHas('sale', function ($q) use ($ad) {
