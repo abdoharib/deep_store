@@ -11,7 +11,7 @@ class getRunningAdsAction
         $facebook = new \JoelButcher\Facebook\Facebook([
             'app_id' => env('FACEBOOK_APP_ID','193483383509873'),
             'app_secret' => env('FACEBOOK_APP_SECRET','a5819237862894e7c0871fb1953a2bff'),
-            'default_access_token' => 'EAACvZBNxYE3EBABfbVqWS0J6xQFZAVFomKejxBcVS2KpMJU82yMGzLdcGHUXZBWxg9De8sDYZAd0ZCi7wZCPnScHh7UPs6jZB5C3fKZBA0MWpAYZCvxDOJVxFIgpvUhcqmJ6F29jF6RjzgsUBcvZCWHAZA8F2380J0wevgMRz2nx5FGMrfaN4deXWtbak8wyOMvuCFisbZBDMCbVAgZDZD',
+            'default_access_token' => 'EAACvZBNxYE3EBAFNzUnJSqZAbrYDTCW3wlBxCpousrcSVjFgqF4X4LZBa0vh5AZBQG90Pd7KvM2u52lb5S7BEzRolpJBeWW7SvAAahEgBYhszqZA0GsmJGICjmvBoX4zcCUzqkWMjtYZCPNnJPGxQ3oP39MfpXx8ptMqk6Mi2GrET1YeJaQAi6',
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
      
