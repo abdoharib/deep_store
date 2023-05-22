@@ -11,12 +11,15 @@ class getRunningAdsAction
         $facebook = new \JoelButcher\Facebook\Facebook([
             'app_id' => env('FACEBOOK_APP_ID','193483383509873'),
             'app_secret' => env('FACEBOOK_APP_SECRET','a5819237862894e7c0871fb1953a2bff'),
-            'default_access_token' => env('ACCESS_TOKEN','EAACvZBNxYE3EBAJx7ImHFVXFpt7N3brmMcHMnFA6BWZCmzkZBbnGZCz48jIB345DWyHZBf42lKqGoU5wB3ni0WSRUYW3esZB3ykbZClt6Vme9ZAIlvUHXWzWZBvsotu9uQj430TkOJT7eZCn3nIvpqCPk9TsMkPExpEbIrJ4YcaoUn8LMUhlnfrB75'),
+            'default_access_token' => env('ACCESS_TOKEN','EAACvZBNxYE3EBAInWIapZCrFVX0WjU3DrwTsTBfdeHaZCj9Jcvl6Au0meQWpE7k37u6fx5aYyJjZCA57w5j12qeOKza95DLhNfZACRjMD7Rypd1WRjZB8fES3Q5ri5z47q0qAXi8WPMJGNtyVm9e3cVyaRyaxZBALlXjRCbYx69JgfOeFobVRQy'),
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
 
     }catch(\Exception $err) {
-        dd($err);
+        $response = $facebook->get('/oauth/access_token');
+        $body = $response->getDecodedBody()['data'];
+        
+        dd($body);
     }
 
     $response = $facebook->get('/act_724531662792327/ads?fields=campaign{name,lifetime_budget,budget_remaining},name,status,created_time,adset{name,budget_remaining,lifetime_budget,daily_budget,end_time}');
