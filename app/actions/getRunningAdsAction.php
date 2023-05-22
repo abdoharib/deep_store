@@ -15,7 +15,7 @@ class getRunningAdsAction
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
 
-    }catch(/Exception $err) {
+    }catch(\Exception $err) {
         dd($err);
     }
 
