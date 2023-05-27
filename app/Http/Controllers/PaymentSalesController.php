@@ -230,6 +230,35 @@ class PaymentSalesController extends BaseController
         return response()->json(['success' => true, 'message' => 'Payment Create successfully'], 200);
     }
 
+    public function settlePaymentSales(Request $request){
+
+        $request->validate([
+            'sales' => 'required|array',
+            'sales.*' => 'required|exists:sales,id'
+        ]);
+
+        foreach ($request->sales as $saleId) {
+            
+            $Sale = Sale::find($saleId);
+
+            // $myRequest = new \Illuminate\Http\Request();
+            // $myRequest->setMethod('POST');
+            $request->request->add(['Reglement' => 'Cash']);
+            $request->request->add(['change' => '0.00']);
+            $request->request->add(['date' => Carbon::now()->format('Y-m-d')]);
+            $request->request->add(['montant' => $Sale->GrandTotal]);
+            $request->request->add(['notes' => '']);
+            $request->request->add(['received_amount' => $Sale->GrandTotal]);
+            $request->request->add(['sale_id' => $Sale->id]);
+
+            $this->store($request);  
+
+        }
+
+        return response()->json(['success' => true, 'message' => 'Payment Create successfully'], 200);
+
+    }
+
     //------------ function show -----------\\
 
     public function show($id){

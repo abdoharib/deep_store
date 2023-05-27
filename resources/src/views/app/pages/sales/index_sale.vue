@@ -31,6 +31,8 @@
       >
         <div slot="selected-row-actions">
           <button class="btn btn-danger btn-sm" @click="delete_by_selected()">{{$t('Del')}}</button>
+          <button class="btn btn-primary btn-sm" @click="pay_by_selected()">تسوية المبيعات</button>
+
         </div>
         <div slot="table-actions" class="mt-2 mb-3">
           <b-button variant="outline-info ripple m-1" size="sm" v-b-toggle.sidebar-right>
@@ -1889,6 +1891,45 @@ export default {
               this.$swal(
                 this.$t("Delete.Deleted"),
                 this.$t("Delete.SaleDeleted"),
+                "success"
+              );
+              Fire.$emit("Delete_sale");
+            })
+            .catch(() => {
+              // Complete the animation of theprogress bar.
+              setTimeout(() => NProgress.done(), 500);
+              this.$swal(
+                this.$t("Delete.Failed"),
+                this.$t("Delete.Therewassomethingwronge"),
+                "warning"
+              );
+            });
+        }
+      });
+    },
+     //---- Pay sales by selection
+     pay_by_selected() {
+      this.$swal({
+        title: 'دفع المبيعات المختارة',
+        text: 'سيتم أنشاء عملية دفع لكل المبيعات الذي تم أختيارها',
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: 'ألغاء',
+        confirmButtonText: 'تطبيق'
+      }).then(result => {
+        if (result.value) {
+          // Start the progress bar.
+          NProgress.start();
+          NProgress.set(0.1);
+          axios
+            .post("sales_pay_by_selection", {
+              sales: this.selectedIds
+            })
+            .then(() => {
+              this.$swal(
+                'تم الدفع',
+                'تم دفع جميع المبيعات المختارة بنجاح',
                 "success"
               );
               Fire.$emit("Delete_sale");

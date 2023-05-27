@@ -287,6 +287,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------------------------------------------\\
 
     Route::resource('payment_sale', 'PaymentSalesController');
+    Route::post('sales_pay_by_selection', 'PaymentSalesController@settlePaymentSales');
     Route::get('payment_sale_get_number', 'PaymentSalesController@getNumberOrder');
     Route::post('payment_sale_send_email', 'PaymentSalesController@SendEmail');
     Route::post('payment_sale_send_sms', 'PaymentSalesController@Send_SMS');
