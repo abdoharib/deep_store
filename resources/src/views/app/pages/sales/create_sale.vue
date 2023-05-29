@@ -85,7 +85,7 @@
                 <b-col md="12" class="mb-5">
                   <h6>{{$t('ProductName')}}</h6>
 
-                  <!-- <div id="autocomplete" class="autocomplete">
+                  <div id="autocomplete" class="autocomplete">
                     <input
                      :placeholder="$t('Scan_Search_Product_by_Code_Name')"
                       @input='e => search_input = e.target.value'
@@ -99,7 +99,7 @@
                         {{getResultValue(product_fil)}}
                       </li>
                     </ul>
-                </div> -->
+                </div>
 
                 <div class="row">
                   <div class="col-md-3" v-for="product_fil in product_filter">

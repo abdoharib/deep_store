@@ -4224,6 +4224,15 @@ class ReportController extends BaseController
 
 
                 $status = (($total_sale_profit - $total_spent) < 0) && ($total_spent > 50);
+                if(!$status){
+                    if($total_sale_profit - $total_spent < 80){
+                        // mehh
+                        $status = 2;
+                    }else{
+                        // good
+                        $status = 3;
+                    }
+                }
 
                 $data[] = [
                     'completed_sales' => $completed_sales,
@@ -4232,7 +4241,7 @@ class ReportController extends BaseController
                     'product_profit' => $product->profit,
                     'test' => ($total_sale_profit - $total_spent),
                     'product_name' => $product->name,
-                    'must_be_stopped' => (bool)$status,
+                    'status' => $status,
                     'start_time' => Carbon::make($ad['created_time'])->format('Y-m-d')
                 ];
             }

@@ -69,12 +69,12 @@
         </div>
 
           <template slot="table-row" slot-scope="props">
-              <div v-if="props.column.field == 'must_be_stopped'">
-            <span
-                v-if="!props.row.must_be_stopped"
-                class="badge badge-outline-success"
-            >ناجح</span>
-                  <span v-else class="badge badge-outline-danger">خاسر</span>
+              <div v-if="props.column.field == 'status'">
+
+                <span v-if="props.row.status == 1" class="badge badge-outline-success">ناجح</span>
+                <span v-if="props.row.status == 2" class="badge badge-outline-warning">متوسط</span>
+                <span v-if="props.row.status == 3" class="badge badge-outline-danger">خاسر</span>
+                
               </div>
 
           </template>
@@ -260,8 +260,8 @@ export default {
           },
 
         {
-          label: this.$t("must_be_stopped"),
-          field: "must_be_stopped",
+          label: this.$t("status"),
+          field: "status",
           tdClass: "text-left",
           thClass: "text-left",
           sortable: false
