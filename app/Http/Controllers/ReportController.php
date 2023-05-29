@@ -4224,15 +4224,17 @@ class ReportController extends BaseController
 
 
                 $status = (($total_sale_profit - $total_spent) < 0) && ($total_spent > 50);
-                if(!$status){
+                if($status) $status = 3;
+                if( $status != 3 ){
                     if($total_sale_profit - $total_spent < 80){
                         // mehh
                         $status = 2;
                     }else{
                         // good
-                        $status = 3;
+                        $status = 1;
                     }
                 }
+
 
                 $data[] = [
                     'completed_sales' => $completed_sales,
