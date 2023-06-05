@@ -84,9 +84,9 @@ class SalesController extends BaseController
         $Sales = Sale::with('facture', 'client', 'warehouse','user')
             ->where('deleted_at', '=', null)
             ->where(function($q) use($assignedWarehouses) {
-                if(Auth::user()->hasRole('Delivery')){
-                    $q->whereIn('warehouse_id', $assignedWarehouses);
-                }
+                // if(Auth::user()->hasRole('Delivery')){
+                //     $q->whereIn('warehouse_id', $assignedWarehouses);
+                // }
             })
             ->where(function ($query) use ($view_records) {
                 if (!$view_records) {
