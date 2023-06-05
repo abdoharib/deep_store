@@ -117,6 +117,7 @@ class SalesController extends BaseController
             $perPage = $totalRows;
         }
 
+        dd($assignedWarehouses);
         $Sales = $Filtred->offset($offSet)
             ->limit($perPage)
             ->orderBy($order, $dir)
