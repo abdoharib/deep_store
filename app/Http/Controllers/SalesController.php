@@ -83,7 +83,7 @@ class SalesController extends BaseController
         // Check If User Has Permission View  All Records
         $Sales = Sale::with('facture', 'client', 'warehouse','user')
             ->where('deleted_at', '=', null)
-            ->where(function($q){
+            ->where(function($q) use($assignedWarehouses) {
                 if(Auth::user()->hasRole('Delivery')){
                     $q->whereIn('warehouse_id', $assignedWarehouses);
                 }
