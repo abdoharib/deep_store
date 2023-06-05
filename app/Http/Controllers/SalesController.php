@@ -77,6 +77,8 @@ class SalesController extends BaseController
         );
         $data = array();
 
+        $assignedWarehouses = Auth::user()->assignedWarehouses->pluck('id');
+
         // Check If User Has Permission View  All Records
         $Sales = Sale::with('facture', 'client', 'warehouse','user')
             ->where('deleted_at', '=', null)
@@ -118,6 +120,7 @@ class SalesController extends BaseController
         $Sales = $Filtred->offset($offSet)
             ->limit($perPage)
             ->orderBy($order, $dir)
+            ->whereIn('warehouse_id', $assignedWarehouses )
             ->get();
 
         foreach ($Sales as $Sale) {
