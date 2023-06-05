@@ -78,7 +78,7 @@ class SalesController extends BaseController
         $data = array();
 
         $assignedWarehouses = Auth::user()->assignedWarehouses->pluck('id');
-        dd($assignedWarehouses->toArray());
+        $assignedWarehouses = $assignedWarehouses->toArray();
 
         // Check If User Has Permission View  All Records
         $Sales = Sale::with('facture', 'client', 'warehouse','user')
