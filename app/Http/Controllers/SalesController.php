@@ -77,11 +77,13 @@ class SalesController extends BaseController
         );
         $data = array();
 
-        $assignedWarehouses = Auth::user()->assignedWarehouses->pluck('id');
+        $assignedWarehouses = Auth::user()->assignedWarehouses;
+        dd($assignedWarehouses);
 
         // Check If User Has Permission View  All Records
         $Sales = Sale::with('facture', 'client', 'warehouse','user')
             ->where('deleted_at', '=', null)
+            ->whereIn('warehouse_id', $assignedWarehouses)
             ->where(function ($query) use ($view_records) {
                 if (!$view_records) {
                     return $query->where('user_id', '=', Auth::user()->id);
@@ -117,11 +119,9 @@ class SalesController extends BaseController
             $perPage = $totalRows;
         }
 
-        dd($assignedWarehouses);
         $Sales = $Filtred->offset($offSet)
             ->limit($perPage)
             ->orderBy($order, $dir)
-            ->whereIn('warehouse_id', $assignedWarehouses )
             ->get();
 
         foreach ($Sales as $Sale) {
