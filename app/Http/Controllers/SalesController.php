@@ -85,7 +85,7 @@ class SalesController extends BaseController
             ->where('deleted_at', '=', null)
             ->where(function($q){
                 if(Auth::user()->hasRole('Delivery')){
-                    $q->whereIn('warehouse_id', $assignedWarehouses)
+                    $q->whereIn('warehouse_id', $assignedWarehouses);
                 }
             })
             ->where(function ($query) use ($view_records) {
