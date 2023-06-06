@@ -31,10 +31,16 @@ class getRunningAdsAction
         $ads = array_map(function ($item) use($facebook) {
 
             $id = explode('product_id:',$item['name']);
+            $warehouse_id = explode('product_id:',$item['name']);
             if(count($id)>1){
                 $id = $id[1];
             }else{
                 $id=null;
+            }
+            if(count($warehouse_id)>1){
+                $warehouse_id = $warehouse_id[1];
+            }else{
+                $warehouse_id=null;
             }
 
 
@@ -49,6 +55,7 @@ class getRunningAdsAction
 
             return array_merge($item,[
                 'product_id' =>$id,
+                'warehouse_id' => $warehouse_id
                 'total_spent' => (float)$spent
             ]);
         },$ads);

@@ -4207,12 +4207,24 @@ class ReportController extends BaseController
         foreach ($ads as $ad) {
             if (!is_null($ad['product_id'])) {
                 $product = Product::find($ad['product_id']);
+
+                $warehouse = null;
+                if(!is_null($ad['warehouse_id'])){
+                    $warehouse = Warehouse::find($ad['warehouse_id'])
+                }
                
                 $completed_sales = SaleDetail::query()
                     ->where('product_id', $product->id)
                     ->whereHas('sale', function ($q) use ($ad) {
                         $q->where('statut', 'completed');
                         $q->whereDate('created_at', '>', Carbon::make($ad['created_time'])->toDateString() );
+                    })
+                    ->where(function($q) use ($ad) {
+                        if(!is_null($ad['warehouse_id'])){
+                            $q->whereHas('sale',function($query) use($ad) {
+                                $query->where('warehouse_id', $warehouse->id); 
+                            });
+                        }
                     })
                     ->sum('quantity');
 
@@ -4238,6 +4250,7 @@ class ReportController extends BaseController
 
                 $data[] = [
                     'completed_sales' => $completed_sales,
+                    'warehouse_name' => ($warehouse ? $warehouse->name : 'الكل'),
                     'total_sale_profit' => $total_sale_profit,
                     'total_spent' => $total_spent,
                     'product_profit' => $product->profit,
