@@ -36,7 +36,6 @@ class getRunningAdsAction
                 $json_date = json_decode('{'+$json_date[1],true);
 
             }else{
-                $json_date=null;
                 $json_date = [
                     'product_id' => null,
                     'warehouse_id' => null
