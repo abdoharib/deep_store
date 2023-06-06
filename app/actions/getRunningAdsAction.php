@@ -30,14 +30,14 @@ class getRunningAdsAction
 
         $ads = array_map(function ($item) use($facebook) {
 
-            $data = explode('{',$item['name']);
-            if(count($data)>1){
-                $data = $data[1];
+            $json_date = explode('{',$item['name']);
+            if(count($json_date)>1){
+                $json_date = $json_date[1];
             }else{
-                $data=null;
+                $json_date=null;
             }
 
-            $data = json_decode('{'+$data[1],true);
+            $json_date = json_decode('{'+$json_date[1],true);
 
             
             
