@@ -32,8 +32,10 @@ class getRunningAdsAction
             $json_date = explode('{',$item['name']);
             if(count($json_date)>1){
                 $json_date = $json_date[1];
+
+                dd('{'+$json_date);
                 try{
-                    $json_date = json_decode('{'+$json_date[1],true);
+                    $json_date = json_decode('{'+$json_date,true);
 
                 } catch (\JsonException $exception) {
                     dd('asfasfas');
