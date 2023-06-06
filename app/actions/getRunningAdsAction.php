@@ -43,10 +43,6 @@ class getRunningAdsAction
             }
 
 
-            
-            
-
-
             $ad_insight = $facebook->get('/'.$item['id'].'/insights?fields=ad_id,spend&time_range={"since":"2023-03-01","until":"'.Carbon::now()->format('Y-m-d').'"}');
             $data = $ad_insight->getDecodedBody()['data'];
 
