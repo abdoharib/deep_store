@@ -54,7 +54,7 @@ class getRunningAdsAction
 
             return array_merge($item,[
                 'product_id' => $data['product_id'],
-                'warehouse_id' => $data['warehouse_id']
+                'warehouse_id' => $data['warehouse_id'],
                 'total_spent' => (float)$spent
             ]);
         },$ads);
