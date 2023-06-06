@@ -33,11 +33,16 @@ class getRunningAdsAction
             $json_date = explode('{',$item['name']);
             if(count($json_date)>1){
                 $json_date = $json_date[1];
+                $json_date = json_decode('{'+$json_date[1],true);
+
             }else{
                 $json_date=null;
+                $json_date = [
+                    'product_id' => null,
+                    'warehouse_id' => null
+                ]
             }
 
-            $json_date = json_decode('{'+$json_date[1],true);
 
             
             
@@ -53,8 +58,8 @@ class getRunningAdsAction
             
 
             return array_merge($item,[
-                'product_id' => $data['product_id'],
-                'warehouse_id' => $data['warehouse_id'],
+                'product_id' => $json_date['product_id'],
+                'warehouse_id' => $json_date['warehouse_id'],
                 'total_spent' => (float)$spent
             ]);
         },$ads);
