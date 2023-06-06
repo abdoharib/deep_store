@@ -4220,7 +4220,7 @@ class ReportController extends BaseController
                         $q->whereDate('created_at', '>', Carbon::make($ad['created_time'])->toDateString() );
                     })
                     ->where(function($q) use ($ad) {
-                        if(!is_null($ad['warehouse_id'])){
+                        if(!is_null($warehouse)){
                             $q->whereHas('sale',function($query) use($ad) {
                                 $query->where('warehouse_id', $warehouse->id); 
                             });
