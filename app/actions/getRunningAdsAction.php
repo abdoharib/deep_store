@@ -37,7 +37,7 @@ class getRunningAdsAction
                 $data=null;
             }
 
-            $data = json_decode('{'+$data[1],true)
+            $data = json_decode('{'+$data[1],true);
 
             
             
