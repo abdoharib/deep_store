@@ -30,18 +30,17 @@ class getRunningAdsAction
 
         $ads = array_map(function ($item) use($facebook) {
 
-            $id = explode('product_id:',$item['name']);
-            $warehouse_id = explode('product_id:',$item['name']);
-            if(count($id)>1){
-                $id = $id[1];
+            $data = explode('{',$item['name']);
+            if(count($data)>1){
+                $data = $data[1];
             }else{
-                $id=null;
+                $data=null;
             }
-            if(count($warehouse_id)>1){
-                $warehouse_id = $warehouse_id[1];
-            }else{
-                $warehouse_id=null;
-            }
+
+            $data = json_decode('{'+$data[1],true)
+
+            
+            
 
 
             $ad_insight = $facebook->get('/'.$item['id'].'/insights?fields=ad_id,spend&time_range={"since":"2023-03-01","until":"'.Carbon::now()->format('Y-m-d').'"}');
@@ -54,8 +53,8 @@ class getRunningAdsAction
             
 
             return array_merge($item,[
-                'product_id' =>$id,
-                'warehouse_id' => $warehouse_id
+                'product_id' => $data['product_id'],
+                'warehouse_id' => $data['warehouse_id']
                 'total_spent' => (float)$spent
             ]);
         },$ads);
