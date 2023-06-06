@@ -37,7 +37,7 @@ class getRunningAdsAction
                     $json_date = json_decode('{'+$json_date[1],true);
 
                 } catch (\JsonException $exception) {
-                    dd('asfasfas')
+                    dd('asfasfas');
                 }
 
             }else{
