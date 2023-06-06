@@ -4210,7 +4210,7 @@ class ReportController extends BaseController
 
                 $warehouse = null;
                 if(!is_null($ad['warehouse_id'])){
-                    $warehouse = Warehouse::find($ad['warehouse_id'])
+                    $warehouse = Warehouse::find($ad['warehouse_id']);
                 }
                
                 $completed_sales = SaleDetail::query()
