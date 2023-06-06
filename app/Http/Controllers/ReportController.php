@@ -4221,7 +4221,7 @@ class ReportController extends BaseController
                     })
                     ->where(function($q) use ($ad,$warehouse) {
                         if(!is_null($warehouse)){
-                            $q->whereHas('sale',function($query) use($ad) {
+                            $q->whereHas('sale',function($query) use($ad,$warehouse) {
                                 $query->where('warehouse_id', $warehouse->id); 
                             });
                         }
