@@ -39,7 +39,7 @@ class getRunningAdsAction
                 $json_date = [
                     'product_id' => null,
                     'warehouse_id' => null
-                ]
+                ];
             }
 
 
