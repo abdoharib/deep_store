@@ -2594,6 +2594,7 @@ class ReportController extends BaseController
             $item['name'] = $product->name;
             $item['category'] = $product['category']->name;
             $item['price'] = $product->price;
+            $item['cost'] = $product->cost;
 
             $product_warehouse_data = product_warehouse::where('product_id', $product->id)
                 ->where('deleted_at', '=', null)
