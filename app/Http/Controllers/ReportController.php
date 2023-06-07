@@ -4250,7 +4250,7 @@ class ReportController extends BaseController
 
                 $data[] = [
                     'completed_sales' => $completed_sales,
-                    'warehouse_name' => ($warehouse ? $warehouse->name : 'الكل'),
+                    'warehouse_name' => ($warehouse ? implode(' / ',$warehouse->pluck('name')->toArray()) : 'الكل'),
                     'total_sale_profit' => $total_sale_profit,
                     'total_spent' => $total_spent,
                     'product_profit' => $product->profit,
