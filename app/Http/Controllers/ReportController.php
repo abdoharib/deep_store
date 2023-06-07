@@ -4210,7 +4210,7 @@ class ReportController extends BaseController
 
                 $warehouse = null;
                 if(!is_null($ad['warehouse_id'])){
-                    $warehouse = Warehouse::find($ad['warehouse_id']);
+                    $warehouse = Warehouse::whereIn('id',$ad['warehouse_id'])->get();
                 }
                
                 $completed_sales = SaleDetail::query()
@@ -4222,7 +4222,7 @@ class ReportController extends BaseController
                     ->where(function($q) use ($ad,$warehouse) {
                         if(!is_null($warehouse)){
                             $q->whereHas('sale',function($query) use($ad,$warehouse) {
-                                $query->where('warehouse_id', $warehouse->id); 
+                                $query->whereIn('warehouse_id', $warehouse->pluck('id')->toArray()); 
                             });
                         }
                     })
