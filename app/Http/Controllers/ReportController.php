@@ -4229,6 +4229,21 @@ class ReportController extends BaseController
                     })
                     ->sum('quantity');
 
+                    $total_sales = SaleDetail::query()
+                    ->where('product_id', $product->id)
+                    ->whereHas('sale', function ($q) use ($ad) {
+                        // $q->where('statut', 'completed');
+                        $q->whereDate('created_at', '>', Carbon::make($ad['created_time'])->toDateString() );
+                    })
+                    ->where(function($q) use ($ad,$warehouse) {
+                        if(!is_null($warehouse)){
+                            $q->whereHas('sale',function($query) use($ad,$warehouse) {
+                                $query->whereIn('warehouse_id', $warehouse->pluck('id')->toArray()); 
+                            });
+                        }
+                    })
+                    ->sum('quantity');
+
                 $total_sale_profit = $completed_sales * $product->profit;
                 // $total_spent = ((int)$ad['lifetime_budget'] - (int)$ad['budget_remaining'])/100;
                 //convert to lyd
@@ -4250,6 +4265,7 @@ class ReportController extends BaseController
 
 
                 $data[] = [
+                    'total_sales' => $total_sales,
                     'completed_sales' => $completed_sales,
                     'warehouse_name' => ($warehouse ? implode(' / ',$warehouse->pluck('name')->toArray()) : 'الكل'),
                     'total_sale_profit' => $total_sale_profit,
