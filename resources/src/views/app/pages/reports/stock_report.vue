@@ -131,6 +131,13 @@ export default {
           thClass: "text-left"
         },
         {
+          label: this.$t("Cost"),
+          field: "cost",
+          type: "decimal",
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
           label: this.$t("Current_stock"),
           field: "quantity",
           tdClass: "text-left",

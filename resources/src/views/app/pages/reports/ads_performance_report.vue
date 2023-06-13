@@ -240,7 +240,19 @@ export default {
           thClass: "text-left"
         },
         {
+          label: this.$t("warehouse_name"),
+          field: "warehouse_name",
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
           label: this.$t("sales"),
+          field: "total_sales",
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
+          label: this.$t("completed_sales"),
           field: "completed_sales",
           tdClass: "text-left",
           thClass: "text-left"

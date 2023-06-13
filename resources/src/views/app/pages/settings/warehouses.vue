@@ -191,6 +191,12 @@ export default {
   computed: {
     columns() {
       return [
+      {
+          label: this.$t("Id"),
+          field: "id",
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
         {
           label: this.$t("Name"),
           field: "name",

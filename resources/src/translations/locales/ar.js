@@ -2,6 +2,8 @@
 
 
 export default {
+    completed_sales:'المبيعات المكتملةM',
+    warehouse_name:'أسم المستودع',
     total_avg_cost:'أجمالي متوسط التكلفة',
     id:'ر.ق',
     must_be_stopped:'حالة الأعلان',
