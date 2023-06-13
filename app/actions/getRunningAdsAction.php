@@ -26,6 +26,8 @@ class getRunningAdsAction
             return false;
         });
 
+        dd($ads);
+
         $ads = array_map(function ($item) use($facebook) {
 
             $json_date = explode('{',$item['name']);
@@ -36,7 +38,6 @@ class getRunningAdsAction
                     $json_date = json_decode('{'.$json_date,true);
 
                 } catch (\JsonException $exception) {
-                    dd('asfasfas');
                 }
 
             }else{
