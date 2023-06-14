@@ -56,10 +56,8 @@ class getRunningAdsAction
                $spent =  $data[0]['spend'];
             }
             
-            try{
-                $x = $json_date['product_id'];
-            }catch(Exception $e){
-                dd($json_date);
+            if(is_null($json_date)){
+                dd($item['name']);
             }
 
             return array_merge($item,[
