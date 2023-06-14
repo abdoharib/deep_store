@@ -58,7 +58,7 @@ class getRunningAdsAction
             
             try{
                 $x = $json_date['product_id'];
-            }catch(){
+            }catch(Exception $e){
                 dd($json_date);
             }
 
