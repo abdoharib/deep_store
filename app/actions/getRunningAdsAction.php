@@ -14,7 +14,7 @@ class getRunningAdsAction
             'default_access_token' => env('ACCESS_TOKEN'),
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
-     
+
 
         $response = $facebook->get('/act_724531662792327/ads?limit=100&fields=campaign{name,lifetime_budget,budget_remaining},name,status,created_time,adset{name,budget_remaining,lifetime_budget,daily_budget,end_time}');
         $ads = $response->getDecodedBody()['data'];
@@ -25,7 +25,7 @@ class getRunningAdsAction
             }
             return false;
         });
-        
+
 
 
         $ads = array_map(function ($item) use($facebook) {
@@ -33,6 +33,7 @@ class getRunningAdsAction
             $json_date = explode('{',$item['name']);
             if(count($json_date)>1){
                 $json_date = $json_date[1];
+                dd($json_date);
 
                 try{
                     $json_date = json_decode('{'.$json_date,true);
@@ -55,7 +56,7 @@ class getRunningAdsAction
             if(count($data)){
                $spent =  $data[0]['spend'];
             }
-            
+
             if(is_null($json_date)){
                 dd($item['name']);
             }
