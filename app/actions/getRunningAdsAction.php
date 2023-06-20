@@ -33,7 +33,6 @@ class getRunningAdsAction
             $json_date = explode('{',$item['name']);
             if(count($json_date)>1){
                 $json_date = $json_date[1];
-                dd($item);
 
                 try{
                     $json_date = json_decode('{'.$json_date,true);
@@ -57,6 +56,7 @@ class getRunningAdsAction
                $spent =  $data[0]['spend'];
             }
 
+            dd($json_date);
             if(is_null($json_date)){
                 dd($item['name']);
             }
