@@ -210,7 +210,7 @@ class SalesController extends BaseController
 
             'shipping_provider' => 'required',
             'vanex_city_id' => 'required_if:shippig_provider,2',
-            'vanex_sub_city_id' => 'required_if:shippig_provider,2',
+            'vanex_sub_city_id' => 'nullable',
             'vanex_shipment_sticker_notes' => 'required_if:shippig_provider,2',
 
         ]);
