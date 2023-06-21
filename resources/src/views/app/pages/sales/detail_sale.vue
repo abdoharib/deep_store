@@ -50,21 +50,21 @@
           </b-row>
           <hr>
           <b-row class="mt-5">
-            <b-col lg="4" md="4" sm="12" class="mb-4">
+            <b-col lg="3" md="3" sm="12" class="mb-4">
               <h5 class="font-weight-bold">{{$t('Customer_Info')}}</h5>
               <div>{{sale.client_name}}</div>
               <div>{{sale.client_email}}</div>
               <div>{{sale.client_phone}}</div>
               <div>{{sale.client_adr}}</div>
             </b-col>
-            <b-col lg="4" md="4" sm="12" class="mb-4">
+            <b-col lg="3" md="3" sm="12" class="mb-4">
               <h5 class="font-weight-bold">{{$t('Company_Info')}}</h5>
               <div>{{company.CompanyName}}</div>
               <div>{{company.email}}</div>
               <div>{{company.CompanyPhone}}</div>
               <div>{{company.CompanyAdress}}</div>
             </b-col>
-            <b-col lg="4" md="4" sm="12" class="mb-4">
+            <b-col lg="3" md="3" sm="12" class="mb-4">
               <h5 class="font-weight-bold">{{$t('Invoice_Info')}}</h5>
               <div>{{$t('Reference')}} : {{sale.Ref}}</div>
               <div>
@@ -96,6 +96,18 @@
                   >{{$t('Canceled')}}</span>
                 <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
               </div>
+            </b-col>
+
+            <b-col lg="3" md="3" sm="12" class="mb-4">
+              <h5 class="font-weight-bold">{{$t('Shipping_Info')}}</h5>
+              <div>{{$t('Reference')}} : {{sale.vanex_shipment_code ? sale.vanex_shipment_code : '/'}}</div>
+              <div>
+                {{$t('shipping_provider')}} :
+                <span
+                  class=""
+                >{{sale.shipping_provider ? sale.shipping_provider : '/'}}</span>
+              </div>
+
             </b-col>
           </b-row>
           <b-row class="mt-3">

@@ -166,6 +166,7 @@
               </b-dropdown>
             </div>
           </span>
+
           <div v-else-if="props.column.field == 'statut'">
             <span
               v-if="props.row.statut == 'completed'"
@@ -181,6 +182,12 @@
               >{{$t('Canceled')}}</span>
             <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
           </div>
+
+          <div v-else-if="props.column.field == 'vanex_shipment_code'">
+            <span v-if="props.row.vanex_shipment_code" class="badge badge-outline-success">{{props.row.vanex_shipment_code}}</span>
+            <span v-else> / </span>
+          </div>
+
 
           <div v-else-if="props.column.field == 'payment_status'">
             <span
@@ -213,6 +220,11 @@
               v-else-if="props.row.shipping_status == 'delivered'"
               class="badge badge-outline-success"
             >{{$t('Delivered')}}</span>
+
+            <span
+              v-else-if="props.row.shipping_status == 'returned'"
+              class="badge badge-outline-danger"
+            >{{$t('Returned')}}</span>
 
             <span v-else-if="props.row.shipping_status == 'cancelled'" class="badge badge-outline-danger">{{$t('Cancelled')}}</span>
           </div>
@@ -924,6 +936,21 @@ export default {
           tdClass: "text-left",
           thClass: "text-left"
         },
+        {
+          label: this.$t("shipping_provider"),
+          field: "shipping_provider",
+          html: true,
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
+          label: this.$t("vanex_shipment_code"),
+          field: "vanex_shipment_code",
+          html: true,
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+
         {
           label: this.$t("Total"),
           field: "GrandTotal",

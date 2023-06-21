@@ -32,6 +32,16 @@ class CreateSalesTable extends Migration {
 			$table->string('payment_statut', 192);
 			$table->string('statut');
 			$table->text('notes')->nullable();
+
+
+            $table->string('shipping_provider')->default('local');
+
+            $table->string('vanex_city_id')->nullable();
+            $table->string('vanex_sub_city_id')->nullable();
+
+            $table->string('vanex_shipment_code')->nullable();
+            $table->string('vanex_shipment_sticker_notes')->nullable();
+
 			$table->timestamps(6);
 			$table->softDeletes();
 		});

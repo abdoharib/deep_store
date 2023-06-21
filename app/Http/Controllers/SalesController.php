@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\actions\createVanexShipmentAction;
+use App\actions\getVanexShipmentAction;
 use Twilio\Rest\Client as Client_Twilio;
 use App\Mail\SaleMail;
 use App\Models\Client;
@@ -38,7 +41,7 @@ class SalesController extends BaseController
 
     //------------- GET ALL SALES -----------\\
 
-    public function index(request $request)
+    public function index(request $request, getVanexShipmentAction $getVanexShipmentAction)
     {
         $this->authorizeForUser($request->user('api'), 'view', Sale::class);
 
@@ -130,6 +133,12 @@ class SalesController extends BaseController
 
         foreach ($Sales as $Sale) {
 
+            //has vanex code
+            if($Sale->shipping_provider == 'vanex' && $Sale->vanex_shipment_code){
+                //retrive the shipping info
+                $getVanexShipmentAction->invoke($Sale);
+            }
+
             $item['id'] = $Sale['id'];
             $item['date'] = $Sale['date'];
             $item['Ref'] = $Sale['Ref'];
@@ -160,6 +169,9 @@ class SalesController extends BaseController
                 $item['sale_has_return'] = 'no';
             }
 
+            $item['shipping_provider'] = $Sale['shipping_provider'];
+            $item['vanex_shipment_code'] = $Sale['vanex_shipment_code'];
+
             $data[] = $item;
         }
 
@@ -186,17 +198,30 @@ class SalesController extends BaseController
 
     //------------- STORE NEW SALE-----------\\
 
-    public function store(Request $request)
+    public function store(Request $request, createVanexShipmentAction $createVanexShipmentAction)
     {
+
 
         $this->authorizeForUser($request->user('api'), 'create', Sale::class);
 
         request()->validate([
             'client_id' => 'required',
             'warehouse_id' => 'required',
+
+            'shipping_provider' => 'required',
+            'vanex_city_id' => 'required_if:shippig_provider,2',
+            'vanex_sub_city_id' => 'required_if:shippig_provider,2',
+            'vanex_shipment_sticker_notes' => 'required_if:shippig_provider,2',
+
         ]);
 
-        \DB::transaction(function () use ($request) {
+
+        $shipping_provider_mapper = [
+            1 => 'local',
+            2 => 'vanex'
+        ];
+
+        \DB::transaction(function () use ($request, $createVanexShipmentAction,$shipping_provider_mapper) {
             $helpers = new helpers();
             $order = new Sale;
 
@@ -213,8 +238,13 @@ class SalesController extends BaseController
             $order->statut = $request->statut;
             $order->payment_statut = 'unpaid';
             $order->notes = $request->notes;
-            $order->user_id = Auth::user()->id;
 
+            $order->vanex_city_id = $request->vanex_city_id;
+            $order->vanex_sub_city_id = $request->vanex_sub_city_id;
+            $order->vanex_shipment_sticker_notes = $request->vanex_shipment_sticker_notes;
+            $order->shipping_provider = $shipping_provider_mapper[$request->shipping_provider];
+
+            $order->user_id = Auth::user()->id;
             $order->save();
 
             $data = $request['details'];
@@ -373,6 +403,11 @@ class SalesController extends BaseController
                     return response()->json(['message' => $e->getMessage()], 500);
                 }
 
+            }
+
+            //only create shippment if the provider is vanex
+            if($request->shipping_provider == 2){
+                $createVanexShipmentAction->invoke($order);
             }
 
         }, 10);
@@ -806,6 +841,8 @@ class SalesController extends BaseController
         $sale_details['paid_amount'] = number_format($sale_data->paid_amount, 2, '.', '');
         $sale_details['due'] = number_format($sale_details['GrandTotal'] - $sale_details['paid_amount'], 2, '.', '');
         $sale_details['payment_status'] = $sale_data->payment_statut;
+        $sale_details['shipping_provider'] = $sale_data['shipping_provider'];
+        $sale_details['vanex_shipment_code'] = $sale_data['vanex_shipment_code'];
 
         if (SaleReturn::where('sale_id', $id)->where('deleted_at', '=', null)->exists()) {
             $sellReturn = SaleReturn::where('sale_id', $id)->where('deleted_at', '=', null)->first();

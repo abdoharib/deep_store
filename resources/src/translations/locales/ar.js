@@ -2,6 +2,9 @@
 
 
 export default {
+    shipping_providers:'مزودي الشحن',
+    shipping_provider:'مزود الشحن',
+    Choose_Shipping_Provider:'أختار مزود شحن',
     completed_sales:'المبيعات المكتملةM',
     warehouse_name:'أسم المستودع',
     total_avg_cost:'أجمالي متوسط التكلفة',
@@ -45,6 +48,14 @@ export default {
     SMS_Configuration:'إعدادات الرسائل القصيرة',
     Gateway:'بوابة الدفع',
     Choose_Gateway:'اختر بوابة الدفع',
+    Choose_City:'اختر مدينة الشحن',
+    area:'منطقة',
+    city:'مدينة',
+    sticker_notes:'ملاحظة البوليصة',
+    vanex_shipment_code:'كود الشحن المرجعي',
+    Shipping_Info:'معلومات الشحن',
+    Choose_Area:'اختر منطقة الشحن',
+    Enter_Sticker_Notes:'أدخال ملاخظة البوليصة',
     Send_SMS :'تم ارسال الرسالة بنجاح',
     sms_config_invalid:'إعدادات الرسائل القصيرة غير صالحة',
     Remove_Stripe_Key_Secret:'حذف مفاتيح Stripe API',
@@ -795,6 +806,7 @@ export default {
 
     Created_by : 'تمت الإضافة بواسطة',
     Created_at : 'تمت الإضافة في',
+    Returned:'تم ألاسترداد',
 
     Add_product_IMEI_Serial_number:'أضف الرقم التسلسلي للمنتج',
     Product_Has_Imei_Serial_number:'المنتج له رقم تسلسلي',

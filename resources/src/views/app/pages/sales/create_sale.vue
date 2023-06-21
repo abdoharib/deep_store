@@ -10,7 +10,7 @@
             <b-card>
               <b-row>
                 <!-- date  -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="2" md="4" sm="12" class="mb-3">
                   <validation-provider
                     name="date"
                     :rules="{ required: true}"
@@ -30,7 +30,7 @@
                   </validation-provider>
                 </b-col>
                 <!-- Customer -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="4" md="2" sm="12" class="mb-3">
                   <validation-provider name="Customer" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('Customer') + ' ' + '*'">
                         <b-row>
@@ -63,7 +63,7 @@
                 </b-col>
 
                 <!-- warehouse -->
-                <b-col lg="4" md="4" sm="12" class="mb-3">
+                <b-col lg="2" md="2" sm="12" class="mb-3">
                   <validation-provider name="warehouse" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('warehouse') + ' ' + '*'">
                       <v-select
@@ -78,6 +78,102 @@
                       />
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
                     </b-form-group>
+                  </validation-provider>
+                </b-col>
+
+<!--
+                <b-col lg="2" md="2" sm="12" class="mb-3">
+                  <validation-provider name="city" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('city') + ' ' + '*'">
+                      <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        :disabled="details.length > 0"
+                        @input="Selected_Warehouse"
+                        v-model="sale.warehouse_id"
+                        :reduce="label => label.value"
+                        :placeholder="$t('Choose_Warehouse')"
+                        :options="warehouses.map(warehouses => ({label: warehouses.name, value: warehouses.id}))"
+                      />
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col> -->
+                <b-col v-if='sale.warehouse_id == 1' lg="4" md="2" sm="12" class="mb-3">
+                  <validation-provider name="shipping_provider" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('shipping_provider') + ' ' + '*'">
+                      <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        :disabled="details.length > 0"
+                        v-model="shipping_provider"
+                        :reduce="label => label.value"
+                        :placeholder="$t('Choose_Shipping_Provider')"
+                        :options="shipping_providers.map(shipping_provider => ({label: shipping_provider.name, value: shipping_provider.id}))"
+                      />
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+
+                <b-col v-if='areWeUsingVanex' lg="4" md="2" sm="12" class="mb-3">
+                  <validation-provider name="city" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('city') + ' ' + '*'">
+                      <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        :disabled="details.length > 0"
+                        v-model="city"
+                        @option:selected="(city) =>getVanexAreas(city.value)"
+                        :reduce="label => label.value"
+                        :loading="is_vanex_cities_loading"
+                        :placeholder="$t('Choose_City')"
+                        :options="cities.map(city => ({label: city.name, value: city.id}))"
+                      />
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+                <b-col v-if='areWeUsingVanex' lg="4" md="2" sm="12" class="mb-3">
+                  <validation-provider name="area" :rules="{ required: true}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('area') + ' ' + '*'">
+                      <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        :disabled="details.length > 0"
+                        v-model="area"
+                        :reduce="label => label.value"
+                        :placeholder="$t('Choose_Area')"
+                        :loading="is_vanex_areas_loading"
+                        :options="areas.map(area => ({label: area.name, value: area.id}))"
+                      />
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+
+                <b-col v-if='areWeUsingVanex' lg="4" md="2" sm="12" class="mb-3">
+                  <validation-provider name="sticker_notes" :rules="{ required: false}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('sticker_notes') + ' ' + '*'">
+                      <!-- <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        :disabled="details.length > 0"
+                        v-model="area"
+                        :reduce="label => label.value"
+                        :placeholder="$t('Enter_Sticker_Notes')"
+                      /> -->
+                      <b-form-input
+                        aria-describedby="sticker_notes"
+                        :label="$t('sticker_notes') + ' '"
+                        :placeholder="$t('Enter_Sticker_Notes')"
+                        v-model="sticker_notes"
+                      ></b-form-input>
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+
+
+
                   </validation-provider>
                 </b-col>
 
@@ -741,6 +837,31 @@ export default {
       client: {},
       products: [],
       details: [],
+
+      shipping_providers:[
+        {
+            id:1,
+            name:'محلي'
+        },
+        {
+            id:2,
+            name:'فانكس'
+        }
+      ],
+      shipping_provider:null,
+
+
+      cities:[],
+      city: null,
+      is_vanex_cities_loading:false,
+
+
+      areas:[],
+      area: null,
+      is_vanex_areas_loading:false,
+
+      sticker_notes:'',
+
       detail: {},
       sales: [],
       payment: {
@@ -795,6 +916,9 @@ export default {
   },
 
   computed: {
+    areWeUsingVanex(){
+      return this.shipping_provider && (this.shipping_provider == 2)
+    },
     ...mapGetters(["currentUser"])
   },
 
@@ -824,6 +948,36 @@ export default {
     handleBlur() {
       this.focused = false
     },
+
+    getVanexCities() {
+        this.is_vanex_cities_loading = true;
+        axios
+        .get('https://app.vanex.ly/api/v1/city/names',{
+            headers:{
+                'Authorization':'Bearer 136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC'
+            }
+        })
+        .then(({ data }) => {
+            this.cities = data.data;
+            this.is_vanex_cities_loading = false
+        });
+    },
+    getVanexAreas(city_id) {
+        this.is_vanex_areas_loading = true;
+
+        axios
+        .get(`https://app.vanex.ly/api/v1/city/${city_id}/subs`,{
+            headers:{
+                'Authorization':'Bearer 136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC'
+            }
+        })
+        .then(({ data }) => {
+            this.area = null;
+            this.areas = data.data.data
+            this.is_vanex_areas_loading = false
+        });
+    },
+
 
       //------------------------------ New Model (create Customer) -------------------------------\\
       New_Client() {
@@ -1496,6 +1650,13 @@ export default {
               amount: parseFloat(this.payment.amount).toFixed(2),
               received_amount: parseFloat(this.payment.received_amount).toFixed(2),
               change: parseFloat(this.payment.received_amount - this.payment.amount).toFixed(2),
+
+              //vanex meta data for shipping api
+              shipping_provider:this.shipping_provider,
+              vanex_city_id:this.city,
+              vanex_sub_city_id:this.area,
+              vanex_shipment_sticker_notes:this.sticker_notes
+
             })
             .then(response => {
               this.makeToast(
@@ -1572,6 +1733,7 @@ export default {
   //----------------------------- Created function-------------------
   created() {
     this.GetElements();
+    this.getVanexCities();
   }
 };
 </script>
