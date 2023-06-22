@@ -1636,7 +1636,7 @@ class ReportController extends BaseController
 
         // Get all distinct product IDs for sales between start and end date
         $productIdsQuery = SaleDetail::whereBetween('date', array($request->from, $request->to));
-        
+
         if($product_id){
             $productIdsQuery->where('product_id',$product_id);
         }
@@ -3535,7 +3535,7 @@ class ReportController extends BaseController
                         if (!$view_records) {
                             return $query->whereHas('sale', function ($q) use ($request) {
                                 $q->where('user_id', '=', Auth::user()->id);
-                               
+
 
                             });
 
@@ -3545,7 +3545,7 @@ class ReportController extends BaseController
                         ['product_variant_id', $variant_id]
                     ])
                     ->where(function ($query) use ($request, $array_warehouses_id) {
-                        
+
                         if ($request->warehouse_id) {
                             return $query->whereHas('sale', function ($q) use ($request, $array_warehouses_id) {
                                 $q->where('warehouse_id', $request->warehouse_id);
@@ -3586,8 +3586,8 @@ class ReportController extends BaseController
                 $nestedData['name'] = $product->name;
                 $nestedData['code'] = $product->code;
                 $nestedData['total_avg_cost'] = $this->CalculeCogsAndAverageCost($request,$product->id)['total_average_cost'];
-               
-               
+
+
                 // dd('fafsaf');
                 $nestedData['sold_amount'] = SaleDetail::with('sale')->where('product_id', $product->id)
                 ->where(function ($query) use ($view_records) {
@@ -3599,7 +3599,7 @@ class ReportController extends BaseController
 
                     }
                 })
-               
+
                 ->where(function ($query) use ($request, $array_warehouses_id) {
                     if ($request->warehouse_id) {
                         return $query->whereHas('sale', function ($q) use ($request, $array_warehouses_id) {
@@ -3985,7 +3985,7 @@ class ReportController extends BaseController
                  $product_name = $detail['product']['name'];
              }
 
-             
+
 
              $item['date'] = $detail->date;
              $item['status'] = $detail->sale->statut;
@@ -4213,17 +4213,17 @@ class ReportController extends BaseController
                 if(!is_null($ad['warehouse_id'])){
                     $warehouse = Warehouse::whereIn('id',$ad['warehouse_id'])->get();
                 }
-               
+
                 $completed_sales = SaleDetail::query()
                     ->where('product_id', $product->id)
                     ->whereHas('sale', function ($q) use ($ad) {
                         $q->where('statut', 'completed');
-                        $q->whereDate('created_at', '>', Carbon::make($ad['created_time'])->toDateString() );
+                        $q->whereDate('date', '>', Carbon::make($ad['created_time'])->toDateString() );
                     })
                     ->where(function($q) use ($ad,$warehouse) {
                         if(!is_null($warehouse)){
                             $q->whereHas('sale',function($query) use($ad,$warehouse) {
-                                $query->whereIn('warehouse_id', $warehouse->pluck('id')->toArray()); 
+                                $query->whereIn('warehouse_id', $warehouse->pluck('id')->toArray());
                             });
                         }
                     })
@@ -4233,12 +4233,12 @@ class ReportController extends BaseController
                     ->where('product_id', $product->id)
                     ->whereHas('sale', function ($q) use ($ad) {
                         // $q->where('statut', 'completed');
-                        $q->whereDate('created_at', '>', Carbon::make($ad['created_time'])->toDateString() );
+                        $q->whereDate('date', '>', Carbon::make($ad['created_time'])->toDateString() );
                     })
                     ->where(function($q) use ($ad,$warehouse) {
                         if(!is_null($warehouse)){
                             $q->whereHas('sale',function($query) use($ad,$warehouse) {
-                                $query->whereIn('warehouse_id', $warehouse->pluck('id')->toArray()); 
+                                $query->whereIn('warehouse_id', $warehouse->pluck('id')->toArray());
                             });
                         }
                     })
