@@ -133,6 +133,7 @@ class SalesController extends BaseController
 
         foreach ($Sales as $Sale) {
 
+            $package_details = null;
             //has vanex code
             if($Sale->shipping_provider == 'vanex' && $Sale->vanex_shipment_code){
                 //retrive the shipping info
@@ -172,7 +173,7 @@ class SalesController extends BaseController
             $item['shipping_provider'] = $Sale['shipping_provider'];
             $item['vanex_shipment_code'] = $Sale['vanex_shipment_code'];
 
-            if($package_details){
+            if(!is_null($package_details)){
                 $item['vanex_shipment_status'] = $package_details['status_object']['status_name_cust'];
             }else{
                 $item['vanex_shipment_status'] = '/';
