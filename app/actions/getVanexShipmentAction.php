@@ -21,7 +21,7 @@ class getVanexShipmentAction
 {
 
     public $token  = "136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC";
-    public function invoke(Sale $sale)
+    public function invoke(Sale $sale) : array
     {
 
         // $store = Store::find(Auth::user()->store_id);
@@ -54,6 +54,7 @@ class getVanexShipmentAction
                 $this->handleSaleStatusUpdate($sale,$package_details['status_object']);
             }
             $sale->save();
+            return $package_details;
         }
     }
 

@@ -136,7 +136,7 @@ class SalesController extends BaseController
             //has vanex code
             if($Sale->shipping_provider == 'vanex' && $Sale->vanex_shipment_code){
                 //retrive the shipping info
-                $getVanexShipmentAction->invoke($Sale);
+                $package_details = $getVanexShipmentAction->invoke($Sale);
             }
 
             $item['id'] = $Sale['id'];
@@ -171,6 +171,12 @@ class SalesController extends BaseController
 
             $item['shipping_provider'] = $Sale['shipping_provider'];
             $item['vanex_shipment_code'] = $Sale['vanex_shipment_code'];
+
+            if($package_details){
+                $item['vanex_shipment_status'] = $package_details['status_object']['status_name_cust'];
+            }else{
+                $item['vanex_shipment_status'] = '/';
+            }
 
             $data[] = $item;
         }
