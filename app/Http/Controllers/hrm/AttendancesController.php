@@ -23,7 +23,7 @@ class AttendancesController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Attendance::class);
+        $this->authorizeForUser($request->user(), 'view', Attendance::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         // How many items do you want to display.
@@ -77,7 +77,7 @@ class AttendancesController extends Controller
             $item['employee_id'] = $attendance['employee']->id;
             $item['company_name'] = $attendance['company']->name;
             $item['employee_username'] = $attendance['employee']->username;
-            
+
             $data[] = $item;
         }
 
@@ -92,7 +92,7 @@ class AttendancesController extends Controller
 
     public function create(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Attendance::class);
+        $this->authorizeForUser($request->user(), 'create', Attendance::class);
 
         $companies = Company::where('deleted_at', '=', null)->get(['id','name']);
         return response()->json([
@@ -105,7 +105,7 @@ class AttendancesController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Attendance::class);
+        $this->authorizeForUser($request->user(), 'create', Attendance::class);
 
         $this->validate($request, [
             'company_id'     => 'required',
@@ -131,9 +131,9 @@ class AttendancesController extends Controller
             return $e;
         }
 
-        
+
         $employee = Employee::with('office_shift')->findOrFail($employee_id);
-        
+
         $day_now = Carbon::parse($request->date)->format('l');
         $day_in_now = strtolower($day_now) . '_in';
         $day_out_now = strtolower($day_now) . '_out';
@@ -211,14 +211,14 @@ class AttendancesController extends Controller
 
     public function show($id){
         //
-        
+
     }
 
     //------------ function edit -----------\\
 
     public function edit(Request $request , $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Attendance::class);
+        $this->authorizeForUser($request->user(), 'update', Attendance::class);
 
         $companies = Company::where('deleted_at', '=', null)->get(['id','name']);
         return response()->json([
@@ -231,7 +231,7 @@ class AttendancesController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Attendance::class);
+        $this->authorizeForUser($request->user(), 'update', Attendance::class);
 
         $this->validate($request, [
             'company_id'      => 'required',
@@ -254,9 +254,9 @@ class AttendancesController extends Controller
         }
 
         $day_now = Carbon::parse($request->date)->format('l');
-    
+
         $employee = Employee::with('office_shift')->findOrFail($employee_id);
-        
+
         $day_in_now = strtolower($day_now) . '_in';
         $day_out_now = strtolower($day_now) . '_out';
 
@@ -332,7 +332,7 @@ class AttendancesController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Attendance::class);
+        $this->authorizeForUser($request->user(), 'delete', Attendance::class);
 
             Attendance::whereId($id)->update([
                 'deleted_at' => Carbon::now(),
@@ -347,7 +347,7 @@ class AttendancesController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Attendance::class);
+        $this->authorizeForUser($request->user(), 'delete', Attendance::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $attendance_id) {
@@ -358,6 +358,6 @@ class AttendancesController extends Controller
 
         return response()->json(['success' => true]);
     }
-    
+
 
 }

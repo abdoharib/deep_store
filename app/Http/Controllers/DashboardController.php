@@ -50,7 +50,7 @@ class DashboardController extends Controller
             $array_warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
             $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $array_warehouses_id)->get(['id', 'name']);
         }
-                    
+
         if(empty($request->warehouse_id)){
             $warehouse_id = 0;
         }else{
@@ -109,7 +109,7 @@ class DashboardController extends Controller
                     return $query->whereIn('warehouse_id', $array_warehouses_id);
                 }
             })
-            
+
             ->groupBy(DB::raw("DATE_FORMAT(date,'%Y-%m-%d')"))
             ->orderBy('date', 'asc')
             ->get([
@@ -260,7 +260,7 @@ class DashboardController extends Controller
 
         return response()->json($products);
     }
-    
+
 
     //-------------------- General Report dashboard -------------\\
 
@@ -374,7 +374,7 @@ class DashboardController extends Controller
             }
         })
         ->get(DB::raw('SUM(GrandTotal)  As sum'))
-        ->first()->sum; 
+        ->first()->sum;
 
         $data['return_sales'] = number_format($data['return_sales'], 2, '.', ',');
 

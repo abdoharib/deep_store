@@ -27,7 +27,7 @@ class ProductsController extends BaseController
 
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Product::class);
+        $this->authorizeForUser($request->user(), 'view', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -121,7 +121,7 @@ class ProductsController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Product::class);
+        $this->authorizeForUser($request->user(), 'create', Product::class);
 
         try {
             $this->validate($request, [
@@ -238,7 +238,7 @@ class ProductsController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Product::class);
+        $this->authorizeForUser($request->user(), 'update', Product::class);
         try {
             $this->validate($request, [
                 'code' => 'required|unique:products',
@@ -484,7 +484,7 @@ class ProductsController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Product::class);
+        $this->authorizeForUser($request->user(), 'delete', Product::class);
 
         \DB::transaction(function () use ($id) {
 
@@ -519,7 +519,7 @@ class ProductsController extends BaseController
 
     public function delete_by_selection(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Product::class);
+        $this->authorizeForUser($request->user(), 'delete', Product::class);
 
         \DB::transaction(function () use ($request) {
             $selectedIds = $request->selectedIds;
@@ -553,13 +553,13 @@ class ProductsController extends BaseController
 
     }
 
-   
+
     //--------------  Show Product Details ---------------\\
 
     public function Get_Products_Details(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', Product::class);
+        $this->authorizeForUser($request->user(), 'view', Product::class);
 
         $Product = Product::where('deleted_at', '=', null)->findOrFail($id);
         //get warehouses assigned to user
@@ -678,6 +678,7 @@ class ProductsController extends BaseController
             $item['id'] = $product_warehouse->product_id;
             $item['name'] = $product_warehouse['product']->name;
             $item['barcode'] = $product_warehouse['product']->code;
+            $item['stock'] = $product_warehouse['qte'];
             $item['Type_barcode'] = $product_warehouse['product']->Type_barcode;
             $firstimage = explode(',', $product_warehouse['product']->image);
             $item['image'] = $firstimage[0];
@@ -802,7 +803,7 @@ class ProductsController extends BaseController
 
     public function Products_Alert(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'Stock_Alerts', Product::class);
+        $this->authorizeForUser($request->user(), 'Stock_Alerts', Product::class);
 
         $product_warehouse_data = product_warehouse::with('warehouse', 'product', 'productVariant')
             ->join('products', 'product_warehouse.product_id', '=', 'products.id')
@@ -842,7 +843,7 @@ class ProductsController extends BaseController
         $data_collection = $collection->slice($offSet, $perPage)->values();
 
         $products = new LengthAwarePaginator($data_collection, count($data), $perPage, Paginator::resolveCurrentPage(), array('path' => Paginator::resolveCurrentPath()));
-       
+
          //get warehouses assigned to user
          $user_auth = auth()->user();
          if($user_auth->is_all_warehouses){
@@ -851,7 +852,7 @@ class ProductsController extends BaseController
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          }
- 
+
         return response()->json([
             'products' => $products,
             'warehouses' => $warehouses,
@@ -863,7 +864,7 @@ class ProductsController extends BaseController
     public function create(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'create', Product::class);
+        $this->authorizeForUser($request->user(), 'create', Product::class);
 
         $categories = Category::where('deleted_at', null)->get(['id', 'name']);
         $brands = Brand::where('deleted_at', null)->get(['id', 'name']);
@@ -880,7 +881,7 @@ class ProductsController extends BaseController
 
     public function Get_element_barcode(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'barcode', Product::class);
+        $this->authorizeForUser($request->user(), 'barcode', Product::class);
 
          //get warehouses assigned to user
          $user_auth = auth()->user();
@@ -890,7 +891,7 @@ class ProductsController extends BaseController
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
          }
-        
+
         return response()->json(['warehouses' => $warehouses]);
 
     }
@@ -900,7 +901,7 @@ class ProductsController extends BaseController
     public function edit(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', Product::class);
+        $this->authorizeForUser($request->user(), 'update', Product::class);
 
         $Product = Product::where('deleted_at', '=', null)->findOrFail($id);
 
@@ -1012,7 +1013,7 @@ class ProductsController extends BaseController
                               ->where('deleted_at', null)
                               ->get();
 
-      
+
         $units = Unit::where('deleted_at', null)
             ->where('base_unit', null)
             ->get();

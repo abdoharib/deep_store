@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -40,6 +40,16 @@ class User extends Authenticatable
         'statut' => 'integer',
         'is_all_warehouses' => 'integer',
     ];
+
+    public function routeNotificationForFcm($notification)
+    {
+        return $this->fcmTokens->pluck('token')->toArray();
+    }
+
+    public function fcmTokens()
+    {
+        return $this->hasMany(\App\Models\FcmToken::class, );
+    }
 
     public function oauthAccessToken()
     {

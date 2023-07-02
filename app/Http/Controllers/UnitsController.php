@@ -14,7 +14,7 @@ class UnitsController extends BaseController
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Unit::class);
+        $this->authorizeForUser($request->user(), 'view', Unit::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -78,7 +78,7 @@ class UnitsController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Unit::class);
+        $this->authorizeForUser($request->user(), 'create', Unit::class);
 
         request()->validate([
             'name' => 'required',
@@ -109,7 +109,7 @@ class UnitsController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Unit::class);
+        $this->authorizeForUser($request->user(), 'update', Unit::class);
 
         request()->validate([
             'name' => 'required',
@@ -142,7 +142,7 @@ class UnitsController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Unit::class);
+        $this->authorizeForUser($request->user(), 'delete', Unit::class);
 
         $Sub_Unit_exist = Unit::where('base_unit', $id)->where('deleted_at', null)->exists();
         if (!$Sub_Unit_exist) {
@@ -187,7 +187,7 @@ class UnitsController extends BaseController
         $units = Unit::where('base_unit', $product_unit_id->unit_id)
                         ->orWhere('id', $product_unit_id->unit_id)
                         ->get();
-        
+
         return response()->json($units);
     }
 

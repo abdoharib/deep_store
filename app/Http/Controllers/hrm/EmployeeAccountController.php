@@ -24,7 +24,7 @@ class EmployeeAccountController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Employee::class);
+        $this->authorizeForUser($request->user(), 'create', Employee::class);
 
         $this->validate($request, [
             'bank_name'      => 'required|string|max:255',
@@ -41,14 +41,14 @@ class EmployeeAccountController extends Controller
 
     public function show($id){
         //
-        
+
         }
 
     //-----------Update EmployeeAccount --------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Employee::class);
+        $this->authorizeForUser($request->user(), 'update', Employee::class);
 
         $this->validate($request, [
             'bank_name'      => 'required|string|max:255',
@@ -67,7 +67,7 @@ class EmployeeAccountController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Employee::class);
+        $this->authorizeForUser($request->user(), 'delete', Employee::class);
 
         EmployeeAccount::whereId($id)->update([
             'deleted_at' => Carbon::now(),

@@ -21,7 +21,7 @@ class EmployeeExperienceController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Employee::class);
+        $this->authorizeForUser($request->user(), 'create', Employee::class);
 
         request()->validate([
             'title'           => 'required|string',
@@ -49,14 +49,14 @@ class EmployeeExperienceController extends Controller
 
     public function show($id){
         //
-        
+
         }
 
     //-----------Update Employee Experience --------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Employee::class);
+        $this->authorizeForUser($request->user(), 'update', Employee::class);
 
         request()->validate([
             'title'           => 'required|string',
@@ -76,7 +76,7 @@ class EmployeeExperienceController extends Controller
             'location'        => $request['location'],
             'description'     => $request['description'],
         ]);
-    
+
         return response()->json(['success' => true]);
     }
 
@@ -84,7 +84,7 @@ class EmployeeExperienceController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Employee::class);
+        $this->authorizeForUser($request->user(), 'delete', Employee::class);
 
         EmployeeExperience::whereId($id)->update([
             'deleted_at' => Carbon::now(),

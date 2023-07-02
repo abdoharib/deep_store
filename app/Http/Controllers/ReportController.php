@@ -84,7 +84,7 @@ class ReportController extends BaseController
     public function Client_Report(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_customers', Client::class);
+        $this->authorizeForUser($request->user(), 'Reports_customers', Client::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -164,7 +164,7 @@ class ReportController extends BaseController
     public function Client_Report_detail(request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_customers', Client::class);
+        $this->authorizeForUser($request->user(), 'Reports_customers', Client::class);
 
         $client = Client::where('deleted_at', '=', null)->findOrFail($id);
 
@@ -188,7 +188,7 @@ class ReportController extends BaseController
     public function Provider_Report_detail(request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_suppliers', Provider::class);
+        $this->authorizeForUser($request->user(), 'Reports_suppliers', Provider::class);
 
         $provider = Provider::where('deleted_at', '=', null)->findOrFail($id);
 
@@ -213,7 +213,7 @@ class ReportController extends BaseController
     public function Sales_Client(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_customers', Client::class);
+        $this->authorizeForUser($request->user(), 'Reports_customers', Client::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -286,7 +286,7 @@ class ReportController extends BaseController
     public function Payments_Client(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_customers', Client::class);
+        $this->authorizeForUser($request->user(), 'Reports_customers', Client::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -339,7 +339,7 @@ class ReportController extends BaseController
     public function Quotations_Client(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_customers', Client::class);
+        $this->authorizeForUser($request->user(), 'Reports_customers', Client::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -409,7 +409,7 @@ class ReportController extends BaseController
     public function Returns_Client(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_customers', Client::class);
+        $this->authorizeForUser($request->user(), 'Reports_customers', Client::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -489,7 +489,7 @@ class ReportController extends BaseController
 
         public function Report_Purchases(request $request)
         {
-            $this->authorizeForUser($request->user('api'), 'ReportPurchases', Purchase::class);
+            $this->authorizeForUser($request->user(), 'ReportPurchases', Purchase::class);
             // How many items do you want to display.
             $perPage = $request->limit;
             $pageStart = \Request::get('page', 1);
@@ -600,7 +600,7 @@ class ReportController extends BaseController
 
         public function Report_Sales(request $request)
         {
-            $this->authorizeForUser($request->user('api'), 'Reports_sales', Sale::class);
+            $this->authorizeForUser($request->user(), 'Reports_sales', Sale::class);
             // How many items do you want to display.
             $perPage = $request->limit;
             $pageStart = \Request::get('page', 1);
@@ -716,7 +716,7 @@ class ReportController extends BaseController
     public function Providers_Report(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_suppliers', Provider::class);
+        $this->authorizeForUser($request->user(), 'Reports_suppliers', Provider::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -795,7 +795,7 @@ class ReportController extends BaseController
     public function Purchases_Provider(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_suppliers', Provider::class);
+        $this->authorizeForUser($request->user(), 'Reports_suppliers', Provider::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -868,7 +868,7 @@ class ReportController extends BaseController
     public function Payments_Provider(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_suppliers', Provider::class);
+        $this->authorizeForUser($request->user(), 'Reports_suppliers', Provider::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -922,7 +922,7 @@ class ReportController extends BaseController
     public function Returns_Provider(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_suppliers', Provider::class);
+        $this->authorizeForUser($request->user(), 'Reports_suppliers', Provider::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -1003,7 +1003,7 @@ class ReportController extends BaseController
     public function ToProviders(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_suppliers', Provider::class);
+        $this->authorizeForUser($request->user(), 'Reports_suppliers', Provider::class);
 
         $results = DB::table('purchases')->where('purchases.deleted_at', '=', null)
             ->join('providers', 'purchases.provider_id', '=', 'providers.id')
@@ -1028,7 +1028,7 @@ class ReportController extends BaseController
     public function Warehouse_Report(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'WarehouseStock', Product::class);
+        $this->authorizeForUser($request->user(), 'WarehouseStock', Product::class);
 
         $data['sales'] = Sale::where('deleted_at', '=', null)
             ->where(function ($query) use ($request) {
@@ -1079,7 +1079,7 @@ class ReportController extends BaseController
     public function Sales_Warehouse(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'WarehouseStock', Product::class);
+        $this->authorizeForUser($request->user(), 'WarehouseStock', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -1152,7 +1152,7 @@ class ReportController extends BaseController
     public function Quotations_Warehouse(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'WarehouseStock', Product::class);
+        $this->authorizeForUser($request->user(), 'WarehouseStock', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -1220,7 +1220,7 @@ class ReportController extends BaseController
     public function Returns_Sale_Warehouse(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'WarehouseStock', Product::class);
+        $this->authorizeForUser($request->user(), 'WarehouseStock', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -1301,7 +1301,7 @@ class ReportController extends BaseController
     public function Returns_Purchase_Warehouse(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'WarehouseStock', Product::class);
+        $this->authorizeForUser($request->user(), 'WarehouseStock', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -1381,7 +1381,7 @@ class ReportController extends BaseController
     public function Expenses_Warehouse(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'WarehouseStock', Product::class);
+        $this->authorizeForUser($request->user(), 'WarehouseStock', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -1449,7 +1449,7 @@ class ReportController extends BaseController
 
     public function Warhouse_Count_Stock(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'WarehouseStock', Product::class);
+        $this->authorizeForUser($request->user(), 'WarehouseStock', Product::class);
 
         $stock_count = product_warehouse::join('products', 'product_warehouse.product_id', '=', 'products.id')
             ->join('warehouses', 'product_warehouse.warehouse_id', '=', 'warehouses.id')
@@ -1517,7 +1517,7 @@ class ReportController extends BaseController
     public function ProfitAndLoss(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_profit', Client::class);
+        $this->authorizeForUser($request->user(), 'Reports_profit', Client::class);
 
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -1841,7 +1841,7 @@ class ReportController extends BaseController
      public function report_top_products(request $request)
      {
 
-        $this->authorizeForUser($request->user('api'), 'Top_products', Product::class);
+        $this->authorizeForUser($request->user(), 'Top_products', Product::class);
 
         $Role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($Role->id)->inRole('record_view');
@@ -1898,7 +1898,7 @@ class ReportController extends BaseController
     public function report_top_customers(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Top_customers', Client::class);
+        $this->authorizeForUser($request->user(), 'Top_customers', Client::class);
 
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -1959,7 +1959,7 @@ class ReportController extends BaseController
      public function users_Report(request $request)
      {
 
-         $this->authorizeForUser($request->user('api'), 'users_report', User::class);
+         $this->authorizeForUser($request->user(), 'users_report', User::class);
 
          // How many items do you want to display.
          $perPage = $request->limit;
@@ -2039,7 +2039,7 @@ class ReportController extends BaseController
     public function get_sales_by_user(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'users_report', User::class);
+        $this->authorizeForUser($request->user(), 'users_report', User::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -2113,7 +2113,7 @@ class ReportController extends BaseController
      public function get_quotations_by_user(request $request)
      {
 
-        $this->authorizeForUser($request->user('api'), 'users_report', User::class);
+        $this->authorizeForUser($request->user(), 'users_report', User::class);
          // How many items do you want to display.
          $perPage = $request->limit;
          $pageStart = \Request::get('page', 1);
@@ -2184,7 +2184,7 @@ class ReportController extends BaseController
     public function get_purchases_by_user(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'users_report', User::class);
+        $this->authorizeForUser($request->user(), 'users_report', User::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -2258,7 +2258,7 @@ class ReportController extends BaseController
      public function get_sales_return_by_user(request $request)
      {
 
-        $this->authorizeForUser($request->user('api'), 'users_report', User::class);
+        $this->authorizeForUser($request->user(), 'users_report', User::class);
          // How many items do you want to display.
          $perPage = $request->limit;
          $pageStart = \Request::get('page', 1);
@@ -2331,7 +2331,7 @@ class ReportController extends BaseController
     public function get_purchase_return_by_user(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'users_report', User::class);
+        $this->authorizeForUser($request->user(), 'users_report', User::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -2406,7 +2406,7 @@ class ReportController extends BaseController
      public function get_transfer_by_user(request $request)
      {
 
-         $this->authorizeForUser($request->user('api'), 'users_report', User::class);
+         $this->authorizeForUser($request->user(), 'users_report', User::class);
 
          // How many items do you want to display.
          $perPage = $request->limit;
@@ -2478,7 +2478,7 @@ class ReportController extends BaseController
     public function get_adjustment_by_user(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'users_report', User::class);
+        $this->authorizeForUser($request->user(), 'users_report', User::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -2542,7 +2542,7 @@ class ReportController extends BaseController
     public function stock_Report(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'stock_report', Product::class);
+        $this->authorizeForUser($request->user(), 'stock_report', Product::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -2628,7 +2628,7 @@ class ReportController extends BaseController
     public function get_sales_by_product(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'stock_report', Product::class);
+        $this->authorizeForUser($request->user(), 'stock_report', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -2729,7 +2729,7 @@ class ReportController extends BaseController
     public function get_quotations_by_product(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'stock_report', Product::class);
+        $this->authorizeForUser($request->user(), 'stock_report', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -2830,7 +2830,7 @@ class ReportController extends BaseController
     public function get_purchases_by_product(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'stock_report', Product::class);
+        $this->authorizeForUser($request->user(), 'stock_report', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -2931,7 +2931,7 @@ class ReportController extends BaseController
     public function get_purchase_return_by_product(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'stock_report', Product::class);
+        $this->authorizeForUser($request->user(), 'stock_report', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -3032,7 +3032,7 @@ class ReportController extends BaseController
     public function get_sales_return_by_product(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'stock_report', Product::class);
+        $this->authorizeForUser($request->user(), 'stock_report', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -3133,7 +3133,7 @@ class ReportController extends BaseController
     public function get_transfer_by_product(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'stock_report', Product::class);
+        $this->authorizeForUser($request->user(), 'stock_report', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -3220,7 +3220,7 @@ class ReportController extends BaseController
     public function get_adjustment_by_product(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'stock_report', Product::class);
+        $this->authorizeForUser($request->user(), 'stock_report', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -3301,7 +3301,7 @@ class ReportController extends BaseController
     public function download_report_client_pdf(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_customers', Client::class);
+        $this->authorizeForUser($request->user(), 'Reports_customers', Client::class);
 
         $helpers = new helpers();
         $client = Client::where('deleted_at', '=', null)->findOrFail($id);
@@ -3374,7 +3374,7 @@ class ReportController extends BaseController
      public function download_report_provider_pdf(Request $request, $id)
      {
 
-        $this->authorizeForUser($request->user('api'), 'Reports_suppliers', Provider::class);
+        $this->authorizeForUser($request->user(), 'Reports_suppliers', Provider::class);
 
          $helpers = new helpers();
          $provider = Provider::where('deleted_at', '=', null)->findOrFail($id);
@@ -3444,7 +3444,7 @@ class ReportController extends BaseController
 
     public function product_report(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'product_report', Product::class);
+        $this->authorizeForUser($request->user(), 'product_report', Product::class);
 
         $Role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($Role->id)->inRole('record_view');
@@ -3693,7 +3693,7 @@ class ReportController extends BaseController
     public function sale_products_details(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'product_report', Product::class);
+        $this->authorizeForUser($request->user(), 'product_report', Product::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -3855,7 +3855,7 @@ class ReportController extends BaseController
     public function product_sales_report(request $request)
     {
 
-         $this->authorizeForUser($request->user('api'), 'product_sales_report', Sale::class);
+         $this->authorizeForUser($request->user(), 'product_sales_report', Sale::class);
          $role = Auth::user()->roles()->first();
          $view_records = Role::findOrFail($role->id)->inRole('record_view');
 
@@ -4029,7 +4029,7 @@ class ReportController extends BaseController
     public function product_purchases_report(request $request)
     {
 
-         $this->authorizeForUser($request->user('api'), 'product_purchases_report', Purchase::class);
+         $this->authorizeForUser($request->user(), 'product_purchases_report', Purchase::class);
          $role = Auth::user()->roles()->first();
          $view_records = Role::findOrFail($role->id)->inRole('record_view');
          // How many items do you want to display.
@@ -4179,7 +4179,7 @@ class ReportController extends BaseController
 
     public function ads_performance_report(request $request, getRunningAdsAction $getRunningAdsAction){
 
-//        $this->authorizeForUser($request->user('api'), 'ads_performance', Product::class);
+//        $this->authorizeForUser($request->user(), 'ads_performance', Product::class);
 //        $role = Auth::user()->roles()->first();
 //        $view_records = Role::findOrFail($role->id)->inRole('record_view');
 //        // How many items do you want to display.

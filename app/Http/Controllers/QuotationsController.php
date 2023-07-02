@@ -33,7 +33,7 @@ class QuotationsController extends BaseController
     //---------------- GET ALL QUOTATIONS ---------------\\
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Quotation::class);
+        $this->authorizeForUser($request->user(), 'view', Quotation::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
 
@@ -116,7 +116,7 @@ class QuotationsController extends BaseController
         }
 
         $customers = client::where('deleted_at', '=', null)->get();
-        
+
         //get warehouses assigned to user
         $user_auth = auth()->user();
         if($user_auth->is_all_warehouses){
@@ -138,7 +138,7 @@ class QuotationsController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Quotation::class);
+        $this->authorizeForUser($request->user(), 'create', Quotation::class);
 
         request()->validate([
             'client_id' => 'required',
@@ -193,7 +193,7 @@ class QuotationsController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Quotation::class);
+        $this->authorizeForUser($request->user(), 'update', Quotation::class);
 
         request()->validate([
             'warehouse_id' => 'required',
@@ -208,7 +208,7 @@ class QuotationsController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === Quotation->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $current_Quotation);
+                $this->authorizeForUser($request->user(), 'check_record', $current_Quotation);
             }
 
             $old_quotation_details = QuotationDetail::where('quotation_id', $id)->get();
@@ -279,7 +279,7 @@ class QuotationsController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Quotation::class);
+        $this->authorizeForUser($request->user(), 'delete', Quotation::class);
 
         \DB::transaction(function () use ($id, $request) {
 
@@ -290,7 +290,7 @@ class QuotationsController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === Quotation->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $Quotation);
+                $this->authorizeForUser($request->user(), 'check_record', $Quotation);
             }
             $Quotation->details()->delete();
             $Quotation->update([
@@ -306,7 +306,7 @@ class QuotationsController extends BaseController
 
     public function delete_by_selection(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Quotation::class);
+        $this->authorizeForUser($request->user(), 'delete', Quotation::class);
 
         \DB::transaction(function () use ($request) {
 
@@ -319,7 +319,7 @@ class QuotationsController extends BaseController
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === Quotation->id
-                    $this->authorizeForUser($request->user('api'), 'check_record', $Quotation);
+                    $this->authorizeForUser($request->user(), 'check_record', $Quotation);
                 }
                 $Quotation->details()->delete();
                 $Quotation->update([
@@ -337,7 +337,7 @@ class QuotationsController extends BaseController
     public function SendEmail(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', Quotation::class);
+        $this->authorizeForUser($request->user(), 'view', Quotation::class);
 
         $quote['id'] = $request->id;
         $quote['Ref'] = $request->Ref;
@@ -355,7 +355,7 @@ class QuotationsController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Quotation::class);
+        $this->authorizeForUser($request->user(), 'view', Quotation::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $quotation_data = Quotation::with('details.product.unitSale')
@@ -367,7 +367,7 @@ class QuotationsController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === Quotation->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $quotation_data);
+            $this->authorizeForUser($request->user(), 'check_record', $quotation_data);
         }
 
         $quote['Ref'] = $quotation_data->Ref;
@@ -408,7 +408,7 @@ class QuotationsController extends BaseController
             } else {
                 $data['code'] = $detail['product']['code'];
             }
-            
+
             $data['quantity'] = $detail->quantity;
             $data['total'] = $detail->total;
             $data['name'] = $detail['product']['name'];
@@ -573,7 +573,7 @@ class QuotationsController extends BaseController
     public function create(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'create', Quotation::class);
+        $this->authorizeForUser($request->user(), 'create', Quotation::class);
 
         //get warehouses assigned to user
         $user_auth = auth()->user();
@@ -597,7 +597,7 @@ class QuotationsController extends BaseController
     public function edit(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', Quotation::class);
+        $this->authorizeForUser($request->user(), 'update', Quotation::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $Quotation = Quotation::with('details.product.unitSale')
@@ -607,7 +607,7 @@ class QuotationsController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === Quotation->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $Quotation);
+            $this->authorizeForUser($request->user(), 'check_record', $Quotation);
         }
 
         if ($Quotation->client_id) {
@@ -768,20 +768,20 @@ class QuotationsController extends BaseController
          $url = url('/api/quote_pdf/' . $request->id);
          $receiverNumber = $Quotation['client']->phone;
          $message = "Dear" .' '.$Quotation['client']->name." \n We are contacting you in regard to a Quotation #".$Quotation->Ref.' '.$url.' '. "that has been created on your account. \n We look forward to conducting future business with you.";
-         
+
          //twilio
         if($gateway->title == "twilio"){
             try {
-    
+
                 $account_sid = env("TWILIO_SID");
                 $auth_token = env("TWILIO_TOKEN");
                 $twilio_number = env("TWILIO_FROM");
-    
+
                 $client = new Client_Twilio($account_sid, $auth_token);
                 $client->messages->create($receiverNumber, [
-                    'from' => $twilio_number, 
+                    'from' => $twilio_number,
                     'body' => $message]);
-        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }
@@ -793,13 +793,13 @@ class QuotationsController extends BaseController
                 $basic  = new \Nexmo\Client\Credentials\Basic(env("NEXMO_KEY"), env("NEXMO_SECRET"));
                 $client = new \Nexmo\Client($basic);
                 $nexmo_from = env("NEXMO_FROM");
-        
+
                 $message = $client->message()->send([
                     'to' => $receiverNumber,
                     'from' => $nexmo_from,
                     'text' => $message
                 ]);
-                        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }

@@ -14,7 +14,7 @@ class CategorieController extends BaseController
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Category::class);
+        $this->authorizeForUser($request->user(), 'view', Category::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -52,7 +52,7 @@ class CategorieController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Category::class);
+        $this->authorizeForUser($request->user(), 'create', Category::class);
 
         request()->validate([
             'name' => 'required',
@@ -70,14 +70,14 @@ class CategorieController extends BaseController
 
     public function show($id){
         //
-    
+
     }
 
     //-------------- Update Category ---------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Category::class);
+        $this->authorizeForUser($request->user(), 'update', Category::class);
 
         request()->validate([
             'name' => 'required',
@@ -96,7 +96,7 @@ class CategorieController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Category::class);
+        $this->authorizeForUser($request->user(), 'delete', Category::class);
 
         Category::whereId($id)->update([
             'deleted_at' => Carbon::now(),
@@ -108,7 +108,7 @@ class CategorieController extends BaseController
 
     public function delete_by_selection(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Category::class);
+        $this->authorizeForUser($request->user(), 'delete', Category::class);
         $selectedIds = $request->selectedIds;
 
         foreach ($selectedIds as $category_id) {

@@ -15,7 +15,7 @@ class LeaveTypeController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Leave::class);
+        $this->authorizeForUser($request->user(), 'view', Leave::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -52,7 +52,7 @@ class LeaveTypeController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Leave::class);
+        $this->authorizeForUser($request->user(), 'create', Leave::class);
 
         request()->validate([
             'title'      => 'required|string',
@@ -69,14 +69,14 @@ class LeaveTypeController extends Controller
 
     public function show($id){
         //
-        
+
         }
 
     //-----------Update Leave --------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Leave::class);
+        $this->authorizeForUser($request->user(), 'update', Leave::class);
 
         request()->validate([
             'title'           => 'required|string',
@@ -85,7 +85,7 @@ class LeaveTypeController extends Controller
         LeaveType::whereId($id)->update([
             'title'           => $request['title'],
         ]);
-    
+
         return response()->json(['success' => true]);
 
         return response()->json(['success' => true]);
@@ -95,7 +95,7 @@ class LeaveTypeController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Leave::class);
+        $this->authorizeForUser($request->user(), 'delete', Leave::class);
 
         LeaveType::whereId($id)->update([
             'deleted_at' => Carbon::now(),
@@ -109,7 +109,7 @@ class LeaveTypeController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Leave::class);
+        $this->authorizeForUser($request->user(), 'delete', Leave::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $leave_type_id) {

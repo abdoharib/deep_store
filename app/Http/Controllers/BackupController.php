@@ -16,7 +16,7 @@ class BackupController extends Controller
    public function Get_Backup(Request $request)
    {
 
-       $this->authorizeForUser($request->user('api'), 'backup', User::class);
+       $this->authorizeForUser($request->user(), 'backup', User::class);
 
        $data = [];
        $id = 0;
@@ -42,7 +42,7 @@ class BackupController extends Controller
    public function Generate_Backup(Request $request)
    {
 
-       $this->authorizeForUser($request->user('api'), 'backup', User::class);
+       $this->authorizeForUser($request->user(), 'backup', User::class);
 
        Artisan::call('database:backup');
 
@@ -54,7 +54,7 @@ class BackupController extends Controller
    public function Delete_Backup(Request $request, $name)
    {
 
-       $this->authorizeForUser($request->user('api'), 'backup', User::class);
+       $this->authorizeForUser($request->user(), 'backup', User::class);
 
        foreach (glob(storage_path() . '/app/public/backup/*') as $filename) {
            $path = storage_path() . '/app/public/backup/' . basename($name);
@@ -82,7 +82,7 @@ class BackupController extends Controller
          } else {
              $bytes = '0 bytes';
          }
-  
+
          return $bytes;
      }
 

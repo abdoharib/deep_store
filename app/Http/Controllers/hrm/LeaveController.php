@@ -19,7 +19,7 @@ class LeaveController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Leave::class);
+        $this->authorizeForUser($request->user(), 'view', Leave::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -69,7 +69,7 @@ class LeaveController extends Controller
 
     public function create(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Leave::class);
+        $this->authorizeForUser($request->user(), 'create', Leave::class);
 
         $leave_types = LeaveType::where('deleted_at', '=', null)->orderBy('id', 'desc')->get();
         $companies = Company::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','name']);
@@ -86,7 +86,7 @@ class LeaveController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Leave::class);
+        $this->authorizeForUser($request->user(), 'create', Leave::class);
 
         request()->validate([
             'employee_id'      => 'required',
@@ -103,7 +103,7 @@ class LeaveController extends Controller
 
 
             $image = $request->file('attachment');
-            $filename = time().'.'.$image->extension();  
+            $filename = time().'.'.$image->extension();
             $image->move(public_path('/images/leaves'), $filename);
 
         } else {
@@ -148,13 +148,13 @@ class LeaveController extends Controller
 
     public function show($id){
         //
-        
+
     }
 
 
     public function edit(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Leave::class);
+        $this->authorizeForUser($request->user(), 'update', Leave::class);
 
         $leave = Leave::where('deleted_at', '=', null)->findOrFail($id);
         $leave_types = LeaveType::where('deleted_at', '=', null)->orderBy('id', 'desc')->get();
@@ -173,7 +173,7 @@ class LeaveController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Leave::class);
+        $this->authorizeForUser($request->user(), 'update', Leave::class);
 
         request()->validate([
             'company_id'      => 'required',
@@ -192,7 +192,7 @@ class LeaveController extends Controller
             if ($request->attachment != $CurrentAttachement) {
 
                 $image = $request->file('attachment');
-                $filename = time().'.'.$image->extension();  
+                $filename = time().'.'.$image->extension();
                 $image->move(public_path('/images/leaves'), $filename);
                 $path = public_path() . '/images/leaves';
                 $LeavePhoto = $path . '/' . $CurrentAttachement;
@@ -230,7 +230,7 @@ class LeaveController extends Controller
 
         // return the old remaining_leave
         if($leave->status == 'approved'){
-           
+
             $employee_leave_info = Employee::find($request->employee_id);
             if($days_diff > ($employee_leave_info->remaining_leave + $leave->days))
             {
@@ -250,14 +250,14 @@ class LeaveController extends Controller
                 return response()->json(['remaining_leave' => "remaining leaves are insufficient", 'isvalid' => false]);
             }
         }
-        
+
         if($request->status == 'approved'){
             $employee_leave_info = Employee::find($request->employee_id);
             $employee_leave_info->remaining_leave = $employee_leave_info->remaining_leave - $days_diff;
             $employee_leave_info->update();
         }
 
-    
+
         Leave::find($id)->update($leave_data);
 
         return response()->json(['success' => true ,'isvalid' => true]);
@@ -270,7 +270,7 @@ class LeaveController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Leave::class);
+        $this->authorizeForUser($request->user(), 'delete', Leave::class);
 
         $leave = Leave::findOrFail($id);
         $leave->deleted_at = Carbon::now();
@@ -285,7 +285,7 @@ class LeaveController extends Controller
                 @unlink($LeavePhoto);
             }
         }
-      
+
         return response()->json(['success' => true]);
     }
 
@@ -294,7 +294,7 @@ class LeaveController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Leave::class);
+        $this->authorizeForUser($request->user(), 'delete', Leave::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $leave_id) {

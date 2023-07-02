@@ -20,9 +20,9 @@ class UpdateController extends Controller
 
     public function get_version_info(request $request){
 
-        $this->authorizeForUser($request->user('api'), 'update', Setting::class);
+        $this->authorizeForUser($request->user(), 'update', Setting::class);
         $version = $this->check();
-        
+
         return response()->json($version);
     }
 
@@ -54,7 +54,7 @@ class UpdateController extends Controller
         return $content;
     }
 
-    
+
     public function viewStep1(Request $request)
     {
         $role = Auth::user()->roles()->first();
@@ -63,17 +63,17 @@ class UpdateController extends Controller
             return view('update.viewStep1');
         }
     }
-    
+
     public function lastStep(Request $request)
     {
         $role = Auth::user()->roles()->first();
         $permission = Role::findOrFail($role->id)->inRole('setting_system');
 
         if($permission){
-            ini_set('max_execution_time', 600); //600 seconds = 10 minutes 
+            ini_set('max_execution_time', 600); //600 seconds = 10 minutes
 
             try {
-            
+
                 Artisan::call('config:cache');
                 Artisan::call('config:clear');
 
@@ -119,14 +119,14 @@ class UpdateController extends Controller
 
                 $permissions_data = Permission::pluck('id')->toArray();
                 $role->permissions()->attach($permissions_data);
-                
+
             } catch (\Exception $e) {
-                
+
                 return $e->getMessage();
-                
+
                 return 'Something went wrong';
             }
-            
+
             return view('update.finishedUpdate');
         }
     }

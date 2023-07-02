@@ -36,7 +36,7 @@ class PurchasesReturnController extends BaseController
 
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', PurchaseReturn::class);
+        $this->authorizeForUser($request->user(), 'view', PurchaseReturn::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         // How many items do you want to display.
@@ -148,7 +148,7 @@ class PurchasesReturnController extends BaseController
          }else{
              $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
              $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
-         } 
+         }
 
         return response()->json([
             'totalRows' => $totalRows,
@@ -164,7 +164,7 @@ class PurchasesReturnController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', PurchaseReturn::class);
+        $this->authorizeForUser($request->user(), 'create', PurchaseReturn::class);
 
         \DB::transaction(function () use ($request) {
             $order = new PurchaseReturn;
@@ -204,7 +204,7 @@ class PurchasesReturnController extends BaseController
                     'imei_number' => $value['imei_number'],
                 ];
 
-            
+
                 if ($order->statut == "completed") {
                     if ($value['product_variant_id'] !== null) {
 
@@ -253,7 +253,7 @@ class PurchasesReturnController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', PurchaseReturn::class);
+        $this->authorizeForUser($request->user(), 'update', PurchaseReturn::class);
 
         \DB::transaction(function () use ($request, $id) {
             $role = Auth::user()->roles()->first();
@@ -263,7 +263,7 @@ class PurchasesReturnController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === PurchaseReturn->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $current_PurchaseReturn);
+                $this->authorizeForUser($request->user(), 'check_record', $current_PurchaseReturn);
             }
 
             $old_Return_Details = PurchaseReturnDetails::where('purchase_return_id', $id)->get();
@@ -428,7 +428,7 @@ class PurchasesReturnController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', PurchaseReturn::class);
+        $this->authorizeForUser($request->user(), 'delete', PurchaseReturn::class);
 
         \DB::transaction(function () use ($id, $request) {
             $role = Auth::user()->roles()->first();
@@ -439,7 +439,7 @@ class PurchasesReturnController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === PurchaseReturn->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $current_PurchaseReturn);
+                $this->authorizeForUser($request->user(), 'check_record', $current_PurchaseReturn);
             }
 
             foreach ($old_Return_Details as $key => $value) {
@@ -488,7 +488,7 @@ class PurchasesReturnController extends BaseController
                         }
                     }
                 }
-                
+
             }
             $current_PurchaseReturn->details()->delete();
             $current_PurchaseReturn->update([
@@ -509,7 +509,7 @@ class PurchasesReturnController extends BaseController
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', PurchaseReturn::class);
+        $this->authorizeForUser($request->user(), 'delete', PurchaseReturn::class);
 
         \DB::transaction(function () use ($request) {
             $role = Auth::user()->roles()->first();
@@ -524,7 +524,7 @@ class PurchasesReturnController extends BaseController
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === current_PurchaseReturn->id
-                    $this->authorizeForUser($request->user('api'), 'check_record', $current_PurchaseReturn);
+                    $this->authorizeForUser($request->user(), 'check_record', $current_PurchaseReturn);
                 }
                 foreach ($old_Return_Details as $key => $value) {
 
@@ -537,16 +537,16 @@ class PurchasesReturnController extends BaseController
                        ->first();
                        $unit = Unit::where('id', $product_unit_purchase_id['unitPurchase']->id)->first();
                    }
-   
+
                    if ($current_PurchaseReturn->statut == "completed") {
                        if ($value['product_variant_id'] !== null) {
-   
+
                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
                                ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
                                ->where('product_id', $value['product_id'])
                                ->where('product_variant_id', $value['product_variant_id'])
                                ->first();
-   
+
                            if ($unit && $product_warehouse) {
                                if ($unit->operator == '/') {
                                    $product_warehouse->qte += $value['quantity'] / $unit->operator_value;
@@ -555,13 +555,13 @@ class PurchasesReturnController extends BaseController
                                }
                                $product_warehouse->save();
                            }
-   
+
                        } else {
                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)
                                ->where('warehouse_id', $current_PurchaseReturn->warehouse_id)
                                ->where('product_id', $value['product_id'])
                                ->first();
-   
+
                            if ($unit && $product_warehouse) {
                                if ($unit->operator == '/') {
                                    $product_warehouse->qte += $value['quantity'] / $unit->operator_value;
@@ -572,7 +572,7 @@ class PurchasesReturnController extends BaseController
                            }
                        }
                    }
-                   
+
                }
                $current_PurchaseReturn->details()->delete();
                $current_PurchaseReturn->update([
@@ -599,7 +599,7 @@ class PurchasesReturnController extends BaseController
 
     }
 
-    
+
     //---------------- edit ---------------\\
 
     public function edit(Request $request , $id)
@@ -613,22 +613,22 @@ class PurchasesReturnController extends BaseController
 
      public function create_purchase_return(Request $request , $id)
      {
- 
-         $this->authorizeForUser($request->user('api'), 'create', PurchaseReturn::class);
+
+         $this->authorizeForUser($request->user(), 'create', PurchaseReturn::class);
          $role = Auth::user()->roles()->first();
          $view_records = Role::findOrFail($role->id)->inRole('record_view');
          $Purchase_data = Purchase::with('details.product.unitPurchase')
              ->where('deleted_at', '=', null)
              ->findOrFail($id);
- 
+
          $details = array();
-         
+
          // Check If User Has Permission view All Records
          if (!$view_records) {
              // Check If User->id === Purchase->id
-             $this->authorizeForUser($request->user('api'), 'check_record', $Purchase_data);
+             $this->authorizeForUser($request->user(), 'check_record', $Purchase_data);
          }
- 
+
          $Return_detail['supplier_id'] = $Purchase_data->provider_id;
          $Return_detail['warehouse_id'] = $Purchase_data->warehouse_id;
          $Return_detail['purchase_id'] = $Purchase_data->id;
@@ -639,10 +639,10 @@ class PurchasesReturnController extends BaseController
          $Return_detail['shipping'] = 0;
          $Return_detail['statut'] = "completed";
          $Return_detail['notes'] = "";
- 
+
          $detail_id = 0;
          foreach ($Purchase_data['details'] as $detail) {
- 
+
              //-------check if detail has purchase_unit_id Or Null
              if($detail->purchase_unit_id !== null){
                  $unit = Unit::where('id', $detail->purchase_unit_id)->first();
@@ -654,21 +654,21 @@ class PurchasesReturnController extends BaseController
                  $unit = Unit::where('id', $product_unit_purchase_id['unitPurchase']->id)->first();
                  $data['no_unit'] = 0;
              }
- 
+
              if ($detail->product_variant_id) {
                  $item_product = product_warehouse::where('product_id', $detail->product_id)
                      ->where('deleted_at', '=', null)
                      ->where('product_variant_id', $detail->product_variant_id)
                      ->where('warehouse_id', $Purchase_data->warehouse_id)
                      ->first();
- 
+
                  $productsVariants = ProductVariant::where('product_id', $detail->product_id)
                      ->where('id', $detail->product_variant_id)->first();
- 
+
                  $item_product ? $data['del'] = 0 : $data['del'] = 1;
                  $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
-                 $data['product_variant_id'] = $detail->product_variant_id;                
- 
+                 $data['product_variant_id'] = $detail->product_variant_id;
+
                  if ($unit && $unit->operator == '/') {
                      $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
                  } else if ($unit && $unit->operator == '*') {
@@ -676,17 +676,17 @@ class PurchasesReturnController extends BaseController
                  } else {
                      $data['stock'] = 0;
                  }
- 
+
              } else {
                  $item_product = product_warehouse::where('product_id', $detail->product_id)
                      ->where('deleted_at', '=', null)->where('product_variant_id', '=', null)
                      ->where('warehouse_id', $Purchase_data->warehouse_id)->first();
- 
+
                  $item_product ? $data['del'] = 0 : $data['del'] = 1;
                  $data['product_variant_id'] = null;
                  $data['code'] = $detail['product']['code'];
-              
- 
+
+
                  if ($unit && $unit->operator == '/') {
                      $data['stock'] = $item_product ? $item_product->qte * $unit->operator_value : 0;
                  } else if ($unit && $unit->operator == '*') {
@@ -694,9 +694,9 @@ class PurchasesReturnController extends BaseController
                  } else {
                      $data['stock'] = 0;
                  }
- 
+
              }
- 
+
              $data['id'] = $detail->id;
              $data['name'] = $detail['product']['name'];
              $data['detail_id'] = $detail_id += 1;
@@ -705,23 +705,23 @@ class PurchasesReturnController extends BaseController
              $data['product_id'] = $detail->product_id;
              $data['unitPurchase'] = $unit->ShortName;
              $data['purchase_unit_id'] = $unit->id;
-             
+
              $data['is_imei'] = $detail['product']['is_imei'];
              $data['imei_number'] = $detail->imei_number;
- 
+
              if ($detail->discount_method == '2') {
                  $data['DiscountNet'] = $detail->discount;
              } else {
                  $data['DiscountNet'] = $detail->cost * $detail->discount / 100;
              }
- 
+
              $tax_cost = $detail->TaxNet * (($detail->cost - $data['DiscountNet']) / 100);
              $data['Unit_cost'] = $detail->cost;
              $data['tax_percent'] = $detail->TaxNet;
              $data['tax_method'] = $detail->tax_method;
              $data['discount'] = $detail->discount;
              $data['discount_Method'] = $detail->discount_method;
- 
+
              if ($detail->tax_method == '1') {
                  $data['Net_cost'] = $detail->cost - $data['DiscountNet'];
                  $data['taxe'] = $tax_cost;
@@ -731,15 +731,15 @@ class PurchasesReturnController extends BaseController
                  $data['taxe'] = $detail->cost - $data['Net_cost'] - $data['DiscountNet'];
                  $data['subtotal'] = ($data['Net_cost'] * $data['quantity']) + ($tax_cost * $data['quantity']);
              }
- 
+
              $details[] = $data;
          }
- 
+
          return response()->json([
              'details' => $details,
              'purchase_return' => $Return_detail,
          ]);
- 
+
      }
 
      //------------- Show Form Edit Purchase Return-----------\\
@@ -747,7 +747,7 @@ class PurchasesReturnController extends BaseController
     public function edit_purchase_return(Request $request, $id, $purchase_id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', PurchaseReturn::class);
+        $this->authorizeForUser($request->user(), 'update', PurchaseReturn::class);
 
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -758,7 +758,7 @@ class PurchasesReturnController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === PurchaseReturn->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $Purchase_Return);
+            $this->authorizeForUser($request->user(), 'check_record', $Purchase_Return);
         }
 
         $Return_detail['supplier_id'] = $Purchase_Return->provider_id;
@@ -850,7 +850,7 @@ class PurchasesReturnController extends BaseController
 
             $data['is_imei'] = $detail['product']['is_imei'];
             $data['imei_number'] = $detail->imei_number;
-            
+
             if ($detail->discount_method == '2') {
                 $data['DiscountNet'] = $detail->discount;
             } else {
@@ -877,20 +877,20 @@ class PurchasesReturnController extends BaseController
             $details[] = $data;
         }
 
-       
+
         return response()->json([
             'details' => $details,
             'purchase_return' => $Return_detail,
         ]);
 
-    } 
+    }
 
     //------------- Send Purchase Return on Email -----------\\
 
     public function Send_Email(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', PurchaseReturn::class);
+        $this->authorizeForUser($request->user(), 'view', PurchaseReturn::class);
 
         $Purchase_Return['id'] = $request->id;
         $Purchase_Return['Ref'] = $request->Ref;
@@ -903,13 +903,13 @@ class PurchasesReturnController extends BaseController
         return $mail;
     }
 
- 
+
     //------------- GET Payments Purchase Return BY ID-----------\\
 
     public function Payment_Returns(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', PaymentPurchaseReturns::class);
+        $this->authorizeForUser($request->user(), 'view', PaymentPurchaseReturns::class);
 
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -918,7 +918,7 @@ class PurchasesReturnController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === PurchaseReturn->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $PurchaseReturn);
+            $this->authorizeForUser($request->user(), 'check_record', $PurchaseReturn);
         }
 
         $payments = PaymentPurchaseReturns::with('PurchaseReturn')
@@ -957,7 +957,7 @@ class PurchasesReturnController extends BaseController
     public function show(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', PurchaseReturn::class);
+        $this->authorizeForUser($request->user(), 'view', PurchaseReturn::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $Purchase_Return = PurchaseReturn::with('purchase','details.product.unitPurchase')
@@ -969,7 +969,7 @@ class PurchasesReturnController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === PurchaseReturn->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $Purchase_Return);
+            $this->authorizeForUser($request->user(), 'check_record', $Purchase_Return);
         }
 
         $return_details['purchase_ref'] = $Purchase_Return['purchase']?$Purchase_Return['purchase']->Ref:'---';
@@ -1014,7 +1014,7 @@ class PurchasesReturnController extends BaseController
             } else {
                 $data['code'] = $detail['product']['code'];
             }
-            
+
             $data['quantity'] = $detail->quantity;
             $data['total'] = $detail->total;
             $data['name'] = $detail['product']['name'];
@@ -1158,7 +1158,7 @@ class PurchasesReturnController extends BaseController
         return $pdf->download('Purchase_Return.pdf');
     }
 
-    
+
 
     //------------------ Send SMS ----------------------------------\\
 
@@ -1172,20 +1172,20 @@ class PurchasesReturnController extends BaseController
         $url = url('/api/return_purchase_pdf/' . $request->id);
         $receiverNumber = $PurchaseReturn['provider']->phone;
         $message = "Dear" .' '.$PurchaseReturn['provider']->name." \n We are contacting you in regard to a purchase Return #".$PurchaseReturn->Ref.' '.$url.' '. "that has been created on your account. \n We look forward to conducting future business with you.";
-        
+
          //twilio
         if($gateway->title == "twilio"){
             try {
-    
+
                 $account_sid = env("TWILIO_SID");
                 $auth_token = env("TWILIO_TOKEN");
                 $twilio_number = env("TWILIO_FROM");
-    
+
                 $client = new Client_Twilio($account_sid, $auth_token);
                 $client->messages->create($receiverNumber, [
-                    'from' => $twilio_number, 
+                    'from' => $twilio_number,
                     'body' => $message]);
-        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }
@@ -1197,13 +1197,13 @@ class PurchasesReturnController extends BaseController
                 $basic  = new \Nexmo\Client\Credentials\Basic(env("NEXMO_KEY"), env("NEXMO_SECRET"));
                 $client = new \Nexmo\Client($basic);
                 $nexmo_from = env("NEXMO_FROM");
-        
+
                 $message = $client->message()->send([
                     'to' => $receiverNumber,
                     'from' => $nexmo_from,
                     'text' => $message
                 ]);
-                        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }

@@ -11,6 +11,8 @@ use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\SaleReturn;
 use App\Models\Unit;
+use App\Models\User;
+use App\Notifications\SaleStatusUpdateNotification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -328,6 +330,9 @@ class getVanexShipmentAction
                     $payment_statut = 'unpaid';
                 }
 
+                $old_status = $current_Sale->statut;
+
+
                 $current_Sale->update([
                     'date' => $sale->date,
                     'client_id' => $sale->client_id,
@@ -341,6 +346,13 @@ class getVanexShipmentAction
                     'GrandTotal' => $sale->GrandTotal,
                     'payment_statut' => $payment_statut,
                 ]);
+
+                 //status updated
+                 if($old_status !== $current_Sale->statut ){
+                    $current_Sale->warehouse->assignedUsers->each(function(User $user) use($current_Sale){
+                        $user->notify(new SaleStatusUpdateNotification($current_Sale));
+                    });
+                }
             }
 
         }, 10);

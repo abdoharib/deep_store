@@ -17,7 +17,7 @@ class ShipmentController extends BaseController
 
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Shipment::class);
+        $this->authorizeForUser($request->user(), 'view', Shipment::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -77,7 +77,7 @@ class ShipmentController extends BaseController
             $item['sale_id'] = $shipment['sale']['id'];
             $item['warehouse_name'] = $shipment['sale']['warehouse']->name;
             $item['customer_name'] = $shipment['sale']['client']->name;
-            
+
             $data[] = $item;
         }
 
@@ -87,13 +87,13 @@ class ShipmentController extends BaseController
         ]);
     }
 
-   
+
 
     //----------- Store new Shipment -------\\
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Shipment::class);
+        $this->authorizeForUser($request->user(), 'create', Shipment::class);
 
         request()->validate([
             'status' => 'required',
@@ -116,7 +116,7 @@ class ShipmentController extends BaseController
             ]);
 
         }, 10);
-       
+
         return response()->json(['success' => true]);
 
     }
@@ -154,7 +154,7 @@ class ShipmentController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Shipment::class);
+        $this->authorizeForUser($request->user(), 'update', Shipment::class);
 
         request()->validate([
             'status' => 'required',
@@ -179,7 +179,7 @@ class ShipmentController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Shipment::class);
+        $this->authorizeForUser($request->user(), 'delete', Shipment::class);
 
         \DB::transaction(function () use ($request , $id) {
 
@@ -197,7 +197,7 @@ class ShipmentController extends BaseController
 
     }
 
-   
+
    //------------- Reference Number Order SALE -----------\\
 
    public function getNumberOrder()
@@ -216,6 +216,6 @@ class ShipmentController extends BaseController
        return $code;
    }
 
-    
+
 
 }

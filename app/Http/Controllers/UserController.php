@@ -7,6 +7,7 @@ use App\Models\Setting;
 use App\Models\User;
 use App\Models\role_user;
 use App\Models\product_warehouse;
+use App\Models\Sale;
 use App\Models\Warehouse;
 use App\Models\UserWarehouse;
 use App\utils\helpers;
@@ -27,7 +28,7 @@ class UserController extends BaseController
     public function index(request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', User::class);
+        $this->authorizeForUser($request->user(), 'view', User::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -94,6 +95,22 @@ class UserController extends BaseController
         $user['default_language'] = Setting::first()->default_language;
         $user['footer'] = Setting::first()->footer;
         $user['developed_by'] = Setting::first()->developed_by;
+
+        $assignedWarehouses = Auth::user()->assignedWarehouses->pluck('id');
+        $assignedWarehouses = $assignedWarehouses->toArray();
+
+        $user['warehouses'] = $assignedWarehouses;
+
+        $user['due_payments_total'] = Sale::where('statut','completed')
+        ->where('deleted_at', '=', null)
+        ->where('payment_statut','unpaid')
+        ->where(function($q) use($assignedWarehouses) {
+            if(Auth::user()->hasRole('Delivery')){
+                $q->whereIn('warehouse_id', $assignedWarehouses);
+            }
+        })
+        ->get()->sum('due');
+
         $permissions = Auth::user()->roles()->first()->permissions->pluck('name');
         $products_alerts = product_warehouse::join('products', 'product_warehouse.product_id', '=', 'products.id')
             ->whereRaw('qte <= stock_alert')
@@ -130,7 +147,7 @@ class UserController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', User::class);
+        $this->authorizeForUser($request->user(), 'create', User::class);
         $this->validate($request, [
             'email' => 'required|unique:users',
         ], [
@@ -170,7 +187,7 @@ class UserController extends BaseController
             if(!$User->is_all_warehouses){
                 $User->assignedWarehouses()->sync($request['assigned_to']);
             }
-    
+
         }, 10);
 
         return response()->json(['success' => true]);
@@ -180,12 +197,12 @@ class UserController extends BaseController
 
     public function show($id){
         //
-        
+
     }
 
     public function edit(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', User::class);
+        $this->authorizeForUser($request->user(), 'update', User::class);
 
         $assigned_warehouses = UserWarehouse::where('user_id', $id)->pluck('warehouse_id')->toArray();
         $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $assigned_warehouses)->pluck('id')->toArray();
@@ -198,9 +215,9 @@ class UserController extends BaseController
     //------------- UPDATE  USER ---------\\
 
     public function update(Request $request, $id)
-    {        
-        $this->authorizeForUser($request->user('api'), 'update', User::class);
-        
+    {
+        $this->authorizeForUser($request->user(), 'update', User::class);
+
         $this->validate($request, [
             'email' => 'required|email|unique:users',
             'email' => Rule::unique('users')->ignore($id),
@@ -267,7 +284,7 @@ class UserController extends BaseController
             $user_saved->assignedWarehouses()->sync($request['assigned_to']);
 
         }, 10);
-        
+
         return response()->json(['success' => true]);
 
     }
@@ -334,7 +351,7 @@ class UserController extends BaseController
     public function IsActivated(request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', User::class);
+        $this->authorizeForUser($request->user(), 'update', User::class);
 
         $user = Auth::user();
         if ($request['id'] !== $user->id) {

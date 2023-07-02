@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
  */
 Route::post('/login', [
-    'uses' => 'Auth\LoginController@login',
+    'uses' => 'Api\AuthController@login',
     'middleware' => 'Is_Active',
 ]);
 
@@ -33,7 +33,8 @@ Route::group([
 });
 
 Route::post('getAccessToken', 'AuthController@getAccessToken');
-Route::middleware(['auth:api', 'Is_Active'])->group(function () {
+
+Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get("dashboard_data", "DashboardController@dashboard_data");
 

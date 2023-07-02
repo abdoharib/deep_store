@@ -16,7 +16,7 @@ class HolidayController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Holiday::class);
+        $this->authorizeForUser($request->user(), 'view', Holiday::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -52,7 +52,7 @@ class HolidayController extends Controller
             $item['start_date'] = $holiday->start_date;
             $item['end_date'] = $holiday->end_date;
             $item['description'] = $holiday->description;
-            
+
             $data[] = $item;
         }
 
@@ -66,7 +66,7 @@ class HolidayController extends Controller
 
     public function create(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Holiday::class);
+        $this->authorizeForUser($request->user(), 'create', Holiday::class);
 
         $companies = Company::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','name']);
         return response()->json([
@@ -78,7 +78,7 @@ class HolidayController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Holiday::class);
+        $this->authorizeForUser($request->user(), 'create', Holiday::class);
 
         request()->validate([
             'title'           => 'required|string',
@@ -102,13 +102,13 @@ class HolidayController extends Controller
 
     public function show($id){
         //
-        
+
     }
 
 
     public function edit(Request $request ,$id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Holiday::class);
+        $this->authorizeForUser($request->user(), 'update', Holiday::class);
 
         $companies = Company::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','name']);
         return response()->json([
@@ -121,7 +121,7 @@ class HolidayController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Holiday::class);
+        $this->authorizeForUser($request->user(), 'update', Holiday::class);
 
         request()->validate([
             'title'           => 'required|string|max:255',
@@ -145,7 +145,7 @@ class HolidayController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Holiday::class);
+        $this->authorizeForUser($request->user(), 'delete', Holiday::class);
 
         Holiday::whereId($id)->update([
             'deleted_at' => Carbon::now(),
@@ -160,7 +160,7 @@ class HolidayController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Holiday::class);
+        $this->authorizeForUser($request->user(), 'delete', Holiday::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $holiday_id) {

@@ -16,7 +16,7 @@ class OfficeShiftController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', OfficeShift::class);
+        $this->authorizeForUser($request->user(), 'view', OfficeShift::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -75,7 +75,7 @@ class OfficeShiftController extends Controller
 
     public function create(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', OfficeShift::class);
+        $this->authorizeForUser($request->user(), 'create', OfficeShift::class);
 
         $companies = Company::where('deleted_at', '=', null)->get(['id','name']);
         return response()->json([
@@ -88,7 +88,7 @@ class OfficeShiftController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', OfficeShift::class);
+        $this->authorizeForUser($request->user(), 'create', OfficeShift::class);
 
         request()->validate([
             'name'           => 'required|string',
@@ -136,14 +136,14 @@ class OfficeShiftController extends Controller
 
     public function show($id){
         //
-        
+
     }
 
     //------------ function edit -----------\\
 
     public function edit(Request $request , $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', OfficeShift::class);
+        $this->authorizeForUser($request->user(), 'update', OfficeShift::class);
 
         $companies = Company::where('deleted_at', '=', null)->get(['id','name']);
         return response()->json([
@@ -156,7 +156,7 @@ class OfficeShiftController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', OfficeShift::class);
+        $this->authorizeForUser($request->user(), 'update', OfficeShift::class);
 
         //monday_in
         if(strlen($request['monday_in']) == 5){
@@ -283,7 +283,7 @@ class OfficeShiftController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', OfficeShift::class);
+        $this->authorizeForUser($request->user(), 'delete', OfficeShift::class);
 
         \DB::transaction(function () use ($id) {
 
@@ -301,7 +301,7 @@ class OfficeShiftController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', OfficeShift::class);
+        $this->authorizeForUser($request->user(), 'delete', OfficeShift::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $office_shift_id) {

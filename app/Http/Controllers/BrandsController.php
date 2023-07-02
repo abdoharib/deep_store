@@ -16,7 +16,7 @@ class BrandsController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Brand::class);
+        $this->authorizeForUser($request->user(), 'view', Brand::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -55,7 +55,7 @@ class BrandsController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Brand::class);
+        $this->authorizeForUser($request->user(), 'create', Brand::class);
 
         request()->validate([
             'name' => 'required',
@@ -93,32 +93,32 @@ class BrandsController extends Controller
 
      public function show($id){
         //
-    
+
     }
 
      //---------------- UPDATE Brand -------------\\
 
      public function update(Request $request, $id)
      {
- 
-         $this->authorizeForUser($request->user('api'), 'update', Brand::class);
- 
+
+         $this->authorizeForUser($request->user(), 'update', Brand::class);
+
          request()->validate([
              'name' => 'required',
          ]);
          \DB::transaction(function () use ($request, $id) {
              $Brand = Brand::findOrFail($id);
              $currentImage = $Brand->image;
- 
+
              if ($currentImage && $request->image != $currentImage) {
                  $image = $request->file('image');
                  $path = public_path() . '/images/brands';
                  $filename = rand(11111111, 99999999) . $image->getClientOriginalName();
- 
+
                  $image_resize = Image::make($image->getRealPath());
                  $image_resize->resize(200, 200);
                  $image_resize->save(public_path('/images/brands/' . $filename));
- 
+
                  $BrandImage = $path . '/' . $currentImage;
                  if (file_exists($BrandImage)) {
                      if ($currentImage != 'no-image.png') {
@@ -129,24 +129,24 @@ class BrandsController extends Controller
                  $image = $request->file('image');
                  $path = public_path() . '/images/brands';
                  $filename = rand(11111111, 99999999) . $image->getClientOriginalName();
- 
+
                  $image_resize = Image::make($image->getRealPath());
                  $image_resize->resize(200, 200);
                  $image_resize->save(public_path('/images/brands/' . $filename));
              }
- 
+
              else {
                  $filename = $currentImage?$currentImage:'no-image.png';
              }
- 
+
              Brand::whereId($id)->update([
                  'name' => $request['name'],
                  'description' => $request['description'],
                  'image' => $filename,
              ]);
- 
+
          }, 10);
- 
+
          return response()->json(['success' => true]);
      }
 
@@ -154,7 +154,7 @@ class BrandsController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Brand::class);
+        $this->authorizeForUser($request->user(), 'delete', Brand::class);
 
         Brand::whereId($id)->update([
             'deleted_at' => Carbon::now(),
@@ -167,7 +167,7 @@ class BrandsController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Brand::class);
+        $this->authorizeForUser($request->user(), 'delete', Brand::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $brand_id) {

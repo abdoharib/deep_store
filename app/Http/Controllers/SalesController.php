@@ -31,6 +31,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Stripe;
 use App\Models\PaymentWithCreditCard;
+use App\Notifications\NewSaleNotification;
+use App\Notifications\SaleStatusUpdateNotification;
 use DB;
 use PDF;
 use ArPHP\I18N\Arabic;
@@ -43,7 +45,7 @@ class SalesController extends BaseController
 
     public function index(request $request, getVanexShipmentAction $getVanexShipmentAction)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Sale::class);
+        $this->authorizeForUser($request->user(), 'view', Sale::class);
 
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -82,6 +84,7 @@ class SalesController extends BaseController
 
         $assignedWarehouses = Auth::user()->assignedWarehouses->pluck('id');
         $assignedWarehouses = $assignedWarehouses->toArray();
+        // dd($assignedWarehouses);
 
         // Check If User Has Permission View  All Records
         $Sales = Sale::with('facture', 'client', 'warehouse','user')
@@ -145,7 +148,7 @@ class SalesController extends BaseController
             $item['Ref'] = $Sale['Ref'];
             $item['created_by'] = $Sale['user']->username;
             $item['created_at'] = $Sale['created_at'];
-
+            $item['sale_details'] = $Sale->details->pluck('product');
             $item['statut'] = $Sale['statut'];
             $item['shipping_status'] =  $Sale['shipping_status'];
             $item['discount'] = $Sale['discount'];
@@ -209,7 +212,7 @@ class SalesController extends BaseController
     {
 
 
-        $this->authorizeForUser($request->user('api'), 'create', Sale::class);
+        $this->authorizeForUser($request->user(), 'create', Sale::class);
 
         request()->validate([
             'client_id' => 'required',
@@ -319,7 +322,7 @@ class SalesController extends BaseController
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === sale->id
-                    $this->authorizeForUser($request->user('api'), 'check_record', $sale);
+                    $this->authorizeForUser($request->user(), 'check_record', $sale);
                 }
 
 
@@ -417,7 +420,13 @@ class SalesController extends BaseController
                 $createVanexShipmentAction->invoke($order);
             }
 
+            $order->warehouse->assignedUsers->each(function(User $user) use($order){
+                $user->notify(new NewSaleNotification($order));
+            });
+
+
         }, 10);
+
 
         return response()->json(['success' => true]);
     }
@@ -427,7 +436,7 @@ class SalesController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Sale::class);
+        $this->authorizeForUser($request->user(), 'update', Sale::class);
 
         request()->validate([
             'warehouse_id' => 'required',
@@ -446,7 +455,7 @@ class SalesController extends BaseController
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === Sale->id
-                    $this->authorizeForUser($request->user('api'), 'check_record', $current_Sale);
+                    $this->authorizeForUser($request->user(), 'check_record', $current_Sale);
                 }
                 $old_sale_details = SaleDetail::where('sale_id', $id)->get();
                 $new_sale_details = $request['details'];
@@ -590,6 +599,8 @@ class SalesController extends BaseController
                     $payment_statut = 'unpaid';
                 }
 
+                $old_status = $current_Sale->statut;
+
                 $current_Sale->update([
                     'date' => $request['date'],
                     'client_id' => $request['client_id'],
@@ -603,6 +614,14 @@ class SalesController extends BaseController
                     'GrandTotal' => $request['GrandTotal'],
                     'payment_statut' => $payment_statut,
                 ]);
+
+
+                //status updated
+                if($old_status !== $current_Sale->statut ){
+                    $current_Sale->warehouse->assignedUsers->each(function(User $user) use($current_Sale){
+                        $user->notify(new SaleStatusUpdateNotification($current_Sale));
+                    });
+                }
             }
 
         }, 10);
@@ -614,7 +633,7 @@ class SalesController extends BaseController
 
      public function destroy(Request $request, $id)
      {
-         $this->authorizeForUser($request->user('api'), 'delete', Sale::class);
+         $this->authorizeForUser($request->user(), 'delete', Sale::class);
 
          \DB::transaction(function () use ($id, $request) {
              $role = Auth::user()->roles()->first();
@@ -630,7 +649,7 @@ class SalesController extends BaseController
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === Sale->id
-                    $this->authorizeForUser($request->user('api'), 'check_record', $current_Sale);
+                    $this->authorizeForUser($request->user(), 'check_record', $current_Sale);
                 }
                 foreach ($old_sale_details as $key => $value) {
 
@@ -712,7 +731,7 @@ class SalesController extends BaseController
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Sale::class);
+        $this->authorizeForUser($request->user(), 'delete', Sale::class);
 
         \DB::transaction(function () use ($request) {
             $role = Auth::user()->roles()->first();
@@ -730,7 +749,7 @@ class SalesController extends BaseController
                     // Check If User Has Permission view All Records
                     if (!$view_records) {
                         // Check If User->id === current_Sale->id
-                        $this->authorizeForUser($request->user('api'), 'check_record', $current_Sale);
+                        $this->authorizeForUser($request->user(), 'check_record', $current_Sale);
                     }
                     foreach ($old_sale_details as $key => $value) {
 
@@ -815,7 +834,7 @@ class SalesController extends BaseController
     public function show(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', Sale::class);
+        $this->authorizeForUser($request->user(), 'view', Sale::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $sale_data = Sale::with('details.product.unitSale')
@@ -827,7 +846,7 @@ class SalesController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === sale->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $sale_data);
+            $this->authorizeForUser($request->user(), 'check_record', $sale_data);
         }
 
         $sale_details['Ref'] = $sale_data->Ref;
@@ -882,6 +901,7 @@ class SalesController extends BaseController
                 $data['code'] = $detail['product']['code'];
             }
 
+            $data['id'] = $detail->id;
             $data['quantity'] = $detail->quantity;
             $data['total'] = $detail->total;
             $data['name'] = $detail['product']['name'];
@@ -1005,7 +1025,7 @@ class SalesController extends BaseController
     public function Payments_Sale(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', PaymentSale::class);
+        $this->authorizeForUser($request->user(), 'view', PaymentSale::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $Sale = Sale::findOrFail($id);
@@ -1013,7 +1033,7 @@ class SalesController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === Sale->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $Sale);
+            $this->authorizeForUser($request->user(), 'check_record', $Sale);
         }
 
         $payments = PaymentSale::with('sale')
@@ -1156,7 +1176,7 @@ class SalesController extends BaseController
     public function create(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'create', Sale::class);
+        $this->authorizeForUser($request->user(), 'create', Sale::class);
 
        //get warehouses assigned to user
        $user_auth = auth()->user();
@@ -1185,7 +1205,7 @@ class SalesController extends BaseController
         if (SaleReturn::where('sale_id', $id)->where('deleted_at', '=', null)->exists()) {
             return response()->json(['success' => false , 'Return exist for the Transaction' => false], 403);
         }else{
-          $this->authorizeForUser($request->user('api'), 'update', Sale::class);
+          $this->authorizeForUser($request->user(), 'update', Sale::class);
           $role = Auth::user()->roles()->first();
           $view_records = Role::findOrFail($role->id)->inRole('record_view');
           $Sale_data = Sale::with('details.product.unitSale')
@@ -1195,7 +1215,7 @@ class SalesController extends BaseController
           // Check If User Has Permission view All Records
           if (!$view_records) {
               // Check If User->id === sale->id
-              $this->authorizeForUser($request->user('api'), 'check_record', $Sale_data);
+              $this->authorizeForUser($request->user(), 'check_record', $Sale_data);
           }
 
           if ($Sale_data->client_id) {
@@ -1222,6 +1242,10 @@ class SalesController extends BaseController
               $sale['warehouse_id'] = '';
           }
 
+          $sale['GrandTotal'] = $Sale_data->GrandTotal;
+          $sale['Ref'] = $Sale_data->Ref;
+          $sale['client_phone'] = $Sale_data->client->phone;
+
           $sale['date'] = $Sale_data->date;
           $sale['tax_rate'] = $Sale_data->tax_rate;
           $sale['TaxNet'] = $Sale_data->TaxNet;
@@ -1229,6 +1253,7 @@ class SalesController extends BaseController
           $sale['shipping'] = $Sale_data->shipping;
           $sale['statut'] = $Sale_data->statut;
           $sale['notes'] = $Sale_data->notes;
+          $sale['id'] = $Sale_data->id;
 
           $detail_id = 0;
           foreach ($Sale_data['details'] as $detail) {
@@ -1352,7 +1377,7 @@ class SalesController extends BaseController
 
     public function Send_Email(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Sale::class);
+        $this->authorizeForUser($request->user(), 'view', Sale::class);
 
         $sale['id'] = $request->id;
         $sale['Ref'] = $request->Ref;
@@ -1369,7 +1394,7 @@ class SalesController extends BaseController
     public function Elemens_Change_To_Sale(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', Quotation::class);
+        $this->authorizeForUser($request->user(), 'update', Quotation::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $Quotation = Quotation::with('details.product.unitSale')
@@ -1379,7 +1404,7 @@ class SalesController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === Quotation->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $Quotation);
+            $this->authorizeForUser($request->user(), 'check_record', $Quotation);
         }
 
         if ($Quotation->client_id) {
@@ -1579,7 +1604,7 @@ class SalesController extends BaseController
     public function get_Products_by_sale(Request $request , $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'create', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'create', SaleReturn::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $SaleReturn = Sale::with('details.product.unitSale')
@@ -1591,7 +1616,7 @@ class SalesController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === SaleReturn->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $SaleReturn);
+            $this->authorizeForUser($request->user(), 'check_record', $SaleReturn);
         }
 
         $Return_detail['client_id'] = $SaleReturn->client_id;

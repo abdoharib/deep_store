@@ -32,7 +32,7 @@ class PosController extends BaseController
 
     public function CreatePOS(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'Sales_pos', Sale::class);
+        $this->authorizeForUser($request->user(), 'Sales_pos', Sale::class);
 
         request()->validate([
             'client_id' => 'required',
@@ -119,7 +119,7 @@ class PosController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === sale->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $sale);
+                $this->authorizeForUser($request->user(), 'check_record', $sale);
             }
 
             try {
@@ -134,7 +134,7 @@ class PosController extends BaseController
                 } else if ($due == $sale->GrandTotal) {
                     $payment_statut = 'unpaid';
                 }
-                              
+
                 if($request['amount'] > 0){
                     if ($request->payment['Reglement'] == 'credit card') {
                         $Client = Client::whereId($request->client_id)->first();
@@ -208,7 +208,7 @@ class PosController extends BaseController
                     }
 
                 }
-              
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }
@@ -225,7 +225,7 @@ class PosController extends BaseController
 
     public function GetProductsByParametre(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'Sales_pos', Sale::class);
+        $this->authorizeForUser($request->user(), 'Sales_pos', Sale::class);
         // How many items do you want to display.
         $perPage = 8;
         $pageStart = \Request::get('page', 1);
@@ -333,7 +333,7 @@ class PosController extends BaseController
 
     public function GetELementPos(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'Sales_pos', Sale::class);
+        $this->authorizeForUser($request->user(), 'Sales_pos', Sale::class);
         $clients = Client::where('deleted_at', '=', null)->get(['id', 'name']);
         $settings = Setting::where('deleted_at', '=', null)->first();
 
@@ -368,8 +368,8 @@ class PosController extends BaseController
           }
 
 
-      
-        
+
+
 
         if ($settings->client_id) {
             if (Client::where('id', $settings->client_id)->where('deleted_at', '=', null)->first()) {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\hrm;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 use App\Models\Designation;
 use App\Models\Company;
 use App\Models\Department;
@@ -16,7 +16,7 @@ class DesignationsController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Designation::class);
+        $this->authorizeForUser($request->user(), 'view', Designation::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -51,10 +51,10 @@ class DesignationsController extends Controller
             $item['company_id'] = $designation['company']->id;
             $item['department_name'] = $designation['department']->department;
             $item['department_id'] = $designation['department']->id;
-            
+
             $data[] = $item;
         }
-    
+
         return response()->json([
             'designations' => $data,
             'totalRows'   => $totalRows,
@@ -63,7 +63,7 @@ class DesignationsController extends Controller
 
     public function create(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Designation::class);
+        $this->authorizeForUser($request->user(), 'create', Designation::class);
 
         $companies = Company::where('deleted_at', '=', null)->get(['id','name']);
         return response()->json([
@@ -76,7 +76,7 @@ class DesignationsController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Designation::class);
+        $this->authorizeForUser($request->user(), 'create', Designation::class);
 
         request()->validate([
             'designation'   => 'required|string',
@@ -97,14 +97,14 @@ class DesignationsController extends Controller
 
     public function show($id){
         //
-        
+
     }
 
     //------------ function edit -----------\\
 
     public function edit(Request $request , $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Designation::class);
+        $this->authorizeForUser($request->user(), 'update', Designation::class);
 
         $companies = Company::where('deleted_at', '=', null)->get(['id','name']);
         return response()->json([
@@ -117,7 +117,7 @@ class DesignationsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Designation::class);
+        $this->authorizeForUser($request->user(), 'update', Designation::class);
 
         request()->validate([
             'designation'   => 'required|string',
@@ -138,7 +138,7 @@ class DesignationsController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Designation::class);
+        $this->authorizeForUser($request->user(), 'delete', Designation::class);
 
         \DB::transaction(function () use ($id) {
 
@@ -156,7 +156,7 @@ class DesignationsController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Designation::class);
+        $this->authorizeForUser($request->user(), 'delete', Designation::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $designation_id) {

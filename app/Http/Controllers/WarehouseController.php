@@ -17,7 +17,7 @@ class WarehouseController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Warehouse::class);
+        $this->authorizeForUser($request->user(), 'view', Warehouse::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -59,7 +59,7 @@ class WarehouseController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Warehouse::class);
+        $this->authorizeForUser($request->user(), 'create', Warehouse::class);
 
         request()->validate([
             'name' => 'required',
@@ -117,14 +117,14 @@ class WarehouseController extends Controller
 
     public function show($id){
         //
-        
+
         }
 
     //-----------Update Warehouse --------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Warehouse::class);
+        $this->authorizeForUser($request->user(), 'update', Warehouse::class);
 
         request()->validate([
             'name' => 'required',
@@ -145,7 +145,7 @@ class WarehouseController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Warehouse::class);
+        $this->authorizeForUser($request->user(), 'delete', Warehouse::class);
 
         \DB::transaction(function () use ($id) {
 
@@ -167,7 +167,7 @@ class WarehouseController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Warehouse::class);
+        $this->authorizeForUser($request->user(), 'delete', Warehouse::class);
 
         \DB::transaction(function () use ($request) {
             $selectedIds = $request->selectedIds;

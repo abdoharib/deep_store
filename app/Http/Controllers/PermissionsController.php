@@ -17,7 +17,7 @@ class PermissionsController extends BaseController
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Role::class);
+        $this->authorizeForUser($request->user(), 'view', Role::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -54,7 +54,7 @@ class PermissionsController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Role::class);
+        $this->authorizeForUser($request->user(), 'create', Role::class);
 
         try {
             request()->validate([
@@ -101,14 +101,14 @@ class PermissionsController extends BaseController
 
     public function show($id){
         //
-        
+
         }
 
     //----------- Update Role --------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Role::class);
+        $this->authorizeForUser($request->user(), 'update', Role::class);
 
         try {
             request()->validate([
@@ -150,7 +150,7 @@ class PermissionsController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Role::class);
+        $this->authorizeForUser($request->user(), 'delete', Role::class);
 
         Role::whereId($id)->update([
             'deleted_at' => Carbon::now(),
@@ -163,7 +163,7 @@ class PermissionsController extends BaseController
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Role::class);
+        $this->authorizeForUser($request->user(), 'delete', Role::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $role_id) {
@@ -188,7 +188,7 @@ class PermissionsController extends BaseController
     public function edit(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', Role::class);
+        $this->authorizeForUser($request->user(), 'update', Role::class);
 
         if($id != '1'){
             $Role = Role::with('permissions')->where('deleted_at', '=', null)->findOrFail($id);
@@ -206,7 +206,7 @@ class PermissionsController extends BaseController
                 'permissions' => $data,
                 'role' => $item,
             ]);
-            
+
         }else{
             return response()->json([
                 'success' => false,

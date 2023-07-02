@@ -37,7 +37,7 @@ class SalesReturnController extends BaseController
 
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'view', SaleReturn::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         // How many items do you want to display.
@@ -166,7 +166,7 @@ class SalesReturnController extends BaseController
 
     public function store(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'create', SaleReturn::class);
 
         request()->validate([
             'client_id' => 'required',
@@ -261,7 +261,7 @@ class SalesReturnController extends BaseController
     public function update(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'update', SaleReturn::class);
 
         \DB::transaction(function () use ($request, $id) {
             $role = Auth::user()->roles()->first();
@@ -271,7 +271,7 @@ class SalesReturnController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === SaleReturn->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $current_SaleReturn);
+                $this->authorizeForUser($request->user(), 'check_record', $current_SaleReturn);
             }
             $old_return_details = SaleReturnDetails::where('sale_return_id', $id)->get();
             $new_return_details = $request['details'];
@@ -341,7 +341,7 @@ class SalesReturnController extends BaseController
 
             // Update Data with New request
             foreach ($new_return_details as $key => $product_detail) {
-               
+
                 if($product_detail['no_unit'] !== 0){
                     $unit_prod = Unit::where('id', $product_detail['sale_unit_id'])->first();
 
@@ -432,7 +432,7 @@ class SalesReturnController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'delete', SaleReturn::class);
 
         \DB::transaction(function () use ($id, $request) {
             $role = Auth::user()->roles()->first();
@@ -443,7 +443,7 @@ class SalesReturnController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === current_SaleReturn->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $current_SaleReturn);
+                $this->authorizeForUser($request->user(), 'check_record', $current_SaleReturn);
             }
 
             foreach ($old_return_details as $key => $value) {
@@ -509,7 +509,7 @@ class SalesReturnController extends BaseController
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'delete', SaleReturn::class);
 
         \DB::transaction(function () use ($request) {
             $role = Auth::user()->roles()->first();
@@ -522,7 +522,7 @@ class SalesReturnController extends BaseController
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === current_SaleReturn->id
-                    $this->authorizeForUser($request->user('api'), 'check_record', $current_SaleReturn);
+                    $this->authorizeForUser($request->user(), 'check_record', $current_SaleReturn);
                 }
 
                 foreach ($old_return_details as $key => $value) {
@@ -536,13 +536,13 @@ class SalesReturnController extends BaseController
                        ->first();
                        $unit = Unit::where('id', $product_unit_sale_id['unitSale']->id)->first();
                    }
-   
+
                    if ($current_SaleReturn->statut == "received") {
                        if ($value['product_variant_id'] !== null) {
                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)->where('warehouse_id', $current_SaleReturn->warehouse_id)
                                ->where('product_id', $value['product_id'])->where('product_variant_id', $value['product_variant_id'])
                                ->first();
-   
+
                            if ($unit && $product_warehouse) {
                                if ($unit->operator == '/') {
                                    $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
@@ -551,12 +551,12 @@ class SalesReturnController extends BaseController
                                }
                                $product_warehouse->save();
                            }
-   
+
                        } else {
                            $product_warehouse = product_warehouse::where('deleted_at', '=', null)->where('warehouse_id', $current_SaleReturn->warehouse_id)
                                ->where('product_id', $value['product_id'])
                                ->first();
-   
+
                            if ($unit && $product_warehouse) {
                                if ($unit->operator == '/') {
                                    $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
@@ -567,7 +567,7 @@ class SalesReturnController extends BaseController
                            }
                        }
                    }
-   
+
                }
 
                 $current_SaleReturn->details()->delete();
@@ -591,7 +591,7 @@ class SalesReturnController extends BaseController
     public function Payment_Returns(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', PaymentSaleReturns::class);
+        $this->authorizeForUser($request->user(), 'view', PaymentSaleReturns::class);
 
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -600,7 +600,7 @@ class SalesReturnController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === SaleReturn->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $SaleReturn);
+            $this->authorizeForUser($request->user(), 'check_record', $SaleReturn);
         }
 
         $payments = PaymentSaleReturns::with('SaleReturn')
@@ -621,7 +621,7 @@ class SalesReturnController extends BaseController
     public function Send_Email(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'view', SaleReturn::class);
 
         $SaleReturn['id'] = $request->id;
         $SaleReturn['Ref'] = $request->Ref;
@@ -656,7 +656,7 @@ class SalesReturnController extends BaseController
     public function show(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'view', SaleReturn::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $Sale_Return = SaleReturn::with('sale','details.product.unitSale')
@@ -668,7 +668,7 @@ class SalesReturnController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === SaleReturn->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $Sale_Return);
+            $this->authorizeForUser($request->user(), 'check_record', $Sale_Return);
         }
 
         $return_details['Ref'] = $Sale_Return->Ref;
@@ -703,14 +703,14 @@ class SalesReturnController extends BaseController
                 ->first();
                 $unit = Unit::where('id', $product_unit_sale_id['unitSale']->id)->first();
             }
-            
+
             if ($detail->product_variant_id) {
 
                 $productsVariants = ProductVariant::where('product_id', $detail->product_id)
                     ->where('id', $detail->product_variant_id)->first();
 
                 $data['code'] = $productsVariants->name . '-' . $detail['product']['code'];
-               
+
             } else {
                 $data['code'] = $detail['product']['code'];
             }
@@ -776,7 +776,7 @@ class SalesReturnController extends BaseController
     public function create_sell_return(Request $request , $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'create', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'create', SaleReturn::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $SaleReturn = Sale::with('details.product.unitSale')
@@ -788,7 +788,7 @@ class SalesReturnController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === SaleReturn->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $SaleReturn);
+            $this->authorizeForUser($request->user(), 'check_record', $SaleReturn);
         }
 
         $Return_detail['client_id'] = $SaleReturn->client_id;
@@ -840,7 +840,7 @@ class SalesReturnController extends BaseController
                 $item_product ? $data['del'] = 0 : $data['del'] = 1;
                 $data['product_variant_id'] = null;
                 $data['code'] = $detail['product']['code'];
-              
+
 
             }
 
@@ -997,7 +997,7 @@ class SalesReturnController extends BaseController
     public function edit_sell_return(Request $request, $id, $sale_id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', SaleReturn::class);
+        $this->authorizeForUser($request->user(), 'update', SaleReturn::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $SaleReturn = SaleReturn::with('sale','details.product.unitSale')
@@ -1007,9 +1007,9 @@ class SalesReturnController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === SaleReturn->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $SaleReturn);
+            $this->authorizeForUser($request->user(), 'check_record', $SaleReturn);
         }
-      
+
         $Return_detail['client_id'] = $SaleReturn->client_id;
         $Return_detail['warehouse_id'] = $SaleReturn->warehouse_id;
         $Return_detail['sale_id'] = $SaleReturn->sale_id?$SaleReturn['sale']->id:NULL;
@@ -1125,21 +1125,21 @@ class SalesReturnController extends BaseController
          $url = url('/api/return_sale_pdf/' . $request->id);
          $receiverNumber = $SaleReturn['client']->phone;
          $message = "Dear" .' '.$SaleReturn['client']->name." \n We are contacting you in regard to a Sale Return #".$SaleReturn->Ref.' '.$url.' '. "that has been created on your account. \n We look forward to conducting future business with you.";
-       
-       
+
+
          //twilio
         if($gateway->title == "twilio"){
             try {
-    
+
                 $account_sid = env("TWILIO_SID");
                 $auth_token = env("TWILIO_TOKEN");
                 $twilio_number = env("TWILIO_FROM");
-    
+
                 $client = new Client_Twilio($account_sid, $auth_token);
                 $client->messages->create($receiverNumber, [
-                    'from' => $twilio_number, 
+                    'from' => $twilio_number,
                     'body' => $message]);
-        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }
@@ -1151,13 +1151,13 @@ class SalesReturnController extends BaseController
                 $basic  = new \Nexmo\Client\Credentials\Basic(env("NEXMO_KEY"), env("NEXMO_SECRET"));
                 $client = new \Nexmo\Client($basic);
                 $nexmo_from = env("NEXMO_FROM");
-        
+
                 $message = $client->message()->send([
                     'to' => $receiverNumber,
                     'from' => $nexmo_from,
                     'text' => $message
                 ]);
-                        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }

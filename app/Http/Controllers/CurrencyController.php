@@ -14,7 +14,7 @@ class CurrencyController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Currency::class);
+        $this->authorizeForUser($request->user(), 'view', Currency::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -52,7 +52,7 @@ class CurrencyController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Currency::class);
+        $this->authorizeForUser($request->user(), 'create', Currency::class);
 
         request()->validate([
             'code' => 'required',
@@ -74,14 +74,14 @@ class CurrencyController extends Controller
 
     public function show($id){
         //
-        
+
         }
 
     //---------------- UPDATE Currency -------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Currency::class);
+        $this->authorizeForUser($request->user(), 'update', Currency::class);
 
         request()->validate([
             'code' => 'required',
@@ -103,7 +103,7 @@ class CurrencyController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Currency::class);
+        $this->authorizeForUser($request->user(), 'delete', Currency::class);
 
         Currency::whereId($id)->update([
             'deleted_at' => Carbon::now(),
@@ -116,7 +116,7 @@ class CurrencyController extends Controller
 
     public function delete_by_selection(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Currency::class);
+        $this->authorizeForUser($request->user(), 'delete', Currency::class);
         $selectedIds = $request->selectedIds;
 
         foreach ($selectedIds as $Currency_id) {

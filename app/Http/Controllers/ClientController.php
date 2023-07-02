@@ -23,7 +23,7 @@ class ClientController extends BaseController
 
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Client::class);
+        $this->authorizeForUser($request->user(), 'view', Client::class);
         // How many items do you want to display.
         $perPage = $request->limit;
         $pageStart = \Request::get('page', 1);
@@ -109,7 +109,7 @@ class ClientController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Client::class);
+        $this->authorizeForUser($request->user(), 'create', Client::class);
 
         $this->validate($request, [
             'name' => 'required',
@@ -141,7 +141,7 @@ class ClientController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Client::class);
+        $this->authorizeForUser($request->user(), 'update', Client::class);
 
         $this->validate($request, [
             'name' => 'required',
@@ -165,7 +165,7 @@ class ClientController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Client::class);
+        $this->authorizeForUser($request->user(), 'delete', Client::class);
 
         Client::whereId($id)->update([
             'deleted_at' => Carbon::now(),
@@ -177,7 +177,7 @@ class ClientController extends BaseController
 
     public function delete_by_selection(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Client::class);
+        $this->authorizeForUser($request->user(), 'delete', Client::class);
         $selectedIds = $request->selectedIds;
 
         foreach ($selectedIds as $Client_id) {
@@ -280,7 +280,7 @@ class ClientController extends BaseController
 
      public function clients_pay_due(Request $request)
      {
-         $this->authorizeForUser($request->user('api'), 'pay_due', Client::class);
+         $this->authorizeForUser($request->user(), 'pay_due', Client::class);
 
          if($request['amount'] > 0){
             $client_sales_due = Sale::where('deleted_at', '=', null)
@@ -331,7 +331,7 @@ class ClientController extends BaseController
 
     public function pay_sale_return_due(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'pay_sale_return_due', Client::class);
+        $this->authorizeForUser($request->user(), 'pay_sale_return_due', Client::class);
 
         if($request['amount'] > 0){
             $client_sell_return_due = SaleReturn::where('deleted_at', '=', null)

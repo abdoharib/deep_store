@@ -17,7 +17,7 @@ class DepartmentsController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Department::class);
+        $this->authorizeForUser($request->user(), 'view', Department::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -57,7 +57,7 @@ class DepartmentsController extends Controller
 
     public function create(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Department::class);
+        $this->authorizeForUser($request->user(), 'create', Department::class);
 
         $companies = Company::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','name']);
         return response()->json([
@@ -70,7 +70,7 @@ class DepartmentsController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Department::class);
+        $this->authorizeForUser($request->user(), 'create', Department::class);
 
         request()->validate([
             'department'   => 'required|string',
@@ -90,14 +90,14 @@ class DepartmentsController extends Controller
 
     public function show($id){
         //
-        
+
     }
 
     //------------ function edit -----------\\
 
     public function edit(Request $request , $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Department::class);
+        $this->authorizeForUser($request->user(), 'update', Department::class);
 
         $companies = Company::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','name']);
         return response()->json([
@@ -110,7 +110,7 @@ class DepartmentsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Department::class);
+        $this->authorizeForUser($request->user(), 'update', Department::class);
 
         request()->validate([
             'department'   => 'required|string',
@@ -130,7 +130,7 @@ class DepartmentsController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Department::class);
+        $this->authorizeForUser($request->user(), 'delete', Department::class);
 
         \DB::transaction(function () use ($id) {
 
@@ -148,7 +148,7 @@ class DepartmentsController extends Controller
     public function delete_by_selection(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'delete', Department::class);
+        $this->authorizeForUser($request->user(), 'delete', Department::class);
 
         $selectedIds = $request->selectedIds;
         foreach ($selectedIds as $department_id) {

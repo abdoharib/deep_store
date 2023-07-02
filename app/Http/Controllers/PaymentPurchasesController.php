@@ -25,7 +25,7 @@ class PaymentPurchasesController extends BaseController
 
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'Reports_payments_Purchases', PaymentPurchase::class);
+        $this->authorizeForUser($request->user(), 'Reports_payments_Purchases', PaymentPurchase::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -116,18 +116,18 @@ class PaymentPurchasesController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', PaymentPurchase::class);
-        
+        $this->authorizeForUser($request->user(), 'create', PaymentPurchase::class);
+
         if($request['montant'] > 0){
             \DB::transaction(function () use ($request) {
                 $role = Auth::user()->roles()->first();
                 $view_records = Role::findOrFail($role->id)->inRole('record_view');
                 $purchase = Purchase::findOrFail($request['purchase_id']);
-        
+
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === purchase->id
-                    $this->authorizeForUser($request->user('api'), 'check_record', $purchase);
+                    $this->authorizeForUser($request->user(), 'check_record', $purchase);
                 }
 
                 $total_paid = $purchase->paid_amount + $request['montant'];
@@ -167,24 +167,24 @@ class PaymentPurchasesController extends BaseController
 
     public function show($id){
         //
-        
+
         }
 
     //----------- Update Payment Purchases --------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', PaymentPurchase::class);
-        
+        $this->authorizeForUser($request->user(), 'update', PaymentPurchase::class);
+
         \DB::transaction(function () use ($id, $request) {
             $role = Auth::user()->roles()->first();
             $view_records = Role::findOrFail($role->id)->inRole('record_view');
             $payment = PaymentPurchase::findOrFail($id);
-    
+
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === payment->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $payment);
+                $this->authorizeForUser($request->user(), 'check_record', $payment);
             }
 
             $purchase = Purchase::whereId($request['purchase_id'])->first();
@@ -221,17 +221,17 @@ class PaymentPurchasesController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', PaymentPurchase::class);
-        
+        $this->authorizeForUser($request->user(), 'delete', PaymentPurchase::class);
+
         \DB::transaction(function () use ($id, $request) {
             $role = Auth::user()->roles()->first();
             $view_records = Role::findOrFail($role->id)->inRole('record_view');
             $payment = PaymentPurchase::findOrFail($id);
-    
+
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === payment->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $payment);
+                $this->authorizeForUser($request->user(), 'check_record', $payment);
             }
 
             $purchase = Purchase::find($payment->purchase_id);
@@ -266,7 +266,7 @@ class PaymentPurchasesController extends BaseController
     public function SendEmail(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', PaymentPurchase::class);
+        $this->authorizeForUser($request->user(), 'view', PaymentPurchase::class);
 
         $payment['id'] = $request->id;
         $payment['Ref'] = $request->Ref;
@@ -338,20 +338,20 @@ class PaymentPurchasesController extends BaseController
          $url = url('/api/payment_purchase_pdf/' . $request->id);
          $receiverNumber = $payment['purchase']['provider']->phone;
          $message = "Dear" .' '.$payment['purchase']['provider']->name." \n We are contacting you in regard to a Payment #".$payment['purchase']->Ref.' '.$url.' '. "that has been created on your account. \n We look forward to conducting future business with you.";
-        
+
         //twilio
         if($gateway->title == "twilio"){
             try {
-    
+
                 $account_sid = env("TWILIO_SID");
                 $auth_token = env("TWILIO_TOKEN");
                 $twilio_number = env("TWILIO_FROM");
-    
+
                 $client = new Client_Twilio($account_sid, $auth_token);
                 $client->messages->create($receiverNumber, [
-                    'from' => $twilio_number, 
+                    'from' => $twilio_number,
                     'body' => $message]);
-        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }
@@ -363,13 +363,13 @@ class PaymentPurchasesController extends BaseController
                 $basic  = new \Nexmo\Client\Credentials\Basic(env("NEXMO_KEY"), env("NEXMO_SECRET"));
                 $client = new \Nexmo\Client($basic);
                 $nexmo_from = env("NEXMO_FROM");
-        
+
                 $message = $client->message()->send([
                     'to' => $receiverNumber,
                     'from' => $nexmo_from,
                     'text' => $message
                 ]);
-                        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }

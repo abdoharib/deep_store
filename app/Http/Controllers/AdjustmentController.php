@@ -23,7 +23,7 @@ class AdjustmentController extends BaseController
 
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Adjustment::class);
+        $this->authorizeForUser($request->user(), 'view', Adjustment::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
 
@@ -101,7 +101,7 @@ class AdjustmentController extends BaseController
     public function store(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'create', Adjustment::class);
+        $this->authorizeForUser($request->user(), 'create', Adjustment::class);
 
         request()->validate([
             'warehouse_id' => 'required',
@@ -197,7 +197,7 @@ class AdjustmentController extends BaseController
     public function update(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', Adjustment::class);
+        $this->authorizeForUser($request->user(), 'update', Adjustment::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $current_adjustment = Adjustment::findOrFail($id);
@@ -205,7 +205,7 @@ class AdjustmentController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === Adjustment->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $current_adjustment);
+            $this->authorizeForUser($request->user(), 'check_record', $current_adjustment);
         }
 
         request()->validate([
@@ -370,7 +370,7 @@ class AdjustmentController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Adjustment::class);
+        $this->authorizeForUser($request->user(), 'delete', Adjustment::class);
 
         \DB::transaction(function () use ($id, $request) {
             $role = Auth::user()->roles()->first();
@@ -381,7 +381,7 @@ class AdjustmentController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === current_adjustment->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $current_adjustment);
+                $this->authorizeForUser($request->user(), 'check_record', $current_adjustment);
             }
 
             // Init Data with old Parametre
@@ -453,7 +453,7 @@ class AdjustmentController extends BaseController
 
     public function delete_by_selection(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', Adjustment::class);
+        $this->authorizeForUser($request->user(), 'delete', Adjustment::class);
         \DB::transaction(function () use ($request) {
             $role = Auth::user()->roles()->first();
             $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -466,7 +466,7 @@ class AdjustmentController extends BaseController
                 // Check If User Has Permission view All Records
                 if (!$view_records) {
                     // Check If User->id === Adjustment->id
-                    $this->authorizeForUser($request->user('api'), 'check_record', $current_adjustment);
+                    $this->authorizeForUser($request->user(), 'check_record', $current_adjustment);
                 }
 
                 // Init Data with old Parametre
@@ -557,7 +557,7 @@ class AdjustmentController extends BaseController
 
     public function create(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', Adjustment::class);
+        $this->authorizeForUser($request->user(), 'create', Adjustment::class);
 
           //get warehouses assigned to user
           $user_auth = auth()->user();
@@ -576,7 +576,7 @@ class AdjustmentController extends BaseController
     public function edit(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'update', Adjustment::class);
+        $this->authorizeForUser($request->user(), 'update', Adjustment::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $Adjustment_data = Adjustment::with('details.product')
@@ -586,7 +586,7 @@ class AdjustmentController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === Adjustment->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $Adjustment_data);
+            $this->authorizeForUser($request->user(), 'check_record', $Adjustment_data);
         }
 
         if ($Adjustment_data->warehouse_id) {
@@ -636,7 +636,7 @@ class AdjustmentController extends BaseController
                     ->where('warehouse_id', $Adjustment_data->warehouse_id)
                     ->where('product_variant_id', '=', null)
                     ->first();
-                    
+
                     $data['id'] = $detail->id;
                     $data['detail_id'] = $detail_id += 1;
                     $data['quantity'] = $detail->quantity;
@@ -653,7 +653,7 @@ class AdjustmentController extends BaseController
             $details[] = $data;
         }
 
-       
+
         //get warehouses assigned to user
          $user_auth = auth()->user();
          if($user_auth->is_all_warehouses){
@@ -675,7 +675,7 @@ class AdjustmentController extends BaseController
     public function Adjustment_detail(Request $request, $id)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', Adjustment::class);
+        $this->authorizeForUser($request->user(), 'view', Adjustment::class);
         $role = Auth::user()->roles()->first();
         $view_records = Role::findOrFail($role->id)->inRole('record_view');
         $Adjustment_data = Adjustment::with('details.product.unit')
@@ -685,7 +685,7 @@ class AdjustmentController extends BaseController
         // Check If User Has Permission view All Records
         if (!$view_records) {
             // Check If User->id === Adjustment->id
-            $this->authorizeForUser($request->user('api'), 'check_record', $Adjustment_data);
+            $this->authorizeForUser($request->user(), 'check_record', $Adjustment_data);
         }
 
         $Adjustment['Ref'] = $Adjustment_data->Ref;

@@ -25,7 +25,7 @@ class SettingsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', Setting::class);
+        $this->authorizeForUser($request->user(), 'update', Setting::class);
 
         $setting = Setting::findOrFail($id);
         $currentAvatar = $setting->logo;
@@ -109,7 +109,7 @@ class SettingsController extends Controller
 
      public function get_pos_Settings(Request $request)
      {
-         $this->authorizeForUser($request->user('api'), 'pos_settings', Setting::class);
+         $this->authorizeForUser($request->user(), 'pos_settings', Setting::class);
 
          $PosSetting = PosSetting::where('deleted_at', '=', null)->first();
 
@@ -124,7 +124,7 @@ class SettingsController extends Controller
 
      public function update_pos_settings(Request $request, $id)
      {
-        $this->authorizeForUser($request->user('api'), 'pos_settings', Setting::class);
+        $this->authorizeForUser($request->user(), 'pos_settings', Setting::class);
 
         request()->validate([
             'note_customer' => 'required',
@@ -151,7 +151,7 @@ class SettingsController extends Controller
 
     public function getSettings(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'view', Setting::class);
+        $this->authorizeForUser($request->user(), 'view', Setting::class);
 
         $settings = Setting::where('deleted_at', '=', null)->first();
         if ($settings) {

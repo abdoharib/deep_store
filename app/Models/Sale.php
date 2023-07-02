@@ -30,6 +30,14 @@ class Sale extends Model
         'paid_amount' => 'double',
     ];
 
+    private $append = [
+        'due'
+    ];
+
+    public function getDueAttribute() {
+        return number_format( $this->GrandTotal - $this->paid_amount, 2, '.', '');
+    }
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');

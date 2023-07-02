@@ -18,7 +18,7 @@ class Sms_SettingsController extends Controller
 
     public function get_sms_config(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'sms_settings', Setting::class);
+        $this->authorizeForUser($request->user(), 'sms_settings', Setting::class);
         Artisan::call('config:cache');
         Artisan::call('config:clear');
 
@@ -38,9 +38,9 @@ class Sms_SettingsController extends Controller
 
     public function update_twilio_config(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'sms_settings', Setting::class);
+        $this->authorizeForUser($request->user(), 'sms_settings', Setting::class);
 
-        
+
             $this->setEnvironmentValue([
                 'TWILIO_SID' => $request['TWILIO_SID'] !== null?'"' . $request['TWILIO_SID'] . '"':'"' . env('TWILIO_SID') . '"',
                 'TWILIO_TOKEN' => $request['TWILIO_TOKEN'] !== null?'"' . $request['TWILIO_TOKEN'] . '"':'"' . env('TWILIO_TOKEN') . '"',
@@ -53,7 +53,7 @@ class Sms_SettingsController extends Controller
         return response()->json(['success' => true]);
 
     }
-    
+
 
 
 
@@ -61,7 +61,7 @@ class Sms_SettingsController extends Controller
 
      public function update_nexmo_config(Request $request)
      {
-         $this->authorizeForUser($request->user('api'), 'sms_settings', Setting::class);
+         $this->authorizeForUser($request->user(), 'sms_settings', Setting::class);
 
         $this->setEnvironmentValue([
             'NEXMO_KEY' => $request['nexmo_key'] !== null?'"' . $request['nexmo_key'] . '"':'"' . env('NEXMO_KEY') . '"',
@@ -76,7 +76,7 @@ class Sms_SettingsController extends Controller
 
      }
 
-     
+
     //-------------- Set Environment Value ---------------\\
 
     public function setEnvironmentValue(array $values)
@@ -86,29 +86,29 @@ class Sms_SettingsController extends Controller
         $str .= "\r\n";
         if (count($values) > 0) {
             foreach ($values as $envKey => $envValue) {
-    
+
                 $keyPosition = strpos($str, "$envKey=");
                 $endOfLinePosition = strpos($str, "\n", $keyPosition);
                 $oldLine = substr($str, $keyPosition, $endOfLinePosition - $keyPosition);
-    
+
                 if (is_bool($keyPosition) && $keyPosition === false) {
                     // variable doesnot exist
                     $str .= "$envKey=$envValue";
                     $str .= "\r\n";
                 } else {
-                    // variable exist                    
+                    // variable exist
                     $str = str_replace($oldLine, "$envKey=$envValue", $str);
-                }            
+                }
             }
         }
-    
+
         $str = substr($str, 0, -1);
         if (!file_put_contents($envFile, $str)) {
             return false;
         }
-    
-        app()->loadEnvironmentFrom($envFile);    
-    
+
+        app()->loadEnvironmentFrom($envFile);
+
         return true;
     }
 

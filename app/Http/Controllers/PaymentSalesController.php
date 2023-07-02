@@ -27,7 +27,7 @@ class PaymentSalesController extends BaseController
 
     public function index(request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'Reports_payments_Sales', PaymentSale::class);
+        $this->authorizeForUser($request->user(), 'Reports_payments_Sales', PaymentSale::class);
 
         // How many items do you want to display.
         $perPage = $request->limit;
@@ -118,7 +118,7 @@ class PaymentSalesController extends BaseController
 
     public function store(Request $request)
     {
-        $this->authorizeForUser($request->user('api'), 'create', PaymentSale::class);
+        $this->authorizeForUser($request->user(), 'create', PaymentSale::class);
 
         \DB::transaction(function () use ($request) {
             $helpers = new helpers();
@@ -129,7 +129,7 @@ class PaymentSalesController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === sale->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $sale);
+                $this->authorizeForUser($request->user(), 'check_record', $sale);
             }
 
             try {
@@ -238,7 +238,7 @@ class PaymentSalesController extends BaseController
         ]);
 
         foreach ($request->sales as $saleId) {
-            
+
             $Sale = Sale::find($saleId);
 
             // $myRequest = new \Illuminate\Http\Request();
@@ -251,7 +251,7 @@ class PaymentSalesController extends BaseController
             $request->request->add(['received_amount' => $Sale->GrandTotal]);
             $request->request->add(['sale_id' => $Sale->id]);
 
-            $this->store($request);  
+            $this->store($request);
 
         }
 
@@ -263,14 +263,14 @@ class PaymentSalesController extends BaseController
 
     public function show($id){
     //
-        
+
     }
 
     //----------- Update Payments Sale --------------\\
 
     public function update(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'update', PaymentSale::class);
+        $this->authorizeForUser($request->user(), 'update', PaymentSale::class);
 
         \DB::transaction(function () use ($id, $request) {
             $helpers = new helpers();
@@ -281,7 +281,7 @@ class PaymentSalesController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === payment->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $payment);
+                $this->authorizeForUser($request->user(), 'check_record', $payment);
             }
 
             $sale = Sale::find($payment->sale_id);
@@ -412,7 +412,7 @@ class PaymentSalesController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizeForUser($request->user('api'), 'delete', PaymentSale::class);
+        $this->authorizeForUser($request->user(), 'delete', PaymentSale::class);
 
         \DB::transaction(function () use ($id, $request) {
             $role = Auth::user()->roles()->first();
@@ -422,7 +422,7 @@ class PaymentSalesController extends BaseController
             // Check If User Has Permission view All Records
             if (!$view_records) {
                 // Check If User->id === payment->id
-                $this->authorizeForUser($request->user('api'), 'check_record', $payment);
+                $this->authorizeForUser($request->user(), 'check_record', $payment);
             }
 
             $sale = Sale::find($payment->sale_id);
@@ -445,7 +445,7 @@ class PaymentSalesController extends BaseController
                     \Stripe\Refund::create([
                         'charge' => $PaymentWithCreditCard->charge_id,
                     ]);
-    
+
                     $PaymentWithCreditCard->delete();
                 }
             }
@@ -519,13 +519,13 @@ class PaymentSalesController extends BaseController
     public function SendEmail(Request $request)
     {
 
-        $this->authorizeForUser($request->user('api'), 'view', PaymentSale::class);
+        $this->authorizeForUser($request->user(), 'view', PaymentSale::class);
 
         $payment['id'] = $request->id;
         $payment['Ref'] = $request->Ref;
         $settings = Setting::where('deleted_at', '=', null)->first();
         $payment['company_name'] = $settings->CompanyName;
-        
+
         $pdf = $this->payment_sale($request, $payment['id']);
         $this->Set_config_mail(); // Set_config_mail => BaseController
         $mail = Mail::to($request->to)->send(new Payment_Sale($payment, $pdf));
@@ -543,20 +543,20 @@ class PaymentSalesController extends BaseController
          $url = url('/api/payment_sale_pdf/' . $request->id);
          $receiverNumber = $payment['sale']['client']->phone;
          $message = "Dear" .' '.$payment['sale']['client']->name." \n We are contacting you in regard to a Payment #".$payment['sale']->Ref.' '.$url.' '. "that has been created on your account. \n We look forward to conducting future business with you.";
-         
+
           //twilio
         if($gateway->title == "twilio"){
             try {
-    
+
                 $account_sid = env("TWILIO_SID");
                 $auth_token = env("TWILIO_TOKEN");
                 $twilio_number = env("TWILIO_FROM");
-    
+
                 $client = new Client_Twilio($account_sid, $auth_token);
                 $client->messages->create($receiverNumber, [
-                    'from' => $twilio_number, 
+                    'from' => $twilio_number,
                     'body' => $message]);
-        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }
@@ -568,13 +568,13 @@ class PaymentSalesController extends BaseController
                 $basic  = new \Nexmo\Client\Credentials\Basic(env("NEXMO_KEY"), env("NEXMO_SECRET"));
                 $client = new \Nexmo\Client($basic);
                 $nexmo_from = env("NEXMO_FROM");
-        
+
                 $message = $client->message()->send([
                     'to' => $receiverNumber,
                     'from' => $nexmo_from,
                     'text' => $message
                 ]);
-                        
+
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 500);
             }
