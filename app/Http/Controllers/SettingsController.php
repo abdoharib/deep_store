@@ -250,7 +250,7 @@ class SettingsController extends Controller
     {
         Artisan::call('cache:clear');
         Artisan::call('view:clear');
-        Artisan::call('route:clear');
+        Artisan::call('optimize:clear');
     }
 
 

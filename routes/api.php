@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
+
+Route::get("clear_cache", "SettingsController@Clear_Cache");
+
+
 Route::post('/login', [
     'uses' => 'Auth\LoginController@login',
     'middleware' => 'Is_Active',
@@ -39,7 +43,6 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     //-------------------------- Clear Cache ---------------------------
 
-    Route::get("clear_cache", "SettingsController@Clear_Cache");
 
     //-------------------------- Reports ---------------------------
 
