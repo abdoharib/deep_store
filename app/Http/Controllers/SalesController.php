@@ -421,6 +421,7 @@ class SalesController extends BaseController
             }
 
             $order->warehouse->assignedUsers->each(function(User $user) use($order){
+                dd($order);
                 $user->notify(new NewSaleNotification($order));
             });
 
