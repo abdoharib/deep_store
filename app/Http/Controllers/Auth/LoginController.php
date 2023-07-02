@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\FcmToken;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 use \Nwidart\Modules\Facades\Module;
 
 class LoginController extends Controller
@@ -67,8 +69,20 @@ class LoginController extends Controller
         }
 
         return view('auth.login',[
-            'ModulesInstalled' => $ModulesInstalled, 
-            'ModulesEnabled' => $ModulesEnabled, 
+            'ModulesInstalled' => $ModulesInstalled,
+            'ModulesEnabled' => $ModulesEnabled,
         ]);
+    }
+
+    private function authenticated(Request $request, $user)
+    {
+        if($user){
+            FcmToken::updateOrCreate([
+                'user_id'=> $user->id,
+                "token"=> $request->input('fcm')
+            ],[
+                'token'=> $request->input('fcm')
+            ]);
+        }
     }
 }

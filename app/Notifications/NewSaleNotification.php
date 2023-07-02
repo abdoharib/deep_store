@@ -33,7 +33,7 @@ class NewSaleNotification extends Notification
      */
     public function via($notifiable)
     {
-        return [FcmChannel::class];
+        return [FcmChannel::class,'database'];
     }
 
 

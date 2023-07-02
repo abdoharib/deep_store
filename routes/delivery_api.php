@@ -42,6 +42,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get("clear_cache", "SettingsController@Clear_Cache");
 
+
+    //-------------------------- Notifications ---------------------------
+    Route::get("unread_notifications", "NotificationController@index");
+    Route::get("unread_notifications_count", "NotificationController@indexCount");
+
+    Route::get("read_notifications", "NotificationController@read");
+
+
     //-------------------------- Reports ---------------------------
 
     Route::get("report/client", "ReportController@Client_Report");

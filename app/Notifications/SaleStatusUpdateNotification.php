@@ -33,7 +33,7 @@ class SaleStatusUpdateNotification extends Notification
      */
     public function via($notifiable)
     {
-        return [FcmChannel::class];
+        return [FcmChannel::class,'database'];
     }
 
 
@@ -42,7 +42,7 @@ class SaleStatusUpdateNotification extends Notification
         $mapper = [
             'pending' => 'تعليق',
             'completed' => 'تم أكمال ✅',
-            'cancelled' => 'تم ألغاء ❌',
+            'canceled' => 'تم ألغاء ❌',
             'postponed' => 'تم تاجيل 📅'
         ];
 

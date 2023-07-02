@@ -617,8 +617,13 @@ class SalesController extends BaseController
 
 
                 //status updated
-                if($old_status !== $current_Sale->statut ){
+                if($old_status !== $request['statut'] ){
+
+
+
+                    // dd($current_Sale->warehouse->assignedUsers);
                     $current_Sale->warehouse->assignedUsers->each(function(User $user) use($current_Sale){
+
                         $user->notify(new SaleStatusUpdateNotification($current_Sale));
                     });
                 }
