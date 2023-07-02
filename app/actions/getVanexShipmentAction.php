@@ -335,6 +335,7 @@ class getVanexShipmentAction
 
                 $current_Sale->update([
                     'date' => $sale->date,
+                    'postponed_date' => $sale->postponed_date,
                     'client_id' => $sale->client_id,
                     'warehouse_id' => $sale->warehouse_id,
                     'notes' => $sale->notes,

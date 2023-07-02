@@ -145,6 +145,7 @@ class SalesController extends BaseController
 
             $item['id'] = $Sale['id'];
             $item['date'] = $Sale['date'];
+            $item['postponed_date'] = $Sale['postponed_date'];
             $item['Ref'] = $Sale['Ref'];
             $item['created_by'] = $Sale['user']->username;
             $item['created_at'] = $Sale['created_at'];
@@ -237,6 +238,7 @@ class SalesController extends BaseController
 
             $order->is_pos = 0;
             $order->date = $request->date;
+            $order->postponed_date = $request->postponed_date;
             $order->Ref = $this->getNumberOrder();
             $order->client_id = $request->client_id;
             $order->GrandTotal = $request->GrandTotal;
@@ -422,6 +424,7 @@ class SalesController extends BaseController
 
             $order->warehouse->assignedUsers->each(function(User $user) use($order){
                 dd($order);
+
                 $user->notify(new NewSaleNotification($order));
             });
 
@@ -604,6 +607,7 @@ class SalesController extends BaseController
 
                 $current_Sale->update([
                     'date' => $request['date'],
+                    'postponed_date' => $request['postponed_date'],
                     'client_id' => $request['client_id'],
                     'warehouse_id' => $request['warehouse_id'],
                     'notes' => $request['notes'],
@@ -857,6 +861,7 @@ class SalesController extends BaseController
 
         $sale_details['Ref'] = $sale_data->Ref;
         $sale_details['date'] = $sale_data->date;
+        $sale_details['postponed_date'] = $sale_data->postponed_date;
         $sale_details['note'] = $sale_data->notes;
         $sale_details['statut'] = $sale_data->statut;
         $sale_details['warehouse'] = $sale_data['warehouse']->name;
@@ -1253,6 +1258,7 @@ class SalesController extends BaseController
           $sale['client_phone'] = $Sale_data->client->phone;
 
           $sale['date'] = $Sale_data->date;
+          $sale['postponed_date'] = $Sale_data->postponed_date;
           $sale['tax_rate'] = $Sale_data->tax_rate;
           $sale['TaxNet'] = $Sale_data->TaxNet;
           $sale['discount'] = $Sale_data->discount;
