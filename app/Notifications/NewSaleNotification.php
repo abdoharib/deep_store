@@ -9,6 +9,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\WebpushConfig;
+use NotificationChannels\Fcm\Resources\WebpushFcmOptions;
 
 class NewSaleNotification extends Notification
 {
@@ -39,13 +41,23 @@ class NewSaleNotification extends Notification
 
     public function toFcm($notifiable)
     {
+        $link = '';
+        if($notifiable->hasRole('Delivery')){
+            $link = "https://delivery.deepstore.ly/app-transaction-detail.html?sale=".$this->sale->id;
+        }else{
+            $link = "https://app.deepstore.ly/app/sales/detail/".$this->sale->id;
+        }
+
         $title = '📝 طلبية جديدة '. '(' .$this->sale->Ref.')';
         return FcmMessage::create()
         ->setData(['sale_ref' => $this->sale->Ref])
         ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
             ->setTitle($title)
             ->setBody( implode(' / ',$this->sale->details->pluck('product')->pluck('name')->toArray()) )
-            ->setImage('http://example.com/url-to-image-here.png'));
+            ->setImage('http://example.com/url-to-image-here.png'))
+            ->setWebPush(WebpushConfig::create()->setFcmOptions(
+                WebpushFcmOptions::create()->setLink($link)
+            ));
 
     }
 
