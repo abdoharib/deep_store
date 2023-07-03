@@ -36,6 +36,8 @@ use App\Notifications\SaleStatusUpdateNotification;
 use DB;
 use PDF;
 use ArPHP\I18N\Arabic;
+use Illuminate\Support\Carbon as SupportCarbon;
+use Illuminate\Support\Facades\Log;
 use \Nwidart\Modules\Facades\Module;
 
 class SalesController extends BaseController
@@ -130,9 +132,7 @@ class SalesController extends BaseController
         }
 
         $Sales = $Filtred->offset($offSet)
-            ->limit($perPage)
-            ->orderBy($order, $dir)
-            ->get();
+            ->limit($perPage)->orderBy($order, $dir)->get();
 
         foreach ($Sales as $Sale) {
 
@@ -145,6 +145,24 @@ class SalesController extends BaseController
 
             $item['id'] = $Sale['id'];
             $item['date'] = $Sale['date'];
+            $item['seen_at'] = $Sale['seen_at'];
+
+            if (Carbon::now()->diffInMinutes($Sale['created_at']) > 60) {
+                if (Carbon::now()->diffInHours($Sale->created_at) > 60) {
+                    $item['created_since'] = Carbon::now()->diffInDays($Sale['created_at']);
+                    $item['created_since_unit'] = 'أيام';
+
+                } else {
+                    $item['created_since'] = Carbon::now()->diffInHours($Sale['created_at']);
+                    $item['created_since_unit'] = 'ساعة';
+
+                }
+            } else {
+                $item['created_since'] = Carbon::now()->diffInMinutes($Sale['created_at']);
+                $item['created_since_unit'] = 'دقيقة';
+            };
+
+            // $item['created_since'] = Carbon::now()->diffInMinutes($Sale['created_at']);
             $item['postponed_date'] = $Sale['postponed_date'];
             $item['Ref'] = $Sale['Ref'];
             $item['created_by'] = $Sale['user']->username;
@@ -258,6 +276,7 @@ class SalesController extends BaseController
 
             $order->user_id = Auth::user()->id;
             $order->save();
+            // $order->seen_at == $order->created_at;
 
             $data = $request['details'];
             foreach ($data as $key => $value) {
@@ -861,6 +880,8 @@ class SalesController extends BaseController
 
         $sale_details['Ref'] = $sale_data->Ref;
         $sale_details['date'] = $sale_data->date;
+        $sale_details['seen_at'] = $sale_data->seen_at;
+
         $sale_details['postponed_date'] = $sale_data->postponed_date;
         $sale_details['note'] = $sale_data->notes;
         $sale_details['statut'] = $sale_data->statut;
@@ -1258,7 +1279,33 @@ class SalesController extends BaseController
           $sale['client_phone'] = $Sale_data->client->phone;
 
           $sale['date'] = $Sale_data->date;
+
+          $is_user_delivery = Auth::user()->assignedWarehouses->contains('id',$Sale_data->warehouse_id) && Auth::user()->hasRole("Delivery");
+          if($is_user_delivery){
+            $Sale_data->update([
+                'seen_at' =>now()
+            ]);
+
+            $sale['seen_at'] = $Sale_data->seen_at;
+          }
+
           $sale['postponed_date'] = $Sale_data->postponed_date;
+
+          if(Carbon::now()->diffInMinutes($Sale_data->created_at) > 60){
+            if(Carbon::now()->diffInHours($Sale_data->created_at) > 60){
+                $sale['created_since'] = Carbon::now()->diffInDays($Sale_data->created_at);
+                $sale['created_since_unit'] = 'أيام';
+
+            }else{
+                $sale['created_since'] = Carbon::now()->diffInHours($Sale_data->created_at);
+                $sale['created_since_unit'] = 'ساعة';
+            }
+          }else{
+            $sale['created_since'] = Carbon::now()->diffInMinutes($Sale_data->created_at);
+            $sale['created_since_unit'] = 'دقيقة';
+
+          };
+
           $sale['tax_rate'] = $Sale_data->tax_rate;
           $sale['TaxNet'] = $Sale_data->TaxNet;
           $sale['discount'] = $Sale_data->discount;
