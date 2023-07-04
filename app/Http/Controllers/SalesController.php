@@ -508,7 +508,7 @@ class SalesController extends BaseController
                     }
 
                     if($value['sale_unit_id'] !== null){
-                        if ($current_Sale->statut == "completed") {
+                        if ($current_Sale->statut == "completed" || ($current_Sale->statut == "under_shipping") ) {
 
                             if ($value['product_variant_id'] !== null) {
                                 $product_warehouse = product_warehouse::where('deleted_at', '=', null)
@@ -532,9 +532,12 @@ class SalesController extends BaseController
                                     ->where('product_id', $value['product_id'])
                                     ->first();
                                 if ($product_warehouse) {
+
                                     if ($old_unit->operator == '/') {
                                         $product_warehouse->qte += $value['quantity'] / $old_unit->operator_value;
                                     } else {
+                                        dd($product_warehouse->qte);
+
                                         $product_warehouse->qte += $value['quantity'] * $old_unit->operator_value;
                                     }
                                     $product_warehouse->save();
@@ -555,7 +558,7 @@ class SalesController extends BaseController
                     if($prod_detail['no_unit'] !== 0){
                         $unit_prod = Unit::where('id', $prod_detail['sale_unit_id'])->first();
 
-                        if ($request['statut'] == "completed") {
+                        if ( ($request['statut'] == "completed") || ($request['statut'] == "under_shipping") ) {
 
                             if ($prod_detail['product_variant_id'] !== null) {
                                 $product_warehouse = product_warehouse::where('deleted_at', '=', null)
@@ -583,8 +586,11 @@ class SalesController extends BaseController
                                     if ($unit_prod->operator == '/') {
                                         $product_warehouse->qte -= $prod_detail['quantity'] / $unit_prod->operator_value;
                                     } else {
+                                        dd($product_warehouse);
+
                                         $product_warehouse->qte -= $prod_detail['quantity'] * $unit_prod->operator_value;
                                     }
+
                                     $product_warehouse->save();
                                 }
                             }
@@ -614,6 +620,8 @@ class SalesController extends BaseController
                         }
                     }
                 }
+
+
 
                 $due = $request['GrandTotal'] - $current_Sale->paid_amount;
                 if ($due === 0.0 || $due < 0.0) {

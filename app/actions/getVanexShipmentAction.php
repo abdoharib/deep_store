@@ -113,7 +113,16 @@ class getVanexShipmentAction
 
             $this->updateSaleStatus($sale,$this->mapper[(int)$vanex_status['id']]);
         } else {
-            $this->updateSaleStatus($sale,'completed');
+
+            $sale->update([
+                'shipping_status' => 'shipped'
+            ]);
+
+            $sale->shipment->update([
+                'status' => 'shipped'
+            ]);
+
+            $this->updateSaleStatus($sale,'under_shipping');
         }
 
     }

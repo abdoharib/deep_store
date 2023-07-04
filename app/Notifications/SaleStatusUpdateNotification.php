@@ -51,6 +51,7 @@ class SaleStatusUpdateNotification extends Notification
         $mapper = [
             'pending' => 'تعليق',
             'completed' => 'تم أكمال ✅',
+            'under_shipping' => 'قيد الشحن 🚗',
             'canceled' => 'تم ألغاء ❌',
             'postponed' => 'تم تاجيل 📅'
         ];
