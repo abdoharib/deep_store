@@ -49,7 +49,10 @@ class createVanexShipmentAction
             'extra_size_by' => 'customer',
             'commission_by' => 'customer',
             'type' => '1',
-            'address' => 'تنسيق مع الزبون'
+            'address' => 'تنسيق مع الزبون',
+            'type_id'=> 1,
+            'package_sub_type' => 6
+
         ]);
         $res_body = $response->body();
         $res_code = $response->status();
