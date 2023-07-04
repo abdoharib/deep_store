@@ -12,7 +12,7 @@ class Sale extends Model
         'date', 'postponed_date', 'Ref', 'is_pos', 'client_id', 'GrandTotal', 'qte_retturn', 'TaxNet', 'tax_rate', 'notes',
         'total_retturn', 'warehouse_id', 'user_id', 'statut', 'discount', 'shipping',
         'paid_amount', 'payment_statut', 'created_at', 'updated_at', 'deleted_at','shipping_status',
-        'vanex_sub_city_id','vanex_city_id','vanex_shipment_sticker_notes','vanex_shipment_code','shipping_provider','seen_at','cancel_reason'
+        'vanex_sub_city_id','vanex_city_id','vanex_shipment_sticker_notes','vanex_shipment_code','shipping_provider','seen_at','cancel_reason','updated_by'
     ];
 
     protected $casts = [

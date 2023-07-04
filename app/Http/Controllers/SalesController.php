@@ -627,6 +627,7 @@ class SalesController extends BaseController
 
                 $current_Sale->update([
                     'date' => $request['date'],
+                    'updated_by' => ($old_status !== $request['statut']) ? Auth::user()->email: null,
                     'cancel_reason' => $request['cancel_reason'],
                     'postponed_date' => $request['postponed_date'],
                     'client_id' => $request['client_id'],
