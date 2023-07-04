@@ -185,7 +185,7 @@ class getVanexShipmentAction
                     }
 
                     if($value['sale_unit_id'] !== null){
-                        if ($current_Sale->statut == "completed") {
+                        if ($current_Sale->statut == "completed" || ($current_Sale->statut == "under_shipping") ) {
 
                             if ($value['product_variant_id'] !== null) {
                                 $product_warehouse = product_warehouse::where('deleted_at', '=', null)
@@ -270,7 +270,7 @@ class getVanexShipmentAction
                     if($prod_detail['no_unit'] !== 0){
                         $unit_prod = Unit::where('id', $prod_detail['sale_unit_id'])->first();
 
-                        if ($sale->statut == "completed") {
+                        if ($sale->statut == "completed" || $sale->statut == "under_shipping") {
 
                             if ($prod_detail['product_variant_id'] !== null) {
                                 $product_warehouse = product_warehouse::where('deleted_at', '=', null)
