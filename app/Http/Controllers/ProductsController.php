@@ -80,6 +80,8 @@ class ProductsController extends BaseController
             $item['brand'] = $product['brand'] ? $product['brand']->name : 'N/D';
             $item['unit'] = $product['unit']->ShortName;
             $item['price'] = $product->price;
+            $item['vanex_storage_product_ref_id'] = $product->vanex_storage_product_ref_id;
+
 
             $product_warehouse_data = product_warehouse::where('product_id', $product->id)
                 ->where('deleted_at', '=', null)
@@ -163,6 +165,7 @@ class ProductsController extends BaseController
                 $Product->is_variant = $request['is_variant'] == 'true' ? 1 : 0;
                 $Product->is_imei = $request['is_imei'] == 'true' ? 1 : 0;
                 $Product->not_selling = $request['not_selling'] == 'true' ? 1 : 0;
+                $Product->vanex_storage_product_ref_id = $request['vanex_storage_product_ref_id'];
 
                 if ($request['images']) {
                     $files = $request['images'];
@@ -280,6 +283,8 @@ class ProductsController extends BaseController
                 $Product->is_variant = $request['is_variant'] == 'true' ? 1 : 0;
                 $Product->is_imei = $request['is_imei'] == 'true' ? 1 : 0;
                 $Product->not_selling = $request['not_selling'] == 'true' ? 1 : 0;
+                $Product->vanex_storage_product_ref_id = $request['vanex_storage_product_ref_id'];
+
                 // Store Variants Product
                 $oldVariants = ProductVariant::where('product_id', $id)
                     ->where('deleted_at', null)
@@ -744,6 +749,7 @@ class ProductsController extends BaseController
         $item['tax_percent'] = $Product_data['TaxNet'];
         $item['is_imei'] = $Product_data['is_imei'];
         $item['not_selling'] = $Product_data['not_selling'];
+        $item['vanex_storage_product_ref_id'] = $Product_data['vanex_storage_product_ref_id'];
 
         if ($Product_data['unitSale']->operator == '/') {
             $price = $Product_data['price'] / $Product_data['unitSale']->operator_value;
@@ -909,6 +915,7 @@ class ProductsController extends BaseController
         $item['code'] = $Product->code;
         $item['Type_barcode'] = $Product->Type_barcode;
         $item['name'] = $Product->name;
+        $item['vanex_storage_product_ref_id'] = $Product->vanex_storage_product_ref_id;
         if ($Product->category_id) {
             if (Category::where('id', $Product->category_id)
                 ->where('deleted_at', '=', null)

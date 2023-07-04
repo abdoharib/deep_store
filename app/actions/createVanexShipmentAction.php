@@ -5,15 +5,55 @@ namespace App\actions;
 use App\Exceptions\VanexAPIShipmentException;
 use App\Models\Sale;
 use App\Models\Shipment;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class createVanexShipmentAction
 {
 
-    public $token  = "136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC";
+    public $bengazi_account_token  = "141340|6QoPdWVVH0p6RiQA60geBzGDvZX8D3nBw2hRLVPm";
+    public $tripoli_token  = "136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC";
+    public $token = null;
+    public $getVanexStorageProduct = null;
+
+
+    public function __construct(getVanexStorageProduct $getVanexStorageProduct) {
+        $this->getVanexStorageProduct = $getVanexStorageProduct;
+    }
+
     public function invoke(Sale $sale)
     {
+
+       if($sale->warehouse->id == 1){
+        $token = $this->tripoli_token;
+       }elseif($sale->warehouse->id == 6){
+        $token = $this->bengazi_account_token;
+       }else{
+        throw new \Exception('المتودع غير مدعوم');
+       }
+
+       $total_amount = 0;
+       $total_qty = 0;
+
+       $products = [];
+       if($sale->warehouse->id == 6){
+        foreach ($sale->details as $detail) {
+            $product = $this->getVanexStorageProduct->invoke($detail->product,$detail->quantity);
+            $products[] = $product;
+            $total_amount = $total_amount + $product['total_price'];
+            $total_qty = $total_qty + $product['qty'];
+        }
+
+        $total_amount = $total_amount- $sale->discount;
+
+       }else{
+        $total_amount = $sale->GrandTotal;
+        $total_qty = $sale->details->sum('quantity');
+       }
+
+
+
 
         // $store = Store::find(Auth::user()->store_id);
 
@@ -26,17 +66,15 @@ class createVanexShipmentAction
             $description = $description." ".$saleDetail->quantity." ".$saleDetail->product->name;
         }
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
-        ])->post('https://app.vanex.ly/api/v1'. '/customer/package', [
+        $payload = [
             'reciever' => 'زبون',
             'store_sub_sender' => null,
             'store_reference_id' => $sale->id,
             'store_pkg_details' => json_encode($sale->details),
-            'qty' => $sale->details->count(),
+            'qty' => $total_qty,
             'phone' => $sale->client->phone,
             'phone_b' => $sale->client->phone,
-            'price' => $sale->GrandTotal,
+            'price' => $total_amount,
             'sticker_notes' => $sale->vanex_shipment_sticker_notes,
             'description' => $description ,
             'height' => '35',
@@ -52,16 +90,24 @@ class createVanexShipmentAction
             'address' => 'تنسيق مع الزبون',
             'type_id'=> 1,
             'package_sub_type' => 6
+        ];
 
-        ]);
+
+        if(count($products)){
+            $payload['products'] = json_encode($products);
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->post('https://app.vanex.ly/api/v1'. '/customer/package', $payload);
         $res_body = $response->body();
         $res_code = $response->status();
 
-        if ($res_code != 201) {
+        if ($res_code != 200) {
             $error_arr = (isset($response['errors'])) ? $response['errors'] : ['خطا غير معروف '];
             array_push($error_arr, ' لم تتم العملية بنجاح نظراً لوجود خطا في  إضافة شحنة لنظام VANEX  : ');
             // throw new VanexAPIShipmentException($error_arr);
-            dd($error_arr);
+            throw new Exception('لم تتم العملية بنجاح نظراً لوجود خطا في  إضافة شحنة لنظام VANEX  : ');
         } else {
             $vanex_package_code = $response->json('package_code');
             $sale->vanex_shipment_code = $vanex_package_code;
