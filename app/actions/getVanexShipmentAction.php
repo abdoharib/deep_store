@@ -138,6 +138,9 @@ class getVanexShipmentAction
         12 => 'completed',
         //شحنة قيد التسوية المالية
         10 => 'completed',
+        //شحنة قيد التسوية بيم الفروع المالية
+        11 => 'completed',
+
         //شحنة  مكتملة
         16 => 'completed',
 
