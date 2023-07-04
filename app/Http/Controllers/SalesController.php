@@ -165,6 +165,7 @@ class SalesController extends BaseController
             // $item['created_since'] = Carbon::now()->diffInMinutes($Sale['created_at']);
             $item['postponed_date'] = $Sale['postponed_date'];
             $item['cancel_reason'] = $Sale['cancel_reason'];
+            $item['updated_by'] = $Sale['updated_by'];
             $item['Ref'] = $Sale['Ref'];
             $item['created_by'] = $Sale['user']->username;
             $item['created_at'] = $Sale['created_at'];
