@@ -164,6 +164,7 @@ class SalesController extends BaseController
 
             // $item['created_since'] = Carbon::now()->diffInMinutes($Sale['created_at']);
             $item['postponed_date'] = $Sale['postponed_date'];
+            $item['cancel_reason'] = $Sale['cancel_reason'];
             $item['Ref'] = $Sale['Ref'];
             $item['created_by'] = $Sale['user']->username;
             $item['created_at'] = $Sale['created_at'];
@@ -273,7 +274,7 @@ class SalesController extends BaseController
             $order->vanex_sub_city_id = $request->vanex_sub_city_id;
             $order->vanex_shipment_sticker_notes = $request->vanex_shipment_sticker_notes;
             $order->shipping_provider = $shipping_provider_mapper[$request->shipping_provider];
-
+            $order->cancel_reason = $request->cancel_reason;
             $order->user_id = Auth::user()->id;
             $order->save();
             // $order->seen_at == $order->created_at;
@@ -626,6 +627,7 @@ class SalesController extends BaseController
 
                 $current_Sale->update([
                     'date' => $request['date'],
+                    'cancel_reason' => $request['cancel_reason'],
                     'postponed_date' => $request['postponed_date'],
                     'client_id' => $request['client_id'],
                     'warehouse_id' => $request['warehouse_id'],
@@ -881,6 +883,7 @@ class SalesController extends BaseController
         $sale_details['Ref'] = $sale_data->Ref;
         $sale_details['date'] = $sale_data->date;
         $sale_details['seen_at'] = $sale_data->seen_at;
+        $sale_details['cancel_reason'] = $sale_data->cancel_reason;
 
         $sale_details['postponed_date'] = $sale_data->postponed_date;
         $sale_details['note'] = $sale_data->notes;
@@ -1313,6 +1316,7 @@ class SalesController extends BaseController
           $sale['statut'] = $Sale_data->statut;
           $sale['notes'] = $Sale_data->notes;
           $sale['id'] = $Sale_data->id;
+          $sale['cancel_reason'] = $Sale_data->cancel_reason;
 
           $detail_id = 0;
           foreach ($Sale_data['details'] as $detail) {
