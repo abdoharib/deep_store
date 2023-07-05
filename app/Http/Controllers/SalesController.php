@@ -166,6 +166,8 @@ class SalesController extends BaseController
             $item['postponed_date'] = $Sale['postponed_date'];
             $item['cancel_reason'] = $Sale['cancel_reason'];
             $item['updated_by'] = $Sale['updated_by'];
+            $item['notes'] = $Sale['notes'];
+            $item['address'] = $Sale['address'];
             $item['Ref'] = $Sale['Ref'];
             $item['created_by'] = $Sale['user']->username;
             $item['created_at'] = $Sale['created_at'];
@@ -271,6 +273,7 @@ class SalesController extends BaseController
                 $order->statut = $request->statut;
                 $order->payment_statut = 'unpaid';
                 $order->notes = $request->notes;
+                $order->address = $request->address;
 
                 $order->vanex_city_id = $request->vanex_city_id;
                 $order->vanex_sub_city_id = $request->vanex_sub_city_id;
@@ -651,6 +654,7 @@ class SalesController extends BaseController
                     'statut' => $request['statut'],
                     'tax_rate' => $request['tax_rate'],
                     'TaxNet' => $request['TaxNet'],
+                    'address' =>  $request['address'],
                     'discount' => $request['discount'],
                     'shipping' => $request['shipping'],
                     'GrandTotal' => $request['GrandTotal'],
@@ -1332,6 +1336,8 @@ class SalesController extends BaseController
           $sale['statut'] = $Sale_data->statut;
           $sale['notes'] = $Sale_data->notes;
           $sale['id'] = $Sale_data->id;
+          $sale['address'] = $Sale_data->address;
+
           $sale['cancel_reason'] = $Sale_data->cancel_reason;
 
           $detail_id = 0;

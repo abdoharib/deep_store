@@ -65,6 +65,7 @@ class createVanexShipmentAction
         foreach ($sale->details as $saleDetail) {
             $description = $description." ".$saleDetail->quantity." ".$saleDetail->product->name;
         }
+        $description = $description." ".$sale->notes;
 
         $payload = [
             'reciever' => 'زبون',
