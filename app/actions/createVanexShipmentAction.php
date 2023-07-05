@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
 class createVanexShipmentAction
 {
 
-    public $bengazi_account_token  = "141340|6QoPdWVVH0p6RiQA60geBzGDvZX8D3nBw2hRLVPm";
+    public $bengazi_account_token  = "141297|EOYQwmzYvSZsLbXvFk6ryvAIfS7xZOzYktOe6ztm";
     public $tripoli_token  = "136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC";
     public $token = null;
     public $getVanexStorageProduct = null;
