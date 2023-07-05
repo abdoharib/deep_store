@@ -21,11 +21,19 @@ use Illuminate\Support\Facades\Request;
 
 class getVanexShipmentAction
 {
-
-    public $token  = "136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC";
+    public $bengazi_account_token  = "141297|EOYQwmzYvSZsLbXvFk6ryvAIfS7xZOzYktOe6ztm";
+    public $tripoli_token  = "136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC";
     public function invoke(Sale $sale) : array
     {
 
+        $token = null;
+        if($sale->warehouse->id == 1){
+            $token = $this->tripoli_token;
+           }elseif($sale->warehouse->id == 6){
+            $token = $this->bengazi_account_token;
+           }else{
+            throw new \Exception('المتودع غير مدعوم');
+           }
         // $store = Store::find(Auth::user()->store_id);
 
         // if(!$store->vanex_api_token){
@@ -38,7 +46,7 @@ class getVanexShipmentAction
         // }
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer ' . $token,
         ])->get('https://app.vanex.ly/api/v1'. '/customer/package/'.$sale->vanex_shipment_code);
         $res_body = $response->body();
         $res_code = $response->status();
