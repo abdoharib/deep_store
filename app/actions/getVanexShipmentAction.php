@@ -57,7 +57,7 @@ class getVanexShipmentAction
             $error_arr = (isset($response['errors'])) ? $response['errors'] : ['خطا غير معروف '];
             array_push($error_arr, ' لم تتم العملية بنجاح نظراً لوجود خطا في  إضافة شحنة لنظام VANEX  : ');
             // throw new VanexAPIShipmentException($error_arr);
-            dd($error_arr);
+            // dd($error_arr);
         } else {
             $package_details = $response->json('data');
             if(array_key_exists('status_object',$package_details)){

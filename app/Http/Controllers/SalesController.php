@@ -545,7 +545,7 @@ class SalesController extends BaseController
                                     if ($old_unit->operator == '/') {
                                         $product_warehouse->qte += $value['quantity'] / $old_unit->operator_value;
                                     } else {
-                                        dd($product_warehouse->qte);
+                                        // dd($product_warehouse->qte);
 
                                         $product_warehouse->qte += $value['quantity'] * $old_unit->operator_value;
                                     }
@@ -595,7 +595,7 @@ class SalesController extends BaseController
                                     if ($unit_prod->operator == '/') {
                                         $product_warehouse->qte -= $prod_detail['quantity'] / $unit_prod->operator_value;
                                     } else {
-                                        dd($product_warehouse);
+                                        // dd($product_warehouse);
 
                                         $product_warehouse->qte -= $prod_detail['quantity'] * $unit_prod->operator_value;
                                     }
