@@ -102,10 +102,13 @@ class createVanexShipmentAction
         ])->post('https://app.vanex.ly/api/v1'. '/customer/package', $payload);
         $res_body = $response->body();
         $res_code = $response->status();
+        // dd($res_code);
 
-        if ($res_code != 200) {
-            $error_arr = (isset($response['errors'])) ? $response['errors'] : ['خطا غير معروف '];
-            array_push($error_arr, ' لم تتم العملية بنجاح نظراً لوجود خطا في  إضافة شحنة لنظام VANEX  : ');
+        if (((int)$res_code != 200) && ((int)$res_code != 201)) {
+            // dd($res_code);
+            // dd(($res_code != 201));
+            // $error_arr = (isset($response['errors'])) ? $response['errors'] : ['خطا غير معروف '];
+            // array_push($error_arr, ' لم تتم العملية بنجاح نظراً لوجود خطا في  إضافة شحنة لنظام VANEX  : ');
             // throw new VanexAPIShipmentException($error_arr);
             throw new Exception('لم تتم العملية بنجاح نظراً لوجود خطا في  إضافة شحنة لنظام VANEX  : ');
         } else {
