@@ -4,6 +4,7 @@ namespace App\actions;
 
 use App\Models\Sale;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class updateVanexSalesAction
 {
@@ -26,6 +27,7 @@ class updateVanexSalesAction
                 //retrive the shipping info
 
                 $package_details = $this->getVanexShipmentAction->invoke($sale);
+                Log::debug("updated sale".$sale->Ref);
 
                 if (!is_null($package_details)) {
                     $sale->update([
