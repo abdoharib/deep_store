@@ -16,6 +16,7 @@ class UpdateSaleFromVanexController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     * @var \Illuminate\Database\Eloquent\Builder $sale
      */
     public function __invoke(request $request, getVanexShipmentAction $getVanexShipmentAction)
     {
@@ -25,7 +26,7 @@ class UpdateSaleFromVanexController extends Controller
         try {
 
 
-            $sales = Sale::all();
+            $sales = Sale::with('facture', 'client', 'warehouse','user')->where('deleted_at', '=', null)->get();
             $sales_updated = 0;
 
             foreach ($sales as $sale) {
@@ -34,6 +35,7 @@ class UpdateSaleFromVanexController extends Controller
                 //has vanex code
                 if ($sale->shipping_provider == 'vanex' && $sale->vanex_shipment_code) {
                     //retrive the shipping info
+
                     $package_details = $getVanexShipmentAction->invoke($sale);
 
                     if (!is_null($package_details)) {
