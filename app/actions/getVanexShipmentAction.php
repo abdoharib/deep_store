@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\SaleReturn;
+use App\Models\Shipment;
 use App\Models\Unit;
 use App\Models\User;
 use App\Notifications\SaleStatusUpdateNotification;
@@ -69,6 +70,20 @@ class getVanexShipmentAction
     }
 
     public function handleSaleStatusUpdate(Sale $sale, array $vanex_status ){
+
+
+        if(!$sale->shipment){
+            $shipment = new Shipment();
+
+            $shipment->Ref = $sale->Ref;
+            $shipment->user_id = Auth::user()->id;
+            $shipment->sale_id = $sale->id;
+            $shipment->delivered_to = 'vanex';
+            $shipment->shipping_address = $sale->address;
+            $shipment->shipping_details = '';
+            $shipment->status = 'ordered';
+            $shipment->save();
+        }
         if (!array_key_exists('id',$vanex_status)) {
             return;
         }
