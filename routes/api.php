@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
+
+
+Route::withoutMiddleware('api')
+    ->middleware('delivery_api')
+    ->group(function () {
+        Route::get('update_vanex_sales','UpdateSaleFromVanexController');
+    });
+
 Route::get("clear_cache", "SettingsController@Clear_Cache");
 
 
