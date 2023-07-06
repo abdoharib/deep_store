@@ -33,7 +33,8 @@ class getVanexShipmentAction
            }elseif($sale->warehouse->id == 6){
             $token = $this->bengazi_account_token;
            }else{
-            throw new \Exception('المتودع غير مدعوم');
+            dd($sale);
+            throw new \Exception('المستودع غير مدعوم');
            }
         // $store = Store::find(Auth::user()->store_id);
 
@@ -76,7 +77,7 @@ class getVanexShipmentAction
             $shipment = new Shipment();
 
             $shipment->Ref = $sale->Ref;
-            $shipment->user_id = null;
+            $shipment->user_id = 1;
             $shipment->sale_id = $sale->id;
             $shipment->delivered_to = 'vanex';
             $shipment->shipping_address = $sale->address;
