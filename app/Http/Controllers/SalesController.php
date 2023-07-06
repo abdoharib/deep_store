@@ -169,6 +169,7 @@ class SalesController extends BaseController
             $item['notes'] = $Sale['notes'];
             $item['address'] = $Sale['address'];
             $item['Ref'] = $Sale['Ref'];
+            $item['answer_status'] = $Sale['answer_status'];
             $item['created_by'] = $Sale['user']->username;
             $item['created_at'] = $Sale['created_at'];
             $item['sale_details'] = $Sale->details->pluck('product');
@@ -274,7 +275,7 @@ class SalesController extends BaseController
                 $order->payment_statut = 'unpaid';
                 $order->notes = $request->notes;
                 $order->address = $request->address;
-
+                $order->answer_status = $request->answer_status;
                 $order->vanex_city_id = $request->vanex_city_id;
                 $order->vanex_sub_city_id = $request->vanex_sub_city_id;
                 $order->vanex_shipment_sticker_notes = $request->vanex_shipment_sticker_notes;
@@ -653,6 +654,7 @@ class SalesController extends BaseController
                     'notes' => $request['notes'],
                     'statut' => $request['statut'],
                     'tax_rate' => $request['tax_rate'],
+                    'answer_status' => $request['answer_status'],
                     'TaxNet' => $request['TaxNet'],
                     'address' =>  $request['address'],
                     'discount' => $request['discount'],
@@ -904,7 +906,7 @@ class SalesController extends BaseController
         $sale_details['date'] = $sale_data->date;
         $sale_details['seen_at'] = $sale_data->seen_at;
         $sale_details['cancel_reason'] = $sale_data->cancel_reason;
-
+        $sale_details['answer_status'] =  $sale_data->answer_status;
         $sale_details['postponed_date'] = $sale_data->postponed_date;
         $sale_details['note'] = $sale_data->notes;
         $sale_details['statut'] = $sale_data->statut;
@@ -1337,6 +1339,7 @@ class SalesController extends BaseController
           $sale['notes'] = $Sale_data->notes;
           $sale['id'] = $Sale_data->id;
           $sale['address'] = $Sale_data->address;
+          $sale['answer_status'] = $Sale_data->answer_status;
 
           $sale['cancel_reason'] = $Sale_data->cancel_reason;
 
