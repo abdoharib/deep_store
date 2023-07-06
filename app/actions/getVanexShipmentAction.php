@@ -76,7 +76,7 @@ class getVanexShipmentAction
             $shipment = new Shipment();
 
             $shipment->Ref = $sale->Ref;
-            $shipment->user_id = Auth::user()->id;
+            $shipment->user_id = null;
             $shipment->sale_id = $sale->id;
             $shipment->delivered_to = 'vanex';
             $shipment->shipping_address = $sale->address;
