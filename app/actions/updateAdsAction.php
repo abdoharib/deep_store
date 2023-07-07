@@ -72,6 +72,8 @@ class updateAdsAction
                         }
                     }
                 })
+                ->whereIn('warehouse_id',$ad_data['warehouse_id'])
+
                 ->where('statut','completed');
 
             })->get()->sum('quantity');
