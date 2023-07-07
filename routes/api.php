@@ -293,6 +293,13 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::post('sales_delete_by_selection', 'SalesController@delete_by_selection');
     Route::get('get_Products_by_sale/{id}', 'SalesController@get_Products_by_sale');
 
+
+
+        //-------------------------------  Ads --------------------------\\
+    //------------------------------------------------------------------\\
+
+    Route::resource('ads', 'AdController');
+
     //-------------------------------  Shipments --------------------------\\
     //------------------------------------------------------------------\\
 

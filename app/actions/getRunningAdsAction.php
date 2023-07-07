@@ -11,20 +11,23 @@ class getRunningAdsAction
         $facebook = new \JoelButcher\Facebook\Facebook([
             'app_id' => env('FACEBOOK_APP_ID','193483383509873'),
             'app_secret' => env('FACEBOOK_APP_SECRET','a5819237862894e7c0871fb1953a2bff'),
-            'default_access_token' => env('ACCESS_TOKEN'),
+            'default_access_token' => env('ACCESS_TOKEN','EAACvZBNxYE3EBALAZAuhnFk712ic7V6cNWLYzbAJZCBP00AET1YZBdxp7JnNizXML1m3RbR4oZAsFXzZAiSZAGwENxHaulDUh8QJo3zGvD4ZCw0RIvwuZBJEI17XBbo4FEIGuDiwwSYWvbudfrVM84V30gy4PQUYtxM2RiHo7pDzcenJbpFPyBJBH'),
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
 
-
-        $response = $facebook->get('/act_724531662792327/ads?limit=100&fields=campaign{name,lifetime_budget,budget_remaining},name,status,created_time,adset{name,budget_remaining,lifetime_budget,daily_budget,end_time}');
+try {
+    $response = $facebook->get('/act_724531662792327/ads?limit=100&fields=campaign{name,lifetime_budget,budget_remaining},name,status,created_time,adset{name,budget_remaining,lifetime_budget,daily_budget,end_time,start_time}');
+} catch (\Exception $e) {
+    dd($e->getMessage());
+}
         $ads = $response->getDecodedBody()['data'];
 
-        $ads = array_filter($ads,function($ad){
-            if( $ad['status']=='ACTIVE' ){
-                return true;
-            }
-            return false;
-        });
+        // $ads = array_filter($ads,function($ad){
+        //     if( $ad['status']=='ACTIVE' ){
+        //         return true;
+        //     }
+        //     return false;
+        // });
 
 
 
@@ -42,6 +45,7 @@ class getRunningAdsAction
                 }
 
             }else{
+                return false;
                 $json_date = [
                     'product_id' => null,
                     'warehouse_id' => null
@@ -58,8 +62,12 @@ class getRunningAdsAction
             }
 
             if(is_null($json_date)){
-                dd($item['name']);
+                //throw new \Exception($item['name']);
+                return null;
+
             }
+
+
 
             return array_merge($item,[
                 'product_id' => $json_date['product_id'],
@@ -67,6 +75,10 @@ class getRunningAdsAction
                 'total_spent' => (float)$spent
             ]);
         },$ads);
+
+        $ads = array_filter($ads,function($item){
+            return $item;
+        });
 
 
         return $ads;

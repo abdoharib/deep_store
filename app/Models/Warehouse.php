@@ -17,4 +17,8 @@ class Warehouse extends Model
         return $this->belongsToMany('App\Models\User');
     }
 
+    // public function ad(){
+    //     return $this->belongsToMany(Ad::class,'ad_warehouse');
+    // }
+
 }

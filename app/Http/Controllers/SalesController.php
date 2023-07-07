@@ -101,7 +101,9 @@ class SalesController extends BaseController
                     return $query->where('user_id', '=', Auth::user()->id);
                 }
             });
-        //Multiple Filter
+
+
+            //Multiple Filter
         $Filtred = $helpers->filter($Sales, $columns, $param, $request)
         // Search With Multiple Param
             ->where(function ($query) use ($request) {
