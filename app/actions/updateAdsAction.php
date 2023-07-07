@@ -85,12 +85,15 @@ class updateAdsAction
 
             if($ad){
 
+                $end_time = array_key_exists('end_time',$ad_data['adset']) ?
+                SupportCarbon::make($ad_data['adset']['end_time'])->toDateTimeString()
+                :null;
             //update existing one
                 $ad->update([
                     'ad_ref_status' => $ad_data['status'],
                     'amount_spent' => ($ad_data['total_spent'] * 5),
                     'start_date' => SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString(),
-                    'end_date' => SupportCarbon::make($ad_data['adset']['end_time'])->toDateTimeString(),
+                    'end_date' => $end_time,
                     'product_id' => $ad_data['product_id'],
                     'product_name' => '',
                     'no_sales' => $no_sales,
@@ -112,6 +115,10 @@ class updateAdsAction
                 }
 
             }else{
+
+                $end_time = array_key_exists('end_time',$ad_data['adset']) ?
+                SupportCarbon::make($ad_data['adset']['end_time'])->toDateTimeString()
+                :null;
                 //create new one
                 $ad = Ad::create([
                     'ad_ref_id' => $ad_data['id'],
@@ -123,7 +130,7 @@ class updateAdsAction
                     'amount_spent' => ($ad_data['total_spent'] * 5),
 
                     'start_date' => $ad_data['adset']['start_time'],
-                    'end_date' => $ad_data['adset']['end_time'],
+                    'end_date' => $end_time,
                     'no_sales' => $no_sales,
                     'no_completed_sales' => $no_completed_sales,
                     'completed_sales_profit' => $completed_sales_profit,
