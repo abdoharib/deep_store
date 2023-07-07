@@ -34,8 +34,21 @@ class updateAdsAction
             $no_sales = SaleDetail::where('product_id',$ad_data['product_id'])
             ->whereHas('sale',function($q)use($ad_data){
 
-                $q->whereDate('date','>=',Carbon::make($ad_data['adset']['start_time'])->toDateString())
-                ->whereDate('date','<=',Carbon::make($ad_data['adset']['end_time'])->toDateString())
+                $q
+                ->where(function($q) use($ad_data) {
+                    if(array_key_exists('adset',$ad_data)){
+                        if(array_key_exists('start_time',$ad_data['adset'])){
+                            $q->whereDate('date','<=',Carbon::make($ad_data['adset']['end_time'])->toDateString());
+                        }
+                    }
+                })
+                ->where(function($q) use($ad_data) {
+                    if(array_key_exists('adset',$ad_data)){
+                        if(array_key_exists('start_time',$ad_data['adset'])){
+                            $q->whereDate('date','>=',Carbon::make($ad_data['adset']['start_time'])->toDateString());
+                        }
+                    }
+                })
                 ->whereIn('warehouse_id',$ad_data['warehouse_id']);
 
             })->get()->sum('quantity');
@@ -45,8 +58,20 @@ class updateAdsAction
             ->whereHas('sale',function($q)use($ad_data){
 
                 $q->whereDate('date','>=',Carbon::make($ad_data['adset']['start_time'])->toDateString())
-                ->whereDate('date','<=',Carbon::make($ad_data['adset']['end_time'])->toDateString())
-                ->whereIn('warehouse_id',$ad_data['warehouse_id'])
+                ->where(function($q) use($ad_data) {
+                    if(array_key_exists('adset',$ad_data)){
+                        if(array_key_exists('start_time',$ad_data['adset'])){
+                            $q->whereDate('date','<=',Carbon::make($ad_data['adset']['end_time'])->toDateString());
+                        }
+                    }
+                })
+                ->where(function($q) use($ad_data) {
+                    if(array_key_exists('adset',$ad_data)){
+                        if(array_key_exists('start_time',$ad_data['adset'])){
+                            $q->whereDate('date','>=',Carbon::make($ad_data['adset']['start_time'])->toDateString());
+                        }
+                    }
+                })
                 ->where('statut','completed');
 
             })->get()->sum('quantity');
