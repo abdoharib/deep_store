@@ -56,14 +56,14 @@ class Ad extends Model
 
     public function getPreformanceStatusAttribute($value){
         // dd($this->warehouses->pluck('warehouse')->pluck('name')->toArray());
-        $status = (($this->completed_sales_profit - $this->amount_spent) < 0) && ($this->amount_spent > 50);
+        $status = (((double)$this->completed_sales_profit - (double)$this->amount_spent) < 0) && ((double)$this->amount_spent > 50);
 
         if($status){
             $status = 'loser';
         }
 
-        if( $status != 3 ){
-            if($this->completed_sales_profit - $this->amount_spent < 80){
+        if( $status !== 'loser' ){
+            if((double)$this->completed_sales_profit - (double)$this->amount_spent < 80){
                 // mehh
                 $status = 'average';
             }else{
