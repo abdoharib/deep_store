@@ -37,7 +37,7 @@ class updateAdsAction
                 $q
                 ->where(function($q) use($ad_data) {
                     if(array_key_exists('adset',$ad_data)){
-                        if(array_key_exists('start_time',$ad_data['adset'])){
+                        if(array_key_exists('end_time',$ad_data['adset'])){
                             $q->whereDate('date','<=',Carbon::make($ad_data['adset']['end_time'])->toDateString());
                         }
                     }
@@ -60,7 +60,7 @@ class updateAdsAction
                 $q->whereDate('date','>=',Carbon::make($ad_data['adset']['start_time'])->toDateString())
                 ->where(function($q) use($ad_data) {
                     if(array_key_exists('adset',$ad_data)){
-                        if(array_key_exists('start_time',$ad_data['adset'])){
+                        if(array_key_exists('end_time',$ad_data['adset'])){
                             $q->whereDate('date','<=',Carbon::make($ad_data['adset']['end_time'])->toDateString());
                         }
                     }
