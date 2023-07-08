@@ -29,12 +29,8 @@ class updateVanexSalesAction
                 try {
                     sleep(2);
                     $package_details = $this->getVanexShipmentAction->invoke($sale);
-                } catch (\Exception $th) {
-                    Log::debug($th->getMessage());
-                    break;
-                }
 
-                Log::debug("updated sale".$sale->Ref);
+                    Log::debug("updated sale".$sale->Ref);
 
                 if (!is_null($package_details)) {
                     $sale->update([
@@ -43,6 +39,11 @@ class updateVanexSalesAction
                     ]);
                 }
                 $sales_updated++;
+                } catch (\Exception $th) {
+                    Log::debug($th->getMessage());
+                }
+
+
             }
         }
     }
