@@ -26,12 +26,17 @@ class updateVanexSalesAction
             if ($sale->shipping_provider == 'vanex' && $sale->vanex_shipment_code) {
                 //retrive the shipping info
 
-                $package_details = $this->getVanexShipmentAction->invoke($sale);
+                try {
+                    $package_details = $this->getVanexShipmentAction->invoke($sale);
+                } catch (\Exception $th) {
+                    Log::debug($th->getMessage());
+                }
                 Log::debug("updated sale".$sale->Ref);
 
                 if (!is_null($package_details)) {
                     $sale->update([
-                        'vanex_shipment_status' => $package_details['status_object']['status_name_cust']
+                        'vanex_shipment_status' => $package_details['status_object']['status_name_cust'],
+                        'last_vanex_update' => now()
                     ]);
                 }
                 $sales_updated++;
