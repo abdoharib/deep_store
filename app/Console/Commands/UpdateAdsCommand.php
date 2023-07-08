@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\actions\adsRiskMangement;
 use App\actions\updateAdsAction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -29,11 +30,14 @@ class UpdateAdsCommand extends Command
      */
 
      private $updateAdsAction=null;
-    public function __construct(updateAdsAction $updateAdsAction)
+     private $adsRiskMangement=null;
+
+    public function __construct(updateAdsAction $updateAdsAction, adsRiskMangement $adsRiskMangement)
     {
         parent::__construct();
 
         $this->updateAdsAction = $updateAdsAction;
+        $this->adsRiskMangement = $adsRiskMangement;
     }
 
     /**
@@ -44,7 +48,8 @@ class UpdateAdsCommand extends Command
     public function handle()
     {
         try {
-            $this->updateAdsAction->invoke();
+            // $this->updateAdsAction->invoke();
+            $this->adsRiskMangement->invoke();
             Log::debug("successfully updated");
         }catch(\Exception $e){
             Log::debug($e->getMessage());
