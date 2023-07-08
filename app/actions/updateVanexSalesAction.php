@@ -37,7 +37,7 @@ class updateVanexSalesAction
                 if (!is_null($package_details)) {
                     $sale->update([
                         'vanex_shipment_status' => $package_details['status_object']['status_name_cust'],
-                        'last_vanex_update' => now()
+                        'last_vanex_update' => now()->toDateTimeString()
                     ]);
                 }
                 $sales_updated++;
