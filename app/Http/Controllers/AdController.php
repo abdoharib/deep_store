@@ -56,7 +56,7 @@ class AdController extends Controller
                     return $query->when($request->filled('search'), function ($query) use ($request) {
                         return $query->where('id', 'LIKE', "%{$request->search}%")
                             ->orWhere('ad_ref_status', 'LIKE', "%{$request->search}%")
-                            ->orWhere('preformance_status', 'LIKE', "%{$request->search}%")
+                            // ->orWhere('preformance_status', 'LIKE', "%{$request->search}%")
 
                             ->orWhere(function ($query) use ($request) {
                                 return $query->whereHas('product', function ($q) use ($request) {
