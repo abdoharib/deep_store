@@ -34,6 +34,8 @@ class adsRiskMangement
             $response = $facebook->post('/'.$ad_ref_id,[
                 'status' => 'PAUSED',
             ]);
+            Log::debug("successfully turned off ad ".$ad_ref_id);
+
         } catch (\Exception $e) {
             Log::debug($e);
         }
