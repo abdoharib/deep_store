@@ -33,7 +33,8 @@ class Ad extends Model
     protected $appends = [
         'preformance_status',
         'product_name',
-        'warehouse_name'
+        'warehouse_name',
+        'is_closed'
     ];
 
 
@@ -52,6 +53,11 @@ class Ad extends Model
     public function getWarehouseNameAttribute($value){
         // dd($this->warehouses->pluck('warehouse')->pluck('name')->toArray());
         return implode(' / ',$this->warehouses->pluck('warehouse')->pluck('name')->toArray());
+    }
+
+    public function getIsClosedAttribute($value){
+        // dd($this->warehouses->pluck('warehouse')->pluck('name')->toArray());
+        return $this->closed_at ? true: false;
     }
 
     public function getPreformanceStatusAttribute($value){
