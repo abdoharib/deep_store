@@ -30,7 +30,7 @@ class AdController extends Controller
             // Start displaying items from this number;
             $offSet = ($pageStart * $perPage) - $perPage;
             $order = 'ad_ref_status';
-            $dir = $request->SortType;
+            $dir = 'asc';
             $helpers = new helpers();
             // Filter fields With Params to retrieve
             $param = array(
