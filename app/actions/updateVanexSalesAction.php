@@ -30,6 +30,7 @@ class updateVanexSalesAction
                     $package_details = $this->getVanexShipmentAction->invoke($sale);
                 } catch (\Exception $th) {
                     Log::debug($th->getMessage());
+                    break;
                 }
                 Log::debug("updated sale".$sale->Ref);
 
