@@ -29,7 +29,7 @@ class AdController extends Controller
             $pageStart = FacadesRequest::get('page', 1);
             // Start displaying items from this number;
             $offSet = ($pageStart * $perPage) - $perPage;
-            $order = $request->SortField;
+            $order = 'ad_ref_status';
             $dir = $request->SortType;
             $helpers = new helpers();
             // Filter fields With Params to retrieve
