@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\SaleDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Carbon as SupportCarbon;
+use Illuminate\Support\Facades\Log;
 
 class updateAdsAction
 {
@@ -116,6 +117,8 @@ class updateAdsAction
 
                 }
 
+                Log::debug('ad updated');
+
             }else{
 
                 $end_time = array_key_exists('end_time',$ad_data['adset']) ?
@@ -146,6 +149,9 @@ class updateAdsAction
                     ]);
 
                 }
+
+                Log::debug('ad created');
+
             }
         }
 
