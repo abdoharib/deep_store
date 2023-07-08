@@ -4,6 +4,7 @@ namespace App\actions;
 
 use App\Models\Ad;
 use Carbon\Carbon;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Log;
 
 class adsRiskMangement
@@ -21,7 +22,7 @@ class adsRiskMangement
         }
     }
 
-    public function turnOffAd(string $ad_ref_id){
+    public function turnOffAd(Ad $ad){
 
         $facebook = new \JoelButcher\Facebook\Facebook([
             'app_id' => env('FACEBOOK_APP_ID','193483383509873'),
@@ -31,10 +32,13 @@ class adsRiskMangement
         ]);
 
         try {
-            $response = $facebook->post('/'.$ad_ref_id,[
+            $response = $facebook->post('/'.$ad->ad_ref_id,[
                 'status' => 'PAUSED',
             ]);
-            Log::debug("successfully turned off ad ".$ad_ref_id);
+            Log::debug("successfully turned off ad ".$ad->ad_ref_id);
+            $ad->update([
+                'closed_at' => SupportCarbon::now()->toDateTimeString()
+            ]);
 
         } catch (\Exception $e) {
             Log::debug($e);

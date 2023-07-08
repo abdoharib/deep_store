@@ -25,6 +25,8 @@ class CreateAdsTable extends Migration
             $table->foreignIdFor(Product::class);
             $table->dateTime('start_date');
             $table->dateTime('end_date');
+            $table->dateTime('closed_at')->nullable();
+
             $table->double('amount_spent');
             // $table->string('preformance_status')->nullable();
 

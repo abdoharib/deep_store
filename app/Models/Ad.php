@@ -16,7 +16,7 @@ class Ad extends Model
         'ad_ref_id',
         'ad_ref_status',
         'product_id',
-
+        'closed_at',
         'start_date',
         'end_date',
 
