@@ -28,9 +28,9 @@ class updateAdsAction
         foreach ($ads_data as $ad_data) {
 
             $ad = Ad::where('ad_ref_id',$ad_data['id'])->first();
-            // if(!Product::find($ad_data['product_id'])){
-            //     break;
-            // }
+            if(!Product::find($ad_data['product_id'])){
+                break;
+            }
 
             $no_sales = SaleDetail::where('product_id',$ad_data['product_id'])
             ->whereHas('sale',function($q)use($ad_data){
