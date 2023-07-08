@@ -50,8 +50,7 @@ class AdController extends Controller
             $ads = Ad::where('deleted_at', '=', null);
 
             //Multiple Filter
-            $Filtred = $helpers->filter($ads, $columns, $param, $request)
-
+            $ads
                 // Search With Multiple Param
             ->where(function ($query) use ($request) {
                     return $query->when($request->filled('search'), function ($query) use ($request) {
