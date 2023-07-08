@@ -20,7 +20,6 @@ class helpers
             $fields[$key]['value'] = $columns[$key];
         }
 
-        dd($fields);
         foreach ($fields as $field) {
             $model->where(function ($query) use ($request, $field, $model) {
                 return $model->when($request->filled($field['value']),
