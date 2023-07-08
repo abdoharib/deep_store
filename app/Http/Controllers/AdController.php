@@ -80,7 +80,7 @@ class AdController extends Controller
             }
 
 
-            $updateAdsAction->invoke();
+            // $updateAdsAction->invoke();
 
             $ads = $ads->offset($offSet)
                 ->limit($perPage)->orderBy($order, $dir)->get();
