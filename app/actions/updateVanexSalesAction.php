@@ -16,7 +16,7 @@ class updateVanexSalesAction
     }
 
     public function invoke(){
-        $sales = Sale::with('facture', 'client', 'warehouse','user')->where('deleted_at', '=', null)->get();
+        $sales = Sale::with('facture', 'client', 'warehouse','user')->where('deleted_at', '=', null)->orderBy('id','desc')->get();
         $sales_updated = 0;
 
         foreach ($sales as $sale) {
@@ -33,6 +33,7 @@ class updateVanexSalesAction
                     Log::debug($th->getMessage());
                     break;
                 }
+
                 Log::debug("updated sale".$sale->Ref);
 
                 if (!is_null($package_details)) {
