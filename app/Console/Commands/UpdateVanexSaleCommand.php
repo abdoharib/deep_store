@@ -47,7 +47,7 @@ class UpdateVanexSaleCommand extends Command
     {
         try {
             $this->updateVanexSalesAction->invoke();
-            Log::debug("successfully updated");
+            Log::debug("successfully updated vanex sales");
         }catch(\Exception $e){
             Log::debug($e->getMessage());
         }
