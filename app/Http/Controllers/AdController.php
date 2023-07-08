@@ -35,15 +35,15 @@ class AdController extends Controller
             // Filter fields With Params to retrieve
             $param = array(
                 0 => '=',
-                1 => '=',
-                2 => '=',
+                // 1 => '=',
+                // 2 => '=',
 
             );
 
             $columns = array(
-                0 => 'start_date',
-                1 => 'end_date',
-                2 => 'ad_ref_status',
+                // 0 => 'start_date',
+                // 1 => 'end_date',
+                0 => 'ad_ref_status',
             );
             $data = array();
 
