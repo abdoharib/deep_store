@@ -190,6 +190,8 @@ class SalesController extends BaseController
             $item['paid_amount'] = number_format($Sale['paid_amount'], 2, '.', '');
             $item['due'] = number_format($item['GrandTotal'] - $item['paid_amount'], 2, '.', '');
             $item['payment_status'] = $Sale['payment_statut'];
+            $item['last_vanex_update'] = $Sale['last_vanex_update'];
+            $item['vanex_shipment_status'] = $Sale['vanex_shipment_status'];
 
             if (SaleReturn::where('sale_id', $Sale['id'])->where('deleted_at', '=', null)->exists()) {
                 $sellReturn = SaleReturn::where('sale_id', $Sale['id'])->where('deleted_at', '=', null)->first();
@@ -202,11 +204,11 @@ class SalesController extends BaseController
             $item['shipping_provider'] = $Sale['shipping_provider'];
             $item['vanex_shipment_code'] = $Sale['vanex_shipment_code'];
 
-            if(!is_null($package_details)){
-                $item['vanex_shipment_status'] = $package_details['status_object']['status_name_cust'];
-            }else{
-                $item['vanex_shipment_status'] = '/';
-            }
+            // if(!is_null($package_details)){
+            //     $item['vanex_shipment_status'] = $package_details['status_object']['status_name_cust'];
+            // }else{
+            //     $item['vanex_shipment_status'] = '/';
+            // }
 
             $data[] = $item;
         }

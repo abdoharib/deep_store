@@ -9,11 +9,11 @@ class Sale extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'answer_status',
+        'answer_status','vanex_shipment_status',
         'date', 'postponed_date', 'Ref', 'is_pos', 'client_id', 'GrandTotal', 'qte_retturn', 'TaxNet', 'tax_rate', 'notes',
         'total_retturn', 'warehouse_id', 'user_id', 'statut', 'discount', 'shipping','address',
         'paid_amount', 'payment_statut', 'created_at', 'updated_at', 'deleted_at','shipping_status',
-        'vanex_sub_city_id','vanex_city_id','vanex_shipment_sticker_notes','vanex_shipment_code','shipping_provider','seen_at','cancel_reason','updated_by'
+        'vanex_sub_city_id','vanex_city_id','vanex_shipment_sticker_notes','vanex_shipment_code','shipping_provider','seen_at','cancel_reason','updated_by','last_vanex_update'
     ];
 
     protected $casts = [
@@ -32,7 +32,8 @@ class Sale extends Model
     ];
 
     private $append = [
-        'due'
+        'due',
+        'sale_cost'
     ];
 
     public function getDueAttribute() {
@@ -68,5 +69,17 @@ class Sale extends Model
         return $this->hasOne(Shipment::class);
 
     }
+
+
+    public function getSaleCostAttribute(){
+
+        $cost = 0;
+        foreach ($this->details as $detail) {
+            $cost =+ ($detail->product->cost * $detail->quantity);
+        }
+        return $cost;
+    }
+
+
 
 }
