@@ -1907,8 +1907,8 @@ class ReportController extends BaseController
         foreach ($weeks as $week) {
 
             $weekly_ads = Ad::where('deleted_at',null)
-            ->whereDate('start_date','>=',$week['from']->toDateTimeString())
-            ->whereDate('end_date','<=',$week['to']->toDateTimeString())
+            ->whereDate('start_date','>=',$week['from'])
+            ->whereDate('end_date','<=',$week['to'])
             ->get();
 
             dd($weekly_ads);
