@@ -12,14 +12,19 @@ class adsRiskMangement
     public function invoke(){
 
         $ads = Ad::all();
+        $ads_manged_risk = 0;
 
         foreach ($ads as $ad) {
+
             if($ad->preformance_status == 'loser'){
                 if($ad->ad_ref_status == 'ACTIVE'){
                     $this->turnOffAd($ad->ad_ref_id);
                 }
             };
+            $ads_manged_risk++;
         }
+
+        Log::debug('looped over and checked '.$ads_manged_risk . ' for spend > profit');
     }
 
     public function turnOffAd(Ad $ad){
