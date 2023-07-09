@@ -55,7 +55,7 @@ class updateAdsAction
             })->get()->sum('quantity');
 
 
-            $no_completed_sales = SaleDetail::where('product_id',$ad_data['product_id'])
+            $completed_sales = SaleDetail::where('product_id',$ad_data['product_id'])
             ->whereHas('sale',function($q)use($ad_data){
 
                 $q->whereDate('date','>=',Carbon::make($ad_data['adset']['start_time'])->toDateString())
@@ -77,13 +77,15 @@ class updateAdsAction
 
                 ->where('statut','completed');
 
-            })->get()->sum('quantity');
+            })->get();
+
+            $no_completed_sales = $completed_sales->sum('quantity');
 
             $completed_sales_profit = 0;
             $product = Product::where('id',$ad_data['product_id'])->first();
 
             if($product){
-                $completed_sales_profit = $no_completed_sales * $product->profit;
+                $completed_sales_profit = ($no_completed_sales * $product->profit) - $completed_sales->pluck('sale')->sum('discount');
             }
 
             if($ad){
