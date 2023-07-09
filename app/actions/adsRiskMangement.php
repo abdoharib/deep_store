@@ -11,7 +11,7 @@ class adsRiskMangement
 {
     public function invoke(){
 
-        $ads = Ad::where('deleted_at',null)->get();
+        $ads = Ad::all();
 
         foreach ($ads as $ad) {
             if($ad->preformance_status == 'loser'){
