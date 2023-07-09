@@ -17,7 +17,9 @@ class adsRiskMangement
         foreach ($ads as $ad) {
 
             if($ad->preformance_status == 'loser'){
+                Log::debug('ad '.$ad->ad_ref_id . 'is a loser');
                 if($ad->ad_ref_status == 'ACTIVE'){
+                    Log::debug('ad '.$ad->ad_ref_id . 'is Active');
                     $this->turnOffAd($ad->ad_ref_id);
                 }
             };
