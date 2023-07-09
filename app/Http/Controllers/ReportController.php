@@ -1912,7 +1912,7 @@ class ReportController extends BaseController
 
         foreach ($weeks as $week) {
 
-            dd($week['from']);
+            dd($week);
 
             $weekly_ads = Ad::
             whereDate('start_date','>=',$week['from'])
@@ -1958,7 +1958,6 @@ class ReportController extends BaseController
         $weeks = [];
 
         while ($start->weekOfYear !== $end->weekOfYear) {
-            dd($start->startOfWeek());
             $weeks[] = [
                 'from' => $start->startOfWeek(),
                 'to' => $start->endOfWeek(),
