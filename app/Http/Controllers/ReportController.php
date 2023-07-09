@@ -1903,11 +1903,17 @@ class ReportController extends BaseController
         $weekly_revenue_from_completed_sale = [];
         $weekly_cost = [];
         $weekly_net_profit = [];
+        $weekly_ads = Ad::
+            whereDate('start_date','>=',Carbon::make('2023-05-01')->toDateTimeString())
+            ->whereDate('end_date','<=',Carbon::now()->toDateTimeString())
+            ->get();
+
+            dd($weekly_ads);
 
         foreach ($weeks as $week) {
 
-            $weekly_ads = Ad::where('deleted_at',null)
-            ->whereDate('start_date','>=',$week['from'])
+            $weekly_ads = Ad::
+            whereDate('start_date','>=',$week['from'])
             ->whereDate('end_date','<=',$week['to'])
             ->get();
 
