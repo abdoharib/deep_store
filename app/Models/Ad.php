@@ -15,6 +15,8 @@ class Ad extends Model
     protected $fillable = [
         'ad_ref_id',
         'ad_ref_status',
+        'ad_set_ref_status',
+
         'product_id',
         'closed_at',
         'start_date',
