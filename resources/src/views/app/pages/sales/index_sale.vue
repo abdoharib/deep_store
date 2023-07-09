@@ -173,13 +173,24 @@
               class="badge badge-outline-success"
             >{{$t('complete')}}</span>
             <span
+              v-else-if="props.row.statut == 'under_shipping'"
+              class="badge badge-outline-primary"
+            >{{$t('under_shipping')}}</span>
+            <span
               v-else-if="props.row.statut == 'pending'"
               class="badge badge-outline-info"
             >{{$t('Pending')}}</span>
+
               <span
                   v-else-if="props.row.statut == 'canceled'"
                   class="badge badge-outline-danger"
               >{{$t('Canceled')}}</span>
+
+              <span
+                  v-else-if="props.row.statut == 'postponed'"
+                  class="badge badge-outline-warning"
+              >{{$t('postponed')}}</span>
+
             <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
           </div>
 
@@ -295,6 +306,11 @@
                         {label: 'completed', value: 'completed'},
                         {label: 'Pending', value: 'pending'},
                         {label: 'Ordered', value: 'ordered'},
+                        {label: 'canceled', value: 'canceled'},
+                        {label: 'postponed', value: 'postponed'},
+                        {label: 'under_shipping', value: 'under_shipping'},
+
+
                       ]"
               ></v-select>
             </b-form-group>
@@ -937,6 +953,20 @@ export default {
           thClass: "text-left"
         },
         {
+          label: this.$t("address"),
+          field: "address",
+          html: true,
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
+          label: this.$t("postponed_date"),
+          field: "postponed_date",
+          html: true,
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
           label: this.$t("shipping_provider"),
           field: "shipping_provider",
           html: true,
@@ -946,6 +976,14 @@ export default {
         {
           label: this.$t("vanex_shipment_code"),
           field: "vanex_shipment_code",
+          html: true,
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+
+        {
+          label: this.$t("vanex_shipment_status"),
+          field: "vanex_shipment_status",
           html: true,
           tdClass: "text-left",
           thClass: "text-left"
@@ -973,6 +1011,20 @@ export default {
           sortable: false
         },
         {
+          label: this.$t("delivery_note"),
+          field: "delivery_note",
+          tdClass: "text-left",
+          thClass: "text-left",
+          sortable: false
+        },
+        {
+          label: this.$t("answer_status"),
+          field: "answer_status",
+          html: true,
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
           label: this.$t("PaymentStatus"),
           field: "payment_status",
           html: true,
@@ -982,6 +1034,13 @@ export default {
         {
           label: this.$t("Shipping_status"),
           field: "shipping_status",
+          html: true,
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
+          label: this.$t("last_vanex_update"),
+          field: "last_vanex_update",
           html: true,
           tdClass: "text-left",
           thClass: "text-left"

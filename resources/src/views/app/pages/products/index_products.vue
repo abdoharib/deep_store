@@ -392,6 +392,12 @@ export default {
           thClass: "text-left"
         },
         {
+          label: this.$t("vanex_storage_product_ref_id"),
+          field: "vanex_storage_product_ref_id",
+          tdClass: "text-left",
+          thClass: "text-left"
+        },
+        {
           label: this.$t("Unit"),
           field: "unit",
           tdClass: "text-left",

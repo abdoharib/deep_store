@@ -122,7 +122,8 @@ export default {
       axios
         .post("/login",{
           email: self.email,
-          password: self.password
+          password: self.password,
+          fcm:localStorage.getItem('fcm')
         },
         {
           baseURL: '',
@@ -136,7 +137,7 @@ export default {
             );
 
           window.location = '/';
-           
+
           NProgress.done();
           this.loading = false;
         })

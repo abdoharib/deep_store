@@ -395,6 +395,25 @@ const routes = [
                     }
                 ]
             },
+                //Ads
+                {
+                    path: "/app/ads",
+                    component: () =>
+                        import(
+                            /* webpackChunkName: "sales" */ "./views/app/pages/ads"
+                        ),
+                    redirect: "/app/ads/list",
+                    children: [
+                        {
+                            name: "index_ads",
+                            path: "list",
+                            component: () =>
+                                import(
+                                    /* webpackChunkName: "index_sales" */ "./views/app/pages/ads/index_ads"
+                                )
+                        },
+                    ]
+                },
 
             // Sales Return
             {

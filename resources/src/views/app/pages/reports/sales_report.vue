@@ -4,16 +4,16 @@
 
     <div v-if="isLoading" class="loading_page spinner spinner-primary mr-3"></div>
       <b-col md="12" class="text-center" v-if="!isLoading">
-        <date-range-picker 
-          v-model="dateRange" 
-          :startDate="startDate" 
-          :endDate="endDate" 
+        <date-range-picker
+          v-model="dateRange"
+          :startDate="startDate"
+          :endDate="endDate"
            @update="Submit_filter_dateRange"
-          :locale-data="locale" > 
+          :locale-data="locale" >
 
           <template v-slot:input="picker" style="min-width: 350px;">
               {{ picker.startDate.toJSON().slice(0, 10)}} - {{ picker.endDate.toJSON().slice(0, 10)}}
-          </template>        
+          </template>
         </date-range-picker>
       </b-col>
 
@@ -73,6 +73,21 @@
               v-else-if="props.row.statut == 'pending'"
               class="badge badge-outline-info"
             >{{$t('Pending')}}</span>
+            <span
+              v-else-if="props.row.statut == 'canceled'"
+              class="badge badge-outline-danger"
+            >{{$t('Canceled')}}</span>
+            <span
+
+              v-else-if="props.row.statut == 'postponed'"
+              class="badge badge-outline-warning"
+            >{{$t('postponed')}}</span>
+
+            <span
+            v-else-if="props.row.statut == 'under_shipping'"
+            class="badge badge-outline-primary"
+            >{{$t('under_shipping')}}</span>
+
             <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
           </div>
 
@@ -134,6 +149,10 @@
                 <option value="completed">Completed</option>
                 <option value="pending">Pending</option>
                 <option value="ordered">Ordered</option>
+                <option value="canceled">Canceled</option>
+                <option value="postponed">Postponed</option>
+
+
               </select>
             </b-form-group>
           </b-col>
@@ -185,21 +204,21 @@ export default {
 components: { DateRangePicker },
   data() {
     return {
-     startDate: "", 
-     endDate: "", 
-     dateRange: { 
-       startDate: "", 
-       endDate: "" 
-     }, 
-      locale:{ 
+     startDate: "",
+     endDate: "",
+     dateRange: {
+       startDate: "",
+       endDate: ""
+     },
+      locale:{
           //separator between the two ranges apply
-          Label: "Apply", 
-          cancelLabel: "Cancel", 
-          weekLabel: "W", 
-          customRangeLabel: "Custom Range", 
-          daysOfWeek: moment.weekdaysMin(), 
-          //array of days - see moment documenations for details 
-          monthNames: moment.monthsShort(), //array of month names - see moment documenations for details 
+          Label: "Apply",
+          cancelLabel: "Cancel",
+          weekLabel: "W",
+          customRangeLabel: "Custom Range",
+          daysOfWeek: moment.weekdaysMin(),
+          //array of days - see moment documenations for details
+          monthNames: moment.monthsShort(), //array of month names - see moment documenations for details
           firstDay: 1 //ISO first day of week - see moment documenations for details
         },
       isLoading: true,
@@ -223,9 +242,9 @@ components: { DateRangePicker },
       warehouses: [],
       rows: [{
           statut: 'Total',
-         
+
           children: [
-             
+
           ],
       },],
       sales: [],
@@ -307,7 +326,7 @@ components: { DateRangePicker },
   methods: {
 
     sumCount(rowObj) {
-     
+
     	let sum = 0;
       for (let i = 0; i < rowObj.children.length; i++) {
         sum += rowObj.children[i].GrandTotal;
@@ -315,7 +334,7 @@ components: { DateRangePicker },
       return sum;
     },
     sumCount2(rowObj) {
-     
+
     	let sum = 0;
       for (let i = 0; i < rowObj.children.length; i++) {
         sum += rowObj.children[i].paid_amount;
@@ -323,7 +342,7 @@ components: { DateRangePicker },
       return sum;
     },
     sumCount3(rowObj) {
-     
+
     	let sum = 0;
       for (let i = 0; i < rowObj.children.length; i++) {
         sum += rowObj.children[i].due;
@@ -451,7 +470,7 @@ components: { DateRangePicker },
 
         self.dateRange.startDate = today.getFullYear();
         self.dateRange.endDate = new Date().toJSON().slice(0, 10);
-        
+
       }
     },
 

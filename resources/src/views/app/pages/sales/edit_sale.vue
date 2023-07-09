@@ -20,7 +20,7 @@
                       <b-form-input
                         :state="getValidationState(validationContext)"
                         aria-describedby="date-feedback"
-                        type="date"
+                        type="datetime-local"
                         v-model="sale.date"
                       ></b-form-input>
                       <b-form-invalid-feedback
@@ -29,6 +29,28 @@
                     </b-form-group>
                   </validation-provider>
                 </b-col>
+
+                 <!-- date  -->
+                 <b-col v-if="sale.statut == 'postponed'" lg="2" md="2" sm="12" class="mb-3">
+                  <validation-provider
+                    name="postponed_date"
+                    :rules="{ required: true}"
+                    v-slot="validationContext"
+                  >
+                    <b-form-group :label="$t('postponed_date') + ' ' + '*'">
+                      <b-form-input
+                        :state="getValidationState(validationContext)"
+                        aria-describedby="date-feedback"
+                        type="datetime-local"
+                        v-model="sale.postponed_date"
+                      ></b-form-input>
+                      <b-form-invalid-feedback
+                        id="OrderTax-feedback"
+                      >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+
                 <!-- Customer -->
                 <b-col lg="4" md="4" sm="12" class="mb-3">
                   <validation-provider name="Customer" :rules="{ required: true}">
@@ -62,6 +84,31 @@
                       />
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
                     </b-form-group>
+                  </validation-provider>
+                </b-col>
+
+                <b-col  lg="4" md="2" sm="12" class="mb-3">
+                  <validation-provider name="address" :rules="{ required: false}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('address') + ' ' + '*'">
+                      <!-- <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        :disabled="details.length > 0"
+                        v-model="area"
+                        :reduce="label => label.value"
+                        :placeholder="$t('Enter_Sticker_Notes')"
+                      /> -->
+                      <b-form-input
+                        aria-describedby="address"
+                        :label="$t('address') + ' '"
+                        :placeholder="$t('Enter_Sticker_Notes')"
+                        v-model="sale.address"
+                      ></b-form-input>
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+
+
+
                   </validation-provider>
                 </b-col>
 
@@ -284,7 +331,10 @@
                                   {label: 'completed', value: 'completed'},
                                   {label: 'Pending', value: 'pending'},
                                   {label: 'ordered', value: 'ordered'},
-                                  {label: 'canceled', value: 'canceled'}
+                                  {label: 'canceled', value: 'canceled'},
+                                  {label: 'postponed', value: 'postponed'},
+                                  {label: 'under_shipping', value: 'under_shipping'}
+
 
                                 ]"
                       ></v-select>
@@ -480,6 +530,7 @@ export default {
       sale: {
         id: "",
         date: "",
+        postponed_date:"",
         statut: "",
         notes: "",
         client_id: "",
@@ -487,6 +538,7 @@ export default {
         tax_rate: 0,
         TaxNet: 0,
         shipping: 0,
+        address:"",
         discount: 0
       },
       total: 0,
@@ -978,6 +1030,8 @@ export default {
         axios
           .put(`sales/${id}`, {
             date: this.sale.date,
+            address: this.sale.address,
+            postponed_date: this.sale.postponed_date,
             client_id: this.sale.client_id,
             GrandTotal: this.GrandTotal,
             warehouse_id: this.sale.warehouse_id,

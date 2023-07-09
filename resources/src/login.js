@@ -1,3 +1,5 @@
+import './firebase-notification-init.js'
+
 import store from "./store";
 import Vue from "vue";
 import router from "./router";
@@ -93,10 +95,10 @@ Vue.config.silent = true;
 Vue.config.devtools = false;
 
 var login = new Vue({
-   
+
   el: '#login',
   store,
   i18n,
-  router:router,  
+  router:router,
 });
 

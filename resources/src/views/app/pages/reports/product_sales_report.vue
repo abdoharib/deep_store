@@ -142,6 +142,8 @@
                         <option value="pending">Pending</option>
                         <option value="ordered">Ordered</option>
                         <option value="canceled">Canceled</option>
+                        <option value="postponed">Postponed</option>
+
 
                     </select>
                 </b-form-group>

@@ -13,6 +13,7 @@
     >
       <div>
         <ul class="navigation-left">
+
           <li
             @mouseenter="toggleSubMenu"
             :class="{ active: selectedParentMenu == 'dashboard' }"
@@ -24,6 +25,7 @@
               <span class="nav-text">{{ $t("dashboard") }}</span>
             </router-link>
           </li>
+
           <li
             v-show="currentUserPermissions
             && (currentUserPermissions.includes('products_add')
@@ -44,6 +46,7 @@
             </a>
             <div class="triangle"></div>
           </li>
+
           <li
             v-show="currentUserPermissions
               && (currentUserPermissions.includes('adjustment_view')
@@ -61,9 +64,6 @@
             <div class="triangle"></div>
           </li>
 
-
-
-
           <li
             v-show="currentUserPermissions && (currentUserPermissions.includes('Quotations_view')
                       || currentUserPermissions.includes('Quotations_add'))"
@@ -79,6 +79,7 @@
             </a>
             <div class="triangle"></div>
           </li>
+
           <li
             v-show="currentUserPermissions && (currentUserPermissions.includes('Purchases_view')
                         || currentUserPermissions.includes('Purchases_add'))"
@@ -94,6 +95,7 @@
             </a>
             <div class="triangle"></div>
           </li>
+
           <li
             v-show="currentUserPermissions && (currentUserPermissions.includes('Sales_view')
                         || currentUserPermissions.includes('Sales_add')
@@ -112,7 +114,22 @@
             <div class="triangle"></div>
           </li>
 
-            <li
+          <li
+
+            class="nav-item"
+            @mouseenter="toggleSubMenu"
+            :class="{ active: selectedParentMenu == 'ads' }"
+            data-item="ads"
+            :data-submenu="true"
+          >
+            <a class="nav-item-hold" href="#">
+              <i class="nav-icon i-Loudspeaker"></i>
+              <span class="nav-text">{{$t('ads')}}</span>
+            </a>
+            <div class="triangle"></div>
+          </li>
+
+          <li
             v-if="currentUserPermissions && currentUserPermissions.includes('Sale_Returns_view')"
             @mouseenter="toggleSubMenu"
             :class="{ active: selectedParentMenu == 'sale_return' }"
@@ -177,6 +194,7 @@
             </a>
             <div class="triangle"></div>
           </li>
+
           <li
             v-show="currentUserPermissions && (currentUserPermissions.includes('expense_view')
               || currentUserPermissions.includes('expense_add'))"
@@ -192,7 +210,6 @@
             </a>
             <div class="triangle"></div>
           </li>
-
 
           <li
             v-show="currentUserPermissions && (currentUserPermissions.includes('Customers_view')
@@ -210,8 +227,6 @@
             </a>
             <div class="triangle"></div>
           </li>
-
-
 
           <li
             v-show="currentUserPermissions && (currentUserPermissions.includes('setting_system')
@@ -279,6 +294,8 @@
       class="sidebar-left-secondary ps rtl-ps-none"
     >
       <div ref="sidebarChild">
+
+
         <ul
           class="childNav d-none"
           data-parent="products"
@@ -339,6 +356,27 @@
             </router-link>
           </li>
         </ul>
+
+
+
+        <ul
+          class="childNav d-none"
+          data-parent="ads"
+          :class="{ 'd-block': selectedParentMenu == 'ads' }"
+        >
+
+          <li
+            class="nav-item"
+
+          >
+            <router-link tag="a" class to="/app/ads/list">
+              <i class="nav-icon i-Files"></i>
+              <span class="item-name">{{$t('adsList')}}</span>
+            </router-link>
+          </li>
+
+        </ul>
+
 
         <ul
           class="childNav d-none"
@@ -966,6 +1004,7 @@
         </ul>
       </div>
     </vue-perfect-scrollbar>
+
     <div
       @click="removeOverlay()"
       class="sidebar-overlay"

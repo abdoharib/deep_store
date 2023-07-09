@@ -20,7 +20,7 @@
                       <b-form-input
                         :state="getValidationState(validationContext)"
                         aria-describedby="date-feedback"
-                        type="date"
+                        type="datetime-local"
                         v-model="sale.date"
                       ></b-form-input>
                       <b-form-invalid-feedback
@@ -29,6 +29,28 @@
                     </b-form-group>
                   </validation-provider>
                 </b-col>
+
+                 <!-- postponed date  -->
+                 <b-col v-if="sale.statut == 'postponed'" lg="2" md="4" sm="12" class="mb-3">
+                  <validation-provider
+                    name="postponed_date"
+                    :rules="{ required: true}"
+                    v-slot="validationContext"
+                  >
+                    <b-form-group :label="$t('postponed_date') + ' ' + '*'">
+                      <b-form-input
+                        :state="getValidationState(validationContext)"
+                        aria-describedby="date-feedback"
+                        type="datetime-local"
+                        v-model="sale.postponed_date"
+                      ></b-form-input>
+                      <b-form-invalid-feedback
+                        id="OrderTax-feedback"
+                      >{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                  </validation-provider>
+                </b-col>
+
                 <!-- Customer -->
                 <b-col lg="4" md="2" sm="12" class="mb-3">
                   <validation-provider name="Customer" :rules="{ required: true}">
@@ -99,7 +121,7 @@
                     </b-form-group>
                   </validation-provider>
                 </b-col> -->
-                <b-col v-if='sale.warehouse_id == 1' lg="4" md="2" sm="12" class="mb-3">
+                <b-col v-if='sale.warehouse_id == 1 || sale.warehouse_id == 6' lg="4" md="2" sm="12" class="mb-3">
                   <validation-provider name="shipping_provider" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('shipping_provider') + ' ' + '*'">
                       <v-select
@@ -134,7 +156,7 @@
                     </b-form-group>
                   </validation-provider>
                 </b-col>
-                <b-col v-if='areWeUsingVanex' lg="4" md="2" sm="12" class="mb-3">
+                <b-col v-if='(areWeUsingVanex && is_vanex_areas_loading ) || ( areas.length)' lg="4" md="2" sm="12" class="mb-3">
                   <validation-provider name="area" :rules="{ required: true}">
                     <b-form-group slot-scope="{ valid, errors }" :label="$t('area') + ' ' + '*'">
                       <v-select
@@ -168,6 +190,31 @@
                         :label="$t('sticker_notes') + ' '"
                         :placeholder="$t('Enter_Sticker_Notes')"
                         v-model="sticker_notes"
+                      ></b-form-input>
+                      <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+
+
+
+                  </validation-provider>
+                </b-col>
+
+                <b-col v-if='!areWeUsingVanex' lg="4" md="2" sm="12" class="mb-3">
+                  <validation-provider name="address" :rules="{ required: false}">
+                    <b-form-group slot-scope="{ valid, errors }" :label="$t('address') + ' ' + '*'">
+                      <!-- <v-select
+                        :class="{'is-invalid': !!errors.length}"
+                        :state="errors[0] ? false : (valid ? true : null)"
+                        :disabled="details.length > 0"
+                        v-model="area"
+                        :reduce="label => label.value"
+                        :placeholder="$t('Enter_Sticker_Notes')"
+                      /> -->
+                      <b-form-input
+                        aria-describedby="address"
+                        :label="$t('address') + ' '"
+                        :placeholder="$t('Enter_address')"
+                        v-model="sale.address"
                       ></b-form-input>
                       <b-form-invalid-feedback>{{ errors[0] }}</b-form-invalid-feedback>
                     </b-form-group>
@@ -400,7 +447,10 @@
                                   {label: 'completed', value: 'completed'},
                                   {label: 'Pending', value: 'pending'},
                                   {label: 'ordered', value: 'ordered'},
-                                  {label: 'canceled', value: 'canceled'}
+                                  {label: 'canceled', value: 'canceled'},
+                                  {label: 'postponed', value: 'postponed'},
+                                  {label: 'under_shipping', value: 'under_shipping'}
+
 
                                 ]"
                       ></v-select>
@@ -848,7 +898,7 @@ export default {
             name:'فانكس'
         }
       ],
-      shipping_provider:null,
+      shipping_provider:1,
 
 
       cities:[],
@@ -872,11 +922,13 @@ export default {
       },
       sale: {
         id: "",
-        date: new Date().toISOString().slice(0, 10),
-        statut: "completed",
+        date: new Date().toISOString(),
+        postponed_date: "null",
+        statut: "pending",
         notes: "",
         client_id: "",
         warehouse_id: "",
+        address:"",
         tax_rate: 0,
         TaxNet: 0,
         shipping: 0,
@@ -1636,6 +1688,7 @@ export default {
           axios
             .post("sales", {
               date: this.sale.date,
+              postponed_date: this.sale.postponed_date,
               client_id: this.sale.client_id,
               warehouse_id: this.sale.warehouse_id,
               statut: this.sale.statut,
@@ -1650,6 +1703,7 @@ export default {
               amount: parseFloat(this.payment.amount).toFixed(2),
               received_amount: parseFloat(this.payment.received_amount).toFixed(2),
               change: parseFloat(this.payment.received_amount - this.payment.amount).toFixed(2),
+              address: this.sale.address,
 
               //vanex meta data for shipping api
               shipping_provider:this.shipping_provider,
@@ -1673,7 +1727,7 @@ export default {
               this.paymentProcessing = false;
               this.makeToast(
                 "danger",
-                this.$t("InvalidData"),
+                error.message ? error.message : this.$t("InvalidData"),
                 this.$t("Failed")
               );
             });

@@ -1,3 +1,5 @@
+import './firebase-notification-init.js'
+
 import store from "./store";
 import Vue from "vue";
 import App from "./App.vue";
@@ -91,3 +93,4 @@ new Vue({
   i18n,
   render: h => h(App),
 }).$mount("#app");
+

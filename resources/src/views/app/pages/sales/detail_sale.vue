@@ -49,7 +49,9 @@
             <h4 class="font-weight-bold">{{$t('SaleDetail')}} : {{sale.Ref}}</h4>
           </b-row>
           <hr>
+
           <b-row class="mt-5">
+
             <b-col lg="3" md="3" sm="12" class="mb-4">
               <h5 class="font-weight-bold">{{$t('Customer_Info')}}</h5>
               <div>{{sale.client_name}}</div>
@@ -57,6 +59,7 @@
               <div>{{sale.client_phone}}</div>
               <div>{{sale.client_adr}}</div>
             </b-col>
+
             <b-col lg="3" md="3" sm="12" class="mb-4">
               <h5 class="font-weight-bold">{{$t('Company_Info')}}</h5>
               <div>{{company.CompanyName}}</div>
@@ -64,9 +67,15 @@
               <div>{{company.CompanyPhone}}</div>
               <div>{{company.CompanyAdress}}</div>
             </b-col>
+
             <b-col lg="3" md="3" sm="12" class="mb-4">
               <h5 class="font-weight-bold">{{$t('Invoice_Info')}}</h5>
+
+              <div>{{$t('cancel_reason')}} : {{sale.cancel_reason}}</div>
+
+
               <div>{{$t('Reference')}} : {{sale.Ref}}</div>
+
               <div>
                 {{$t('PaymentStatus')}} :
                 <span
@@ -79,13 +88,27 @@
                 >{{$t('partial')}}</span>
                 <span v-else class="badge badge-outline-warning">{{$t('Unpaid')}}</span>
               </div>
+
               <div>{{$t('warehouse')}} : {{sale.warehouse}}</div>
+
               <div>
                 {{$t('Status')}} :
+
                 <span
                   v-if="sale.statut == 'completed'"
                   class="badge badge-outline-success"
                 >{{$t('complete')}}</span>
+                <span
+                  v-if="sale.statut == 'completed'"
+                  class="badge badge-outline-primary"
+                >{{$t('under_shipping')}}</span>
+
+                <span
+                  v-if="sale.statut == 'postponed'"
+                  class="badge badge-outline-warning"
+                >{{$t('postponed')}}</span>
+
+
                 <span
                   v-else-if="sale.statut == 'pending'"
                   class="badge badge-outline-info"
@@ -96,6 +119,7 @@
                   >{{$t('Canceled')}}</span>
                 <span v-else class="badge badge-outline-warning">{{$t('Ordered')}}</span>
               </div>
+
             </b-col>
 
             <b-col lg="3" md="3" sm="12" class="mb-4">
@@ -109,7 +133,11 @@
               </div>
 
             </b-col>
+
           </b-row>
+
+
+
           <b-row class="mt-3">
             <b-col md="12">
               <h5 class="font-weight-bold">{{$t('Order_Summary')}}</h5>
