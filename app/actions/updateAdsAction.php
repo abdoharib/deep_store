@@ -95,6 +95,7 @@ class updateAdsAction
                 $ad->update([
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_status' => $ad_data['adset']['status'],
+                    'last_ad_update_at' => now(),
                     'amount_spent' => ($ad_data['total_spent'] * 5),
                     'start_date' => SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString(),
                     'end_date' => $end_time,
@@ -130,6 +131,7 @@ class updateAdsAction
                     'ad_ref_id' => $ad_data['id'],
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_status' => $ad_data['adset']['status'],
+                    "last_ad_update_at" => now(),
                     'product_id' => $ad_data['product_id'],
                     'product_name' => '',
 
