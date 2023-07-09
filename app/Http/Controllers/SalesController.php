@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\actions\createVanexShipmentAction;
 use App\actions\getVanexShipmentAction;
+use App\actions\sendWhatsAppMessage;
 use Twilio\Rest\Client as Client_Twilio;
 use App\Mail\SaleMail;
 use App\Models\Client;
@@ -170,6 +171,7 @@ class SalesController extends BaseController
             $item['updated_by'] = $Sale['updated_by'];
             $item['notes'] = $Sale['notes'];
             $item['address'] = $Sale['address'];
+            $item['delivery_note'] = $Sale['delivery_note'];
             $item['Ref'] = $Sale['Ref'];
             $item['answer_status'] = $Sale['answer_status'];
             $item['created_by'] = $Sale['user']->username;
@@ -279,6 +281,7 @@ class SalesController extends BaseController
                 $order->payment_statut = 'unpaid';
                 $order->notes = $request->notes;
                 $order->address = $request->address;
+                $order->delivery_note = $request->delivery_note;
                 $order->answer_status = $request->answer_status;
                 $order->vanex_city_id = $request->vanex_city_id;
                 $order->vanex_sub_city_id = $request->vanex_sub_city_id;
@@ -473,7 +476,7 @@ class SalesController extends BaseController
 
     //------------- UPDATE SALE -----------
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, sendWhatsAppMessage $sendWhatsAppMessage)
     {
         $this->authorizeForUser($request->user(), 'update', Sale::class);
 
@@ -482,7 +485,7 @@ class SalesController extends BaseController
             'client_id' => 'required',
         ]);
 
-        \DB::transaction(function () use ($request, $id) {
+        \DB::transaction(function () use ($request, $id,$sendWhatsAppMessage) {
 
             $role = Auth::user()->roles()->first();
             $view_records = Role::findOrFail($role->id)->inRole('record_view');
@@ -637,6 +640,7 @@ class SalesController extends BaseController
 
 
 
+
                 $due = $request['GrandTotal'] - $current_Sale->paid_amount;
                 if ($due === 0.0 || $due < 0.0) {
                     $payment_statut = 'paid';
@@ -647,6 +651,7 @@ class SalesController extends BaseController
                 }
 
                 $old_status = $current_Sale->statut;
+                $old_answer_status = $current_Sale->answer_status;
 
                 $current_Sale->update([
                     'date' => $request['date'],
@@ -657,6 +662,7 @@ class SalesController extends BaseController
                     'warehouse_id' => $request['warehouse_id'],
                     'notes' => $request['notes'],
                     'statut' => $request['statut'],
+                    'delivery_note' => $request['delivery_note'],
                     'tax_rate' => $request['tax_rate'],
                     'answer_status' => $request['answer_status'],
                     'TaxNet' => $request['TaxNet'],
@@ -678,6 +684,12 @@ class SalesController extends BaseController
 
                         $user->notify(new SaleStatusUpdateNotification($current_Sale));
                     });
+                }
+
+                if($request['answer_status'] != $old_answer_status){
+                    if($request['answer_status'] == 'no_answer'){
+                        // $sendWhatsAppMessage->invoke($current_Sale);
+                    }
                 }
             }
 
@@ -918,6 +930,7 @@ class SalesController extends BaseController
         $sale_details['discount'] = $sale_data->discount;
         $sale_details['shipping'] = $sale_data->shipping;
         $sale_details['tax_rate'] = $sale_data->tax_rate;
+        $sale_details['delivery_note'] = $sale_data->delivery_note;
         $sale_details['TaxNet'] = $sale_data->TaxNet;
         $sale_details['client_name'] = $sale_data['client']->name;
         $sale_details['client_phone'] = $sale_data['client']->phone;
@@ -1342,6 +1355,7 @@ class SalesController extends BaseController
           $sale['statut'] = $Sale_data->statut;
           $sale['notes'] = $Sale_data->notes;
           $sale['id'] = $Sale_data->id;
+          $sale['delivery_note'] = $Sale_data->delivery_note;
           $sale['address'] = $Sale_data->address;
           $sale['answer_status'] = $Sale_data->answer_status;
 

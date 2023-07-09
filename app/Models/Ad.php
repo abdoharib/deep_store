@@ -22,8 +22,13 @@ class Ad extends Model
 
         'amount_spent',
         'completed_sales_profit',
+
         'no_sales',
+        'revenue_sales',
+
         'no_completed_sales',
+        'revenue_completed_sales'
+
     ];
 
     protected $casts = [

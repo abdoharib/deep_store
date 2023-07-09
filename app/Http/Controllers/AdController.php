@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\actions\updateAdsAction;
 use App\Models\Ad;
 use App\Models\Role;
+use App\Models\Sale;
+use App\Models\SaleDetail;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\utils\helpers;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class AdController extends Controller
@@ -106,6 +109,74 @@ class AdController extends Controller
         }
     }
 
+
+
+
+    public function weeklyChart(request $request){
+
+        $weeks = $this->weeksBetweenTwoDates(Carbon::make('2023-05-01'), Carbon::now());
+
+        $weekly_ad_spend =[];
+        $weekly_revenue_from_completed_sale = [];
+        $weekly_cost = [];
+        $weekly_net_profit = [];
+
+        foreach ($weeks as $week) {
+
+            $weekly_ads = Ad::where('deleted_at',null)
+            ->whereDate('start_date','>=',$week['from']->toDateTimeString())
+            ->whereDate('end_date','<=',$week['to']->toDateTimeString())
+            ->get();
+
+            $weekly_ad_spend[] = $weekly_ads->sum('amount_spent');
+
+
+            $week_discount = Sale::where('deleted_at',null)
+            ->whereDate('date','>=',$week['from']->toDateString())
+            ->whereDate('date','<=',$week['to']->toDateString())
+            ->where('statut','completed')
+            ->get()->sum('discount');
+
+
+            $weekly_revenue_from_completed_sale[] =
+
+            $weekly_completed_sales = Sale::where('deleted_at',null)
+            ->whereDate('date','>=',$week['from']->toDateString())
+            ->whereDate('date','<=',$week['to']->toDateString())
+            ->where('statut','completed')
+            ->get();
+
+            $net_profit =  $weekly_completed_sales->sum('GrandTotal') - ($weekly_completed_sales->sum('sale_cost') - );
+
+
+
+
+
+
+            $weekly_net_profit[] = [];
+
+        }
+    }
+
+
+    public function weeksBetweenTwoDates($start, $end)
+    {
+        $weeks = [];
+
+        while ($start->weekOfYear !== $end->weekOfYear) {
+            $weeks[] = [
+                'from' => $start->startOfWeek(),
+                'to' => $start->endOfWeek(),
+                'week_of_year' => $start->weekOfYear,
+                'week_of_month' => $start->weekOfMonth,
+                'month_name' => $start->monthName,
+            ];
+
+            $start->addWeek(1);
+        }
+
+        return $weeks;
+    }
     /**
      * Show the form for creating a new resource.
      *
