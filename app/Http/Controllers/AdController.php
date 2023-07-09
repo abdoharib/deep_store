@@ -146,16 +146,17 @@ class AdController extends Controller
             ->where('statut','completed')
             ->get();
 
-            $net_profit =  $weekly_completed_sales->sum('GrandTotal') - ($weekly_completed_sales->sum('sale_cost') - );
-
-
-
-
-
-
-            $weekly_net_profit[] = [];
+            $net_profit =  $weekly_completed_sales->sum('GrandTotal') - ($weekly_completed_sales->sum('sale_cost') - $weekly_ads->sum('amount_spent') );
+            $weekly_net_profit[] = $net_profit;
 
         }
+
+        return response()->json([
+            'data' => [
+                'weekly_ad_spend' => $weekly_ad_spend,
+                'weekly_net_profit' => $weekly_net_profit
+            ]
+        ]);
     }
 
 
