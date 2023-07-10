@@ -1967,12 +1967,12 @@ class ReportController extends BaseController
                 'week_of_month' => $start->weekOfMonth,
                 'month_name' => $start->monthName,
             ]);
-            dd( $weeks[0]);
+            // dd( $weeks[0]);
 
             $start->addWeek(1);
         }
 
-        // dd($weeks[0]);
+        dd($weeks[0]);
 
         return $weeks;
     }
