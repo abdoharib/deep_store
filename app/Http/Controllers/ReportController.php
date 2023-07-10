@@ -38,7 +38,6 @@ use App\utils\helpers;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
@@ -1915,8 +1914,8 @@ class ReportController extends BaseController
 
 
             $weekly_ads = Ad::
-            whereDate('start_date','>=',SupportCarbon::make($week['from'])->toDateString())
-            ->whereDate('end_date','<=', SupportCarbon::make($week['to'])->toDateString())
+            where('start_date','>=',$week['from'])
+            ->where('end_date','<=',$week['to'])
             ->get();
 
             // dd($weekly_ads);
