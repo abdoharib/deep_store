@@ -1918,7 +1918,10 @@ class ReportController extends BaseController
             whereDate('start_date','>=',SupportCarbon::make($week['from']))
             // ->whereDate('end_date','<=',SupportCarbon::make($week['to']))
             ->get();
-            dd($weekly_ads);
+            dd([
+                'data' => $weekly_ads,
+                'from'=>$week['from'],
+            ]);
 
             // dd($weekly_ads);
 
