@@ -1955,6 +1955,10 @@ class ReportController extends BaseController
 
         }
 
+        $weeks = array_map( function($week){
+            return ($week['month_name'].' '.$week['week_of_month']);
+        },$weeks,);
+
         return  [
                 'weekly_ad_spend' => $weekly_ad_spend,
                 'weekly_net_profit' => $weekly_net_profit,
