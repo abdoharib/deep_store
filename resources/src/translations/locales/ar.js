@@ -2,6 +2,8 @@
 
 
 export default {
+    last_ad_update_at:'أخر تحديث للأعلان',
+    ad_set_ref_status:'حالة مجموعة الأعلانات',
     delivery_note:'ملاحظة المندوب',
     answer_status:'حالة الرد',
     last_vanex_update:'أخر تحديث من فانكس',

@@ -315,6 +315,13 @@ export default {
                     sortable: false
                 },
                 {
+                    label: this.$t("ad_set_ref_status"),
+                    field: "ad_set_ref_status",
+                    tdClass: "text-left",
+                    thClass: "text-left",
+                    sortable: false
+                },
+                {
                     label: this.$t("start_date"),
                     field: "start_date",
                     tdClass: "text-left",
@@ -345,6 +352,12 @@ export default {
                     tdClass: "text-left",
                     thClass: "text-left",
                     sortable: false
+                },
+                {
+                    label: this.$t("last_ad_update_at"),
+                    field: "last_ad_update_at",
+                    tdClass: "text-left",
+                    thClass: "text-left"
                 },
       ];
     }
