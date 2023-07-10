@@ -1961,8 +1961,8 @@ class ReportController extends BaseController
             array_push($weeks,
             [
 
-                'from' => $start->startOfWeek(),
-                'to' => $start->endOfWeek(),
+                'from' => $start->startOfWeek()->toDateTimeString(),
+                'to' => $start->endOfWeek()->toDateTimeString(),
                 'week_of_year' => $start->weekOfYear,
                 'week_of_month' => $start->weekOfMonth,
                 'month_name' => $start->monthName,
