@@ -1924,8 +1924,8 @@ class ReportController extends BaseController
 
 
             $week_discount = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$week['from']->toDateString())
-            ->whereDate('date','<=',$week['to']->toDateString())
+            ->whereDate('date','>=',$week['from'])
+            ->whereDate('date','<=',$week['to'])
             ->where('statut','completed')
             ->get()->sum('discount');
 
@@ -1933,8 +1933,8 @@ class ReportController extends BaseController
             $weekly_revenue_from_completed_sale[] =
 
             $weekly_completed_sales = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$week['from']->toDateString())
-            ->whereDate('date','<=',$week['to']->toDateString())
+            ->whereDate('date','>=',$week['from'])
+            ->whereDate('date','<=',$week['to'])
             ->where('statut','completed')
             ->get();
 
