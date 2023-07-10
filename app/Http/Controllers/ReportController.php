@@ -41,9 +41,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use App\actions\getAdsAmountSpent;
 
 class ReportController extends BaseController
 {
+
+
+    private $getAdsAmountSpent;
+
+    public function __construct(getAdsAmountSpent $getAdsAmountSpent) {
+        $this->getAdsAmountSpent = $getAdsAmountSpent;
+    }
 
 
     //----------- Get Last 5 Sales --------------\\
@@ -1901,7 +1909,7 @@ class ReportController extends BaseController
         $weeks = $this->weeksBetweenTwoDates(Carbon::make('2023-05-01'), Carbon::now());
 
         $weekly_ad_spend =[];
-        // $weekly_revenue_from_completed_sale = [];
+        $weekly_revenue_from_completed_sale = [];
         $weekly_cost = [];
         $weekly_net_profit = [];
         // $weekly_ads = Ad::
@@ -1912,60 +1920,43 @@ class ReportController extends BaseController
         //     dd($weekly_ads);
 
 
-        $ads = Ad::all();
 
-        foreach ($ads as $ad) {
+        foreach ($weeks as $week) {
 
 
             // $weekly_ads = Ad::
-            // whereDate('start_date','>=',SupportCarbon::make($ad['start_date']))
-            // ->whereDate('end_date','<=',SupportCarbon::make($ad['end_date']))
+            // whereDate('start_date','>=',SupportCarbon::make($week['from']))
+            // ->whereDate('end_date','<=',SupportCarbon::make($week['to']))
             // ->get();
-            // dd([
-            //     'data' => $weekly_ads->count(),
-            //     'from'=>$week['from'],
-            //     'to'=>$week['to'],
-            // ]);
 
-            // dd($weekly_ads);
-
-            array_push($weekly_ad_spend,
-            [
-                'data' => $ad->sum('amount_spent'),
-                'from'=>$ad->start_date,
-                'to'=>$ad->end_date,
-            ]);
-            // $weekly_ad_spend[] = $weekly_ads->count();
+            $spend = $this->getAdsAmountSpent->invoke(SupportCarbon::make($week['from'])->toDateString(),SupportCarbon::make($week['to'])->toDateString());
+            array_push($weekly_ad_spend,$spend);
 
 
             $week_discount = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$ad->start_date)
-            ->whereDate('date','<=',$ad->end_date)
+            ->whereDate('date','>=',$week['from'])
+            ->whereDate('date','<=',$week['to'])
             ->where('statut','completed')
             ->get()->sum('discount');
 
 
-            // $weekly_revenue_from_completed_sale[] =
+            $weekly_revenue_from_completed_sale[] =
 
             $weekly_completed_sales = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$ad->start_date)
-            ->whereDate('date','<=',$ad->end_date)
+            ->whereDate('date','>=',$week['from'])
+            ->whereDate('date','<=',$week['to'])
             ->where('statut','completed')
             ->get();
 
-            // $net_profit =  $weekly_completed_sales->sum('GrandTotal') - ($weekly_completed_sales->sum('sale_cost') - $weekly_ads->sum('amount_spent') );
-            // $weekly_net_profit[] = $net_profit;
+            $net_profit =  $weekly_completed_sales->sum('GrandTotal') - ($weekly_completed_sales->sum('sale_cost') - $spend );
+            $weekly_net_profit[] = $net_profit;
 
         }
 
         return  [
                 'weekly_ad_spend' => $weekly_ad_spend,
                 'weekly_net_profit' => $weekly_net_profit,
-                'period' => [
-                    'from' => $ad->start_date,
-                    'to' => $ad->end_date,
-
-                ]
+                'weeks' => $weeks
 
         ];
     }
