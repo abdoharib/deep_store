@@ -1953,8 +1953,8 @@ class ReportController extends BaseController
             ->where('statut','completed')
             ->get();
 
-            $net_profit =  $weekly_completed_sales->sum('GrandTotal') - ($weekly_completed_sales->sum('sale_cost') - $weekly_ads->sum('amount_spent') );
-            $weekly_net_profit[] = $net_profit;
+            // $net_profit =  $weekly_completed_sales->sum('GrandTotal') - ($weekly_completed_sales->sum('sale_cost') - $weekly_ads->sum('amount_spent') );
+            // $weekly_net_profit[] = $net_profit;
 
         }
 
