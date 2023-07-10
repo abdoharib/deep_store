@@ -1921,6 +1921,8 @@ class ReportController extends BaseController
             dd([
                 'data' => $weekly_ads,
                 'from'=>$week['from'],
+                'to'=>$week['to'],
+
             ]);
 
             // dd($weekly_ads);
