@@ -13,7 +13,7 @@ class getAdsAmountSpent
         $facebook = new \JoelButcher\Facebook\Facebook([
             'app_id' => env('FACEBOOK_APP_ID', '193483383509873'),
             'app_secret' => env('FACEBOOK_APP_SECRET', 'a5819237862894e7c0871fb1953a2bff'),
-            'default_access_token' => env('ACCESS_TOKEN', 'EAACvZBNxYE3EBAFNCfR84RU4a0HGmHsmU4kPjI0oYKc0XIx0n7xWBpfqsRP0Uw1wPCdPViY3dx0XZARQGcdQwNWrfl1OoYYMpW3DTPh6bkrpCVlPA3HhrR9L3B9ZBmBAuyZCeJ8Nm6TcBlxqyXFgr78Rirj9FvTzJfH2QD0rqaeoa4reEXRbMZBRcwgaMLJ7WHf3ZBGbrTrheuogAnakjA'),
+            'default_access_token' => env('ACCESS_TOKEN', 'EAACvZBNxYE3EBAMijHiLcdJqJA36UdfYQ7DzZAutj1ytPXwKLPeEaJxOXiysOqS95q8tP4adMCjM3GY0dkfkUQjmEldgtSzgcvPff4dGEiWZAZAUWy4fAejvyspFzCB2mYrp3PCe6ljRd24or6XGJR30GBrHf2Owv7jcHxkdJ2aJkiDZCby6q'),
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
 
