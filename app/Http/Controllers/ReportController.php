@@ -1920,7 +1920,7 @@ class ReportController extends BaseController
 
             // dd($weekly_ads);
 
-            $weekly_ad_spend[] = $weekly_ads->sum('amount_spent');
+            $weekly_ad_spend[] = $weekly_ads->count();
 
 
             $week_discount = Sale::where('deleted_at',null)
