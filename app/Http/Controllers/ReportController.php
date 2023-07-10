@@ -1932,15 +1932,15 @@ class ReportController extends BaseController
             array_push($weekly_ad_spend,
             [
                 'data' => $ad->sum('amount_spent'),
-                'from'=>$ad['start_date'],
-                'to'=>$ad['end_date'],
+                'from'=>$ad->start_date,
+                'to'=>$ad->end_date,
             ]);
             // $weekly_ad_spend[] = $weekly_ads->count();
 
 
             $week_discount = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$ad['start_date'])
-            ->whereDate('date','<=',$ad['end_date'])
+            ->whereDate('date','>=',$ad->start_date)
+            ->whereDate('date','<=',$ad->end_date)
             ->where('statut','completed')
             ->get()->sum('discount');
 
@@ -1948,8 +1948,8 @@ class ReportController extends BaseController
             // $weekly_revenue_from_completed_sale[] =
 
             $weekly_completed_sales = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$ad['start_date'])
-            ->whereDate('date','<=',$ad['end_date'])
+            ->whereDate('date','>=',$ad->start_date)
+            ->whereDate('date','<=',$ad->end_date)
             ->where('statut','completed')
             ->get();
 
@@ -1962,8 +1962,8 @@ class ReportController extends BaseController
                 'weekly_ad_spend' => $weekly_ad_spend,
                 'weekly_net_profit' => $weekly_net_profit,
                 'period' => [
-                    'from' => $ad['start_date'],
-                    'to' => $ad['end_date'],
+                    'from' => $ad->start_date,
+                    'to' => $ad->end_date,
 
                 ]
 
