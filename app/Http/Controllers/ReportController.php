@@ -1912,7 +1912,6 @@ class ReportController extends BaseController
 
         foreach ($weeks as $week) {
 
-            dd($week['to']);
 
             $weekly_ads = Ad::
             whereDate('start_date','>=',$week['from'])
