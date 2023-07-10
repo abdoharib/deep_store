@@ -34,7 +34,7 @@ class adsRiskMangement
         $facebook = new \JoelButcher\Facebook\Facebook([
             'app_id' => env('FACEBOOK_APP_ID','193483383509873'),
             'app_secret' => env('FACEBOOK_APP_SECRET','a5819237862894e7c0871fb1953a2bff'),
-            'default_access_token' => env('ACCESS_TOKEN','EAACvZBNxYE3EBALcnVay0eeRbr4ZCH7FzGYwlgV4aXYqA5BJEkyiecl9YeQbdLwS2I0eaDYZBaJcNYIPMDoxgcaIyTinNMGymIZASn7IXWI1kEFyZCnmEGVGzzCzS7sxBb5S65ONQGAsqeFy18WZBp09SZCVsADhv7qjUJjE44QmoA6DeOCsVZBS'),
+            'default_access_token' => env('ACCESS_TOKEN'),
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
 
