@@ -1901,7 +1901,7 @@ class ReportController extends BaseController
         $weeks = $this->weeksBetweenTwoDates(Carbon::make('2023-05-01'), Carbon::now());
 
         $weekly_ad_spend =[];
-        $weekly_revenue_from_completed_sale = [];
+        // $weekly_revenue_from_completed_sale = [];
         $weekly_cost = [];
         $weekly_net_profit = [];
         // $weekly_ads = Ad::
@@ -1911,12 +1911,15 @@ class ReportController extends BaseController
 
         //     dd($weekly_ads);
 
-        foreach ($weeks as $week) {
+
+        $ads = Ad::all();
+
+        foreach ($ads as $ad) {
 
 
             $weekly_ads = Ad::
-            whereDate('start_date','>=',SupportCarbon::make($week['from']))
-            ->whereDate('end_date','<=',SupportCarbon::make($week['to']))
+            whereDate('start_date','>=',SupportCarbon::make($ad['start_date']))
+            ->whereDate('end_date','<=',SupportCarbon::make($ad['end_date']))
             ->get();
             // dd([
             //     'data' => $weekly_ads->count(),
@@ -1927,26 +1930,26 @@ class ReportController extends BaseController
             // dd($weekly_ads);
 
             array_push($weekly_ad_spend,
-        [
-                'data' => $weekly_ads->count(),
-                'from'=>$week['from'],
-                'to'=>$week['to'],
+            [
+                'data' => $ad->sum('amount_spent'),
+                'from'=>$ad['start_date'],
+                'to'=>$ad['end_date'],
             ]);
             // $weekly_ad_spend[] = $weekly_ads->count();
 
 
             $week_discount = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$week['from'])
-            ->whereDate('date','<=',$week['to'])
+            ->whereDate('date','>=',$ad['start_date'])
+            ->whereDate('date','<=',$ad['end_date'])
             ->where('statut','completed')
             ->get()->sum('discount');
 
 
-            $weekly_revenue_from_completed_sale[] =
+            // $weekly_revenue_from_completed_sale[] =
 
             $weekly_completed_sales = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$week['from'])
-            ->whereDate('date','<=',$week['to'])
+            ->whereDate('date','>=',$ad['start_date'])
+            ->whereDate('date','<=',$ad['end_date'])
             ->where('statut','completed')
             ->get();
 
@@ -1958,7 +1961,11 @@ class ReportController extends BaseController
         return  [
                 'weekly_ad_spend' => $weekly_ad_spend,
                 'weekly_net_profit' => $weekly_net_profit,
-                'weeks' => $weeks
+                'period' => [
+                    'from' => $ad['start_date'],
+                    'to' => $ad['end_date'],
+
+                ]
 
         ];
     }
