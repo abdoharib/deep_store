@@ -1918,7 +1918,7 @@ class ReportController extends BaseController
             ->whereDate('end_date','<=',$week['to'])
             ->get();
 
-            dd($weekly_ads);
+            // dd($weekly_ads);
 
             $weekly_ad_spend[] = $weekly_ads->sum('amount_spent');
 
