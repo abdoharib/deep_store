@@ -1914,8 +1914,8 @@ class ReportController extends BaseController
 
 
             $weekly_ads = Ad::
-            where('start_date','>=',$week['from'])
-            ->where('end_date','<=',$week['to'])
+            whereDate('start_date','>=',$week['from'])
+            ->whereDate('end_date','<=',$week['to'])
             ->get();
 
             // dd($weekly_ads);
