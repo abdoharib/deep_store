@@ -1917,10 +1917,10 @@ class ReportController extends BaseController
         foreach ($ads as $ad) {
 
 
-            $weekly_ads = Ad::
-            whereDate('start_date','>=',SupportCarbon::make($ad['start_date']))
-            ->whereDate('end_date','<=',SupportCarbon::make($ad['end_date']))
-            ->get();
+            // $weekly_ads = Ad::
+            // whereDate('start_date','>=',SupportCarbon::make($ad['start_date']))
+            // ->whereDate('end_date','<=',SupportCarbon::make($ad['end_date']))
+            // ->get();
             // dd([
             //     'data' => $weekly_ads->count(),
             //     'from'=>$week['from'],
