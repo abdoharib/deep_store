@@ -1958,6 +1958,7 @@ class ReportController extends BaseController
         $weeks = [];
 
         while ($start->weekOfYear !== $end->weekOfYear) {
+            dd($start->startOfWeek());
             $weeks[] = [
                 'from' => $start->startOfWeek(),
                 'to' => $start->endOfWeek(),
