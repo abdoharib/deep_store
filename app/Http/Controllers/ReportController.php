@@ -1972,8 +1972,6 @@ class ReportController extends BaseController
             $start->addWeek(1);
         }
 
-        dd($weeks[5]);
-
         return $weeks;
     }
 
