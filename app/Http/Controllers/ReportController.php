@@ -1926,7 +1926,12 @@ class ReportController extends BaseController
 
             // dd($weekly_ads);
 
-            array_push($weekly_ad_spend,$weekly_ads->count());
+            array_push($weekly_ad_spend,
+        [
+                'data' => $weekly_ads->count(),
+                'from'=>$week['from'],
+                'to'=>$week['to'],
+            ]);
             // $weekly_ad_spend[] = $weekly_ads->count();
 
 
