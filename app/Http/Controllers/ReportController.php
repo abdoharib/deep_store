@@ -694,7 +694,6 @@ class ReportController extends BaseController
                 $item['client_adr'] = $Sale['client']['adresse'];
                 $item['GrandTotal'] = $Sale['GrandTotal'];
                 $item['cost'] = $Sale['sale_cost'];
-
                 $item['paid_amount'] = $Sale['paid_amount'];
                 $item['due'] = $Sale['GrandTotal'] - $Sale['paid_amount'];
                 $item['payment_status'] = $Sale['payment_statut'];
