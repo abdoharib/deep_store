@@ -1916,13 +1916,13 @@ class ReportController extends BaseController
 
             $weekly_ads = Ad::
             whereDate('start_date','>=',SupportCarbon::make($week['from']))
-            ->whereDate('end_date','<=',SupportCarbon::make('2023-06-07'))
+            ->whereDate('end_date','<=',SupportCarbon::make($week['to']))
             ->get();
-            dd([
-                'data' => $weekly_ads->count(),
-                'from'=>$week['from'],
-                'to'=>$week['to'],
-            ]);
+            // dd([
+            //     'data' => $weekly_ads->count(),
+            //     'from'=>$week['from'],
+            //     'to'=>$week['to'],
+            // ]);
 
             // dd($weekly_ads);
 
