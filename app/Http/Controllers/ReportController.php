@@ -1967,7 +1967,7 @@ class ReportController extends BaseController
         return  [
                 'daily_ad_spend' => $daily_ad_spend,
                 'daily_net_profit' => $daily_net_profit,
-                'daily_ad_spend_x2' = $daily_net_profit_x2,
+                'daily_ad_spend_x2' => $daily_net_profit_x2,
                 'daily_completed_sales_revnue'=>$daily_completed_sales_revnue,
                 'days' => $days_names
 
