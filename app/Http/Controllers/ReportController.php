@@ -1913,6 +1913,7 @@ class ReportController extends BaseController
 
         $daily_ad_spend =[];
         $daily_net_profit = [];
+        $daily_net_profit_x2 = [];
         $daily_completed_sales_revnue = [];
 
 
