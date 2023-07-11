@@ -42,6 +42,7 @@ use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use App\actions\getAdsAmountSpent;
+use Carbon\CarbonPeriod;
 
 class ReportController extends BaseController
 {
@@ -1633,7 +1634,7 @@ class ReportController extends BaseController
             $item['paiement_net'] = $item['payment_received'] - $item['payment_sent'];
             $item['total_revenue'] =  $item['sales']['sum'] -  $item['return_sales'];
 
-            $item['weekly_ads_chart'] = $this->weeklyChart();
+            $item['weekly_ads_chart'] = $this->dailyChart(SupportCarbon::make($request->from),SupportCarbon::make($request->to));
 
         return response()->json(['data' => $item]);
 
@@ -1905,14 +1906,17 @@ class ReportController extends BaseController
 
      }
 
-     public function weeklyChart(){
+     public function dailyChart(Carbon $start, Carbon $end){
 
-        $weeks = $this->weeksBetweenTwoDates(Carbon::make('2023-05-01'), Carbon::now());
+        $days = $this->daysBetweenTwoDates($start, $end);
+        // dd($days->toArray());
 
-        $weekly_ad_spend =[];
-        $weekly_revenue_from_completed_sale = [];
-        $weekly_cost = [];
-        $weekly_net_profit = [];
+        $daily_ad_spend =[];
+        $daily_net_profit = [];
+        $daily_completed_sales_revnue = [];
+
+
+        $days_names = [];
         // $weekly_ads = Ad::
         //     whereDate('start_date','>=',Carbon::make('2023-05-01')->toDateTimeString())
         //     ->whereDate('end_date','<=',Carbon::now()->toDateTimeString())
@@ -1922,71 +1926,61 @@ class ReportController extends BaseController
 
 
 
-        foreach ($weeks as $week) {
-
+        foreach ($days as $day) {
+            $start_of_day = $day->startOfDay();
+            $end_of_day = $day->endOfDay();
+            $days_names[] = $day->format('F jS, Y');
 
             // $weekly_ads = Ad::
             // whereDate('start_date','>=',SupportCarbon::make($week['from']))
             // ->whereDate('end_date','<=',SupportCarbon::make($week['to']))
             // ->get();
 
-            $spend = $this->getAdsAmountSpent->invoke(SupportCarbon::make($week['from'])->toDateString(),SupportCarbon::make($week['to'])->toDateString());
-            array_push($weekly_ad_spend,$spend);
+            $spend = (float)$this->getAdsAmountSpent->invoke($start_of_day->toDateString(),$start_of_day->toDateString());
+            // if($spend == false){
+            //     break;
+            // }
+
+            array_push($daily_ad_spend,$spend);
 
 
-            $week_discount = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$week['from'])
-            ->whereDate('date','<=',$week['to'])
-            ->where('statut','completed')
-            ->get()->sum('discount');
 
 
-            $weekly_revenue_from_completed_sale[] =
 
-            $weekly_completed_sales = Sale::where('deleted_at',null)
-            ->whereDate('date','>=',$week['from'])
-            ->whereDate('date','<=',$week['to'])
+
+            $daily_completed_sales = Sale::where('deleted_at',null)
+            ->whereDate('date','>=',$start_of_day)
+            ->whereDate('date','<=',$end_of_day)
             ->where('statut','completed')
             ->get();
 
-            $net_profit =  $weekly_completed_sales->sum('GrandTotal') - ($weekly_completed_sales->sum('sale_cost') - $spend );
-            $weekly_net_profit[] = $net_profit;
+            $net_profit =  $daily_completed_sales->sum('GrandTotal') - ($daily_completed_sales->sum('sale_cost') + $spend );
+            $daily_completed_sales_revnue[] = $daily_completed_sales->sum('GrandTotal');
+            $daily_net_profit[] = $net_profit;
 
         }
 
-        $weeks = array_map( function($week){
-            return ($week['month_name'].' '.$week['week_of_month']);
-        },$weeks,);
+
 
         return  [
-                'weekly_ad_spend' => $weekly_ad_spend,
-                'weekly_net_profit' => $weekly_net_profit,
-                'weeks' => $weeks
+                'daily_ad_spend' => $daily_ad_spend,
+                'daily_net_profit' => $daily_net_profit,
+                'daily_completed_sales_revnue'=>$daily_completed_sales_revnue,
+                'days' => $days_names
 
         ];
     }
 
 
-    public function weeksBetweenTwoDates($start, $end)
+    public function daysBetweenTwoDates($start, $end)
     {
-        $weeks = [];
-
-        while ($start->weekOfYear !== $end->weekOfYear) {
-            array_push($weeks,
-            [
-
-                'from' => $start->startOfWeek()->toDateTimeString(),
-                'to' => $start->endOfWeek()->toDateTimeString(),
-                'week_of_year' => $start->weekOfYear,
-                'week_of_month' => $start->weekOfMonth,
-                'month_name' => $start->monthName,
-            ]);
-            // dd( $weeks[0]);
-
-            $start->addWeek(1);
+        if(now()->lessThan($end)){
+            $end = now();
         }
+        // $end = now()->startOfDay();
+        // $days = [];
 
-        return $weeks;
+        return CarbonPeriod::create($start->toDateString(),$end->toDateString());
     }
 
 
