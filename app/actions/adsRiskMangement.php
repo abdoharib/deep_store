@@ -44,6 +44,7 @@ class adsRiskMangement
             ]);
             Log::debug("successfully turned off ad ".$ad->ad_ref_id);
             $ad->update([
+                'ad_ref_status' => 'PAUSED',
                 'closed_at' => SupportCarbon::now()->toDateTimeString()
             ]);
 
