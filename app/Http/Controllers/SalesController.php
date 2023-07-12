@@ -341,6 +341,9 @@ class SalesController extends BaseController
                                 if ($unit->operator == '/') {
                                     $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
                                 } else {
+                                    if(($value['quantity'] *  $unit->operator_value) > $product_warehouse->qte){
+                                        throw new \Exception('Invalid Quantity');
+                                    }
                                     $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
                                 }
                                 $product_warehouse->save();
@@ -488,211 +491,218 @@ class SalesController extends BaseController
 
         \DB::transaction(function () use ($request, $id,$sendWhatsAppMessage) {
 
-            $role = Auth::user()->roles()->first();
-            $view_records = Role::findOrFail($role->id)->inRole('record_view');
-            $current_Sale = Sale::findOrFail($id);
+            try {
+                $role = Auth::user()->roles()->first();
+                $view_records = Role::findOrFail($role->id)->inRole('record_view');
+                $current_Sale = Sale::findOrFail($id);
 
-            if (SaleReturn::where('sale_id', $id)->where('deleted_at', '=', null)->exists()) {
-                return response()->json(['success' => false , 'Return exist for the Transaction' => false], 403);
-            }else{
-                // Check If User Has Permission view All Records
-                if (!$view_records) {
-                    // Check If User->id === Sale->id
-                    $this->authorizeForUser($request->user(), 'check_record', $current_Sale);
-                }
-                $old_sale_details = SaleDetail::where('sale_id', $id)->get();
-                $new_sale_details = $request['details'];
-                $length = sizeof($new_sale_details);
+                if (SaleReturn::where('sale_id', $id)->where('deleted_at', '=', null)->exists()) {
+                    return response()->json(['success' => false , 'Return exist for the Transaction' => false], 403);
+                }else{
+                    // Check If User Has Permission view All Records
+                    if (!$view_records) {
+                        // Check If User->id === Sale->id
+                        $this->authorizeForUser($request->user(), 'check_record', $current_Sale);
+                    }
+                    $old_sale_details = SaleDetail::where('sale_id', $id)->get();
+                    $new_sale_details = $request['details'];
+                    $length = sizeof($new_sale_details);
 
-                // Get Ids for new Details
-                $new_products_id = [];
-                foreach ($new_sale_details as $new_detail) {
-                    $new_products_id[] = $new_detail['id'];
-                }
-
-                // Init Data with old Parametre
-                $old_products_id = [];
-                foreach ($old_sale_details as $key => $value) {
-                    $old_products_id[] = $value->id;
-
-                    //check if detail has sale_unit_id Or Null
-                    if($value['sale_unit_id'] !== null){
-                        $old_unit = Unit::where('id', $value['sale_unit_id'])->first();
-                    }else{
-                        $product_unit_sale_id = Product::with('unitSale')
-                        ->where('id', $value['product_id'])
-                        ->first();
-                        $old_unit = Unit::where('id', $product_unit_sale_id['unitSale']->id)->first();
+                    // Get Ids for new Details
+                    $new_products_id = [];
+                    foreach ($new_sale_details as $new_detail) {
+                        $new_products_id[] = $new_detail['id'];
                     }
 
-                    if($value['sale_unit_id'] !== null){
-                        if ($current_Sale->statut == "completed" || ($current_Sale->statut == "under_shipping") ) {
+                    // Init Data with old Parametre
+                    $old_products_id = [];
+                    foreach ($old_sale_details as $key => $value) {
+                        $old_products_id[] = $value->id;
 
-                            if ($value['product_variant_id'] !== null) {
-                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                    ->where('warehouse_id', $current_Sale->warehouse_id)
-                                    ->where('product_id', $value['product_id'])
-                                    ->where('product_variant_id', $value['product_variant_id'])
-                                    ->first();
-
-                                if ($product_warehouse) {
-                                    if ($old_unit->operator == '/') {
-                                        $product_warehouse->qte += $value['quantity'] / $old_unit->operator_value;
-                                    } else {
-                                        $product_warehouse->qte += $value['quantity'] * $old_unit->operator_value;
-                                    }
-                                    $product_warehouse->save();
-                                }
-
-                            } else {
-                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                    ->where('warehouse_id', $current_Sale->warehouse_id)
-                                    ->where('product_id', $value['product_id'])
-                                    ->first();
-                                if ($product_warehouse) {
-
-                                    if ($old_unit->operator == '/') {
-                                        $product_warehouse->qte += $value['quantity'] / $old_unit->operator_value;
-                                    } else {
-                                        // dd($product_warehouse->qte);
-
-                                        $product_warehouse->qte += $value['quantity'] * $old_unit->operator_value;
-                                    }
-                                    $product_warehouse->save();
-                                }
-                            }
+                        //check if detail has sale_unit_id Or Null
+                        if($value['sale_unit_id'] !== null){
+                            $old_unit = Unit::where('id', $value['sale_unit_id'])->first();
+                        }else{
+                            $product_unit_sale_id = Product::with('unitSale')
+                            ->where('id', $value['product_id'])
+                            ->first();
+                            $old_unit = Unit::where('id', $product_unit_sale_id['unitSale']->id)->first();
                         }
-                        // Delete Detail
-                        if (!in_array($old_products_id[$key], $new_products_id)) {
-                            $SaleDetail = SaleDetail::findOrFail($value->id);
-                            $SaleDetail->delete();
-                        }
-                    }
-                }
 
-                // Update Data with New request
-                foreach ($new_sale_details as $prd => $prod_detail) {
+                        if($value['sale_unit_id'] !== null){
+                            if ($current_Sale->statut == "completed" || ($current_Sale->statut == "under_shipping") ) {
 
-                    if($prod_detail['no_unit'] !== 0){
-                        $unit_prod = Unit::where('id', $prod_detail['sale_unit_id'])->first();
+                                if ($value['product_variant_id'] !== null) {
+                                    $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                        ->where('warehouse_id', $current_Sale->warehouse_id)
+                                        ->where('product_id', $value['product_id'])
+                                        ->where('product_variant_id', $value['product_variant_id'])
+                                        ->first();
 
-                        if ( ($request['statut'] == "completed") || ($request['statut'] == "under_shipping") ) {
-
-                            if ($prod_detail['product_variant_id'] !== null) {
-                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                    ->where('warehouse_id', $request->warehouse_id)
-                                    ->where('product_id', $prod_detail['product_id'])
-                                    ->where('product_variant_id', $prod_detail['product_variant_id'])
-                                    ->first();
-
-                                if ($product_warehouse) {
-                                    if ($unit_prod->operator == '/') {
-                                        $product_warehouse->qte -= $prod_detail['quantity'] / $unit_prod->operator_value;
-                                    } else {
-                                        $product_warehouse->qte -= $prod_detail['quantity'] * $unit_prod->operator_value;
-                                    }
-                                    $product_warehouse->save();
-                                }
-
-                            } else {
-                                $product_warehouse = product_warehouse::where('deleted_at', '=', null)
-                                    ->where('warehouse_id', $request->warehouse_id)
-                                    ->where('product_id', $prod_detail['product_id'])
-                                    ->first();
-
-                                if ($product_warehouse) {
-                                    if ($unit_prod->operator == '/') {
-                                        $product_warehouse->qte -= $prod_detail['quantity'] / $unit_prod->operator_value;
-                                    } else {
-                                        // dd($product_warehouse);
-
-                                        $product_warehouse->qte -= $prod_detail['quantity'] * $unit_prod->operator_value;
+                                    if ($product_warehouse) {
+                                        if ($old_unit->operator == '/') {
+                                            $product_warehouse->qte += $value['quantity'] / $old_unit->operator_value;
+                                        } else {
+                                            $product_warehouse->qte += $value['quantity'] * $old_unit->operator_value;
+                                        }
+                                        $product_warehouse->save();
                                     }
 
-                                    $product_warehouse->save();
+                                } else {
+                                    $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                        ->where('warehouse_id', $current_Sale->warehouse_id)
+                                        ->where('product_id', $value['product_id'])
+                                        ->first();
+                                    if ($product_warehouse) {
+
+                                        if ($old_unit->operator == '/') {
+                                            $product_warehouse->qte += $value['quantity'] / $old_unit->operator_value;
+                                        } else {
+                                            // dd($product_warehouse->qte);
+
+                                            $product_warehouse->qte += $value['quantity'] * $old_unit->operator_value;
+                                        }
+                                        $product_warehouse->save();
+                                    }
                                 }
                             }
-
+                            // Delete Detail
+                            if (!in_array($old_products_id[$key], $new_products_id)) {
+                                $SaleDetail = SaleDetail::findOrFail($value->id);
+                                $SaleDetail->delete();
+                            }
                         }
+                    }
 
-                        $orderDetails['sale_id'] = $id;
-                        $orderDetails['date'] = $request['date'];
-                        $orderDetails['price'] = $prod_detail['Unit_price'];
-                        $orderDetails['sale_unit_id'] = $prod_detail['sale_unit_id'];
-                        $orderDetails['TaxNet'] = $prod_detail['tax_percent'];
-                        $orderDetails['tax_method'] = $prod_detail['tax_method'];
-                        $orderDetails['discount'] = $prod_detail['discount'];
-                        $orderDetails['discount_method'] = $prod_detail['discount_Method'];
-                        $orderDetails['quantity'] = $prod_detail['quantity'];
-                        $orderDetails['product_id'] = $prod_detail['product_id'];
-                        $orderDetails['product_variant_id'] = $prod_detail['product_variant_id'];
-                        $orderDetails['total'] = $prod_detail['subtotal'];
-                        $orderDetails['imei_number'] = $prod_detail['imei_number'];
+                    // Update Data with New request
+                    foreach ($new_sale_details as $prd => $prod_detail) {
 
-                        if (!in_array($prod_detail['id'], $old_products_id)) {
-                            $orderDetails['date'] = Carbon::now();
-                            $orderDetails['sale_unit_id'] = $unit_prod ? $unit_prod->id : Null;
-                            SaleDetail::Create($orderDetails);
-                        } else {
-                            SaleDetail::where('id', $prod_detail['id'])->update($orderDetails);
+                        if($prod_detail['no_unit'] !== 0){
+                            $unit_prod = Unit::where('id', $prod_detail['sale_unit_id'])->first();
+
+                            if ( ($request['statut'] == "completed") || ($request['statut'] == "under_shipping") ) {
+
+                                if ($prod_detail['product_variant_id'] !== null) {
+                                    $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                        ->where('warehouse_id', $request->warehouse_id)
+                                        ->where('product_id', $prod_detail['product_id'])
+                                        ->where('product_variant_id', $prod_detail['product_variant_id'])
+                                        ->first();
+
+                                    if ($product_warehouse) {
+                                        if ($unit_prod->operator == '/') {
+                                            $product_warehouse->qte -= $prod_detail['quantity'] / $unit_prod->operator_value;
+                                        } else {
+                                            $product_warehouse->qte -= $prod_detail['quantity'] * $unit_prod->operator_value;
+                                        }
+                                        $product_warehouse->save();
+                                    }
+
+                                } else {
+                                    $product_warehouse = product_warehouse::where('deleted_at', '=', null)
+                                        ->where('warehouse_id', $request->warehouse_id)
+                                        ->where('product_id', $prod_detail['product_id'])
+                                        ->first();
+
+                                    if ($product_warehouse) {
+                                        if ($unit_prod->operator == '/') {
+                                            $product_warehouse->qte -= $prod_detail['quantity'] / $unit_prod->operator_value;
+                                        } else {
+                                            // dd($product_warehouse);
+                                            if( ($prod_detail['quantity'] * $unit_prod->operator_value) > $product_warehouse->qte){
+                                                throw new \Exception('Invalid Quantity');
+                                            }
+                                            $product_warehouse->qte -= $prod_detail['quantity'] * $unit_prod->operator_value;
+                                        }
+
+                                        $product_warehouse->save();
+                                    }
+                                }
+
+                            }
+
+                            $orderDetails['sale_id'] = $id;
+                            $orderDetails['date'] = $request['date'];
+                            $orderDetails['price'] = $prod_detail['Unit_price'];
+                            $orderDetails['sale_unit_id'] = $prod_detail['sale_unit_id'];
+                            $orderDetails['TaxNet'] = $prod_detail['tax_percent'];
+                            $orderDetails['tax_method'] = $prod_detail['tax_method'];
+                            $orderDetails['discount'] = $prod_detail['discount'];
+                            $orderDetails['discount_method'] = $prod_detail['discount_Method'];
+                            $orderDetails['quantity'] = $prod_detail['quantity'];
+                            $orderDetails['product_id'] = $prod_detail['product_id'];
+                            $orderDetails['product_variant_id'] = $prod_detail['product_variant_id'];
+                            $orderDetails['total'] = $prod_detail['subtotal'];
+                            $orderDetails['imei_number'] = $prod_detail['imei_number'];
+
+                            if (!in_array($prod_detail['id'], $old_products_id)) {
+                                $orderDetails['date'] = Carbon::now();
+                                $orderDetails['sale_unit_id'] = $unit_prod ? $unit_prod->id : Null;
+                                SaleDetail::Create($orderDetails);
+                            } else {
+                                SaleDetail::where('id', $prod_detail['id'])->update($orderDetails);
+                            }
+                        }
+                    }
+
+
+
+
+                    $due = $request['GrandTotal'] - $current_Sale->paid_amount;
+                    if ($due === 0.0 || $due < 0.0) {
+                        $payment_statut = 'paid';
+                    } else if ($due != $request['GrandTotal']) {
+                        $payment_statut = 'partial';
+                    } else if ($due == $request['GrandTotal']) {
+                        $payment_statut = 'unpaid';
+                    }
+
+                    $old_status = $current_Sale->statut;
+                    $old_answer_status = $current_Sale->answer_status;
+
+                    $current_Sale->update([
+                        'date' => $request['date'],
+                        'updated_by' => ($old_status !== $request['statut']) ? Auth::user()->email: null,
+                        'cancel_reason' => $request['cancel_reason'],
+                        'postponed_date' => $request['postponed_date'],
+                        'client_id' => $request['client_id'],
+                        'warehouse_id' => $request['warehouse_id'],
+                        'notes' => $request['notes'],
+                        'statut' => $request['statut'],
+                        'delivery_note' => $request['delivery_note'],
+                        'tax_rate' => $request['tax_rate'],
+                        'answer_status' => $request['answer_status'],
+                        'TaxNet' => $request['TaxNet'],
+                        'address' =>  $request['address'],
+                        'discount' => $request['discount'],
+                        'shipping' => $request['shipping'],
+                        'GrandTotal' => $request['GrandTotal'],
+                        'payment_statut' => $payment_statut,
+                    ]);
+
+
+                    //status updated
+                    if($old_status !== $request['statut'] ){
+
+
+
+                        // dd($current_Sale->warehouse->assignedUsers);
+                        $current_Sale->warehouse->assignedUsers->each(function(User $user) use($current_Sale){
+
+                            $user->notify(new SaleStatusUpdateNotification($current_Sale));
+                        });
+                    }
+
+                    if($request['answer_status'] != $old_answer_status){
+                        if($request['answer_status'] == 'no_answer'){
+                            // $sendWhatsAppMessage->invoke($current_Sale);
                         }
                     }
                 }
-
-
-
-
-                $due = $request['GrandTotal'] - $current_Sale->paid_amount;
-                if ($due === 0.0 || $due < 0.0) {
-                    $payment_statut = 'paid';
-                } else if ($due != $request['GrandTotal']) {
-                    $payment_statut = 'partial';
-                } else if ($due == $request['GrandTotal']) {
-                    $payment_statut = 'unpaid';
-                }
-
-                $old_status = $current_Sale->statut;
-                $old_answer_status = $current_Sale->answer_status;
-
-                $current_Sale->update([
-                    'date' => $request['date'],
-                    'updated_by' => ($old_status !== $request['statut']) ? Auth::user()->email: null,
-                    'cancel_reason' => $request['cancel_reason'],
-                    'postponed_date' => $request['postponed_date'],
-                    'client_id' => $request['client_id'],
-                    'warehouse_id' => $request['warehouse_id'],
-                    'notes' => $request['notes'],
-                    'statut' => $request['statut'],
-                    'delivery_note' => $request['delivery_note'],
-                    'tax_rate' => $request['tax_rate'],
-                    'answer_status' => $request['answer_status'],
-                    'TaxNet' => $request['TaxNet'],
-                    'address' =>  $request['address'],
-                    'discount' => $request['discount'],
-                    'shipping' => $request['shipping'],
-                    'GrandTotal' => $request['GrandTotal'],
-                    'payment_statut' => $payment_statut,
-                ]);
-
-
-                //status updated
-                if($old_status !== $request['statut'] ){
-
-
-
-                    // dd($current_Sale->warehouse->assignedUsers);
-                    $current_Sale->warehouse->assignedUsers->each(function(User $user) use($current_Sale){
-
-                        $user->notify(new SaleStatusUpdateNotification($current_Sale));
-                    });
-                }
-
-                if($request['answer_status'] != $old_answer_status){
-                    if($request['answer_status'] == 'no_answer'){
-                        // $sendWhatsAppMessage->invoke($current_Sale);
-                    }
-                }
+            } catch (\Exception $e) {
+                return response()->json(['message' => $e->getMessage()], 500);
             }
+
 
         }, 10);
 
