@@ -1536,6 +1536,22 @@ class ReportController extends BaseController
 
         $data = [];
 
+        $item['no_sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))
+        ->select(
+            DB::raw("count(*) as nmbr")
+        )->first();
+
+
+        $item['no_canceled_sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))->where('statut','completed')
+        ->select(
+            DB::raw("count(*) as nmbr")
+        )->first();
+
+        $item['no_completed_sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))->where('statut','completed')
+        ->select(
+            DB::raw("count(*) as nmbr")
+        )->first();
+
         $item['sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))->where('statut','completed')
             ->select(
                 DB::raw('SUM(GrandTotal) AS sum'),
