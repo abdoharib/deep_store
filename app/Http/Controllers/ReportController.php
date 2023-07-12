@@ -1985,7 +1985,8 @@ class ReportController extends BaseController
                 'daily_net_profit' => $daily_net_profit,
                 'daily_ad_spend_x2' => $daily_net_profit_x2,
                 'daily_completed_sales_revnue'=>$daily_completed_sales_revnue,
-                'days' => $days_names
+                'days' => $days_names,
+                'total_ads_spend' => array_sum($daily_ad_spend)
 
         ];
     }
