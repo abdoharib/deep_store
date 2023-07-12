@@ -179,6 +179,7 @@ class SalesController extends BaseController
             $item['sale_details'] = $Sale->details->pluck('product');
             $item['statut'] = $Sale['statut'];
             $item['shipping_status'] =  $Sale['shipping_status'];
+            $item['has_stock'] =  $Sale['has_stock'];
             $item['discount'] = $Sale['discount'];
             $item['shipping'] = $Sale['shipping'];
             $item['warehouse_name'] = $Sale['warehouse']['name'];
@@ -313,7 +314,7 @@ class SalesController extends BaseController
                     ];
 
 
-                    if ($order->statut == "completed") {
+                    if ($order->statut == "completed" || $order->statut == 'under_shipping') {
                         if ($value['product_variant_id'] !== null) {
                             $product_warehouse = product_warehouse::where('deleted_at', '=', null)
                                 ->where('warehouse_id', $order->warehouse_id)
@@ -1358,6 +1359,7 @@ class SalesController extends BaseController
           $sale['delivery_note'] = $Sale_data->delivery_note;
           $sale['address'] = $Sale_data->address;
           $sale['answer_status'] = $Sale_data->answer_status;
+          $sale['has_stock'] = $Sale_data->has_stock;
 
           $sale['cancel_reason'] = $Sale_data->cancel_reason;
 
@@ -1399,6 +1401,7 @@ class SalesController extends BaseController
                   }
 
               } else {
+
                   $item_product = product_warehouse::where('product_id', $detail->product_id)
                       ->where('deleted_at', '=', null)->where('warehouse_id', $Sale_data->warehouse_id)
                       ->where('product_variant_id', '=', null)->first();
@@ -1420,6 +1423,8 @@ class SalesController extends BaseController
                 $data['id'] = $detail->id;
                 $data['detail_id'] = $detail_id += 1;
                 $data['product_id'] = $detail->product_id;
+                $data['has_stock'] = $detail->has_stock;
+
                 $data['total'] = $detail->total;
                 $data['name'] = $detail['product']['name'];
                 $data['quantity'] = $detail->quantity;

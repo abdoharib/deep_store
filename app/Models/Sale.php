@@ -33,7 +33,8 @@ class Sale extends Model
 
     private $append = [
         'due',
-        'sale_cost'
+        'sale_cost',
+        'has_stock'
     ];
 
     public function getDueAttribute() {
@@ -79,6 +80,21 @@ class Sale extends Model
         }
         return $cost;
     }
+
+
+    public function getHasStockAttribute(){
+
+        $has_stock = true;
+        foreach ($this->details as $detail) {
+            if(!$detail->has_stock){
+                $has_stock = false;
+                break;
+            }
+        }
+        return $has_stock;
+    }
+
+
 
 
 

@@ -25,6 +25,11 @@ class SaleDetail extends Model
         'discount' => 'double',
     ];
 
+
+    private $append = [
+        'has_stock',
+    ];
+
     public function sale()
     {
         return $this->belongsTo('App\Models\Sale');
@@ -33,6 +38,15 @@ class SaleDetail extends Model
     public function product()
     {
         return $this->belongsTo('App\Models\Product');
+    }
+
+    public function getHasStockAttribute(){
+
+        $product_warehouse = product_warehouse::where('product_id', $this->product_id)
+            ->where('deleted_at', '=', null)->where('warehouse_id', $this->sale->warehouse_id)
+            ->where('product_variant_id', '=', null)->first();
+
+        return $this->quantity <= $product_warehouse->qte ;
     }
 
 
