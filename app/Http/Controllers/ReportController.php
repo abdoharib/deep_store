@@ -1542,7 +1542,7 @@ class ReportController extends BaseController
         )->first();
 
 
-        $item['no_canceled_sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))->where('statut','completed')
+        $item['no_canceled_sales'] = Sale::where('deleted_at', '=', null)->whereBetween('date', array($request->from, $request->to))->where('statut','canceled')
         ->select(
             DB::raw("count(*) as nmbr")
         )->first();
