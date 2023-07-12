@@ -468,7 +468,7 @@ class SalesController extends BaseController
 
             }, 10);
         }catch (\Exception $e){
-            return response($e->getMessage(),500);
+            return abort(500, $e->getMessage());
 
         }
 
@@ -700,7 +700,7 @@ class SalesController extends BaseController
                     }
                 }
             } catch (\Exception $e) {
-                return response($e->getMessage(),500);
+                return abort(500, $e->getMessage());
             }
 
 
