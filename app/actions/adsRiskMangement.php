@@ -20,7 +20,7 @@ class adsRiskMangement
                 Log::debug('ad '.$ad->ad_ref_id . ' is a loser');
                 if($ad->ad_ref_status == 'ACTIVE'){
                     Log::debug('ad '.$ad->ad_ref_id . ' is Active');
-                    $this->turnOffAd($ad->ad_ref_id);
+                    $this->turnOffAd($ad);
                 }
             };
             $ads_manged_risk++;
