@@ -342,7 +342,7 @@ class SalesController extends BaseController
                                     $product_warehouse->qte -= $value['quantity'] / $unit->operator_value;
                                 } else {
                                     if(($value['quantity'] *  $unit->operator_value) > $product_warehouse->qte){
-                                        throw new \Exception('Invalid Quantity');
+                                        throw new \Exception('مخزون غير متوفر');
                                     }
                                     $product_warehouse->qte -= $value['quantity'] * $unit->operator_value;
                                 }
@@ -610,7 +610,7 @@ class SalesController extends BaseController
                                         } else {
                                             // dd($product_warehouse);
                                             if( ($prod_detail['quantity'] * $unit_prod->operator_value) > $product_warehouse->qte){
-                                                throw new \Exception('Invalid Quantity');
+                                                throw new \Exception('مخزون غير متوفر');
                                             }
                                             $product_warehouse->qte -= $prod_detail['quantity'] * $unit_prod->operator_value;
                                         }
