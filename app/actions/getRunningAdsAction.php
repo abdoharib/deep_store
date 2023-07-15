@@ -77,7 +77,7 @@ try {
                 }
             });
             if(count($v)){
-                $cpr = $v['value'];
+                $cpr = $v[0]['value'];
             }
             Log::debug($cpr);
 
