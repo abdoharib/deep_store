@@ -85,7 +85,7 @@ class Product extends Model
     public function getHasActiveAdsAttribute(){
         return ($this->ads()
         ->where('ad_ref_status','ACTIVE')
-        ->where('ad_ref_effective_status','ACTIVE')->count()) ? true : false;
+        ->where('ad_set_ref_status','ACTIVE')->count()) ? true : false;
 
     }
 
