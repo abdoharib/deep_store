@@ -31,7 +31,7 @@ class Product extends Model
         'TaxNet' => 'double',
     ];
 
-    protected $appends = ['profit'];
+    protected $appends = ['profit','has_active_ads'];
 
     public function ProductVariant()
     {
@@ -80,6 +80,17 @@ class Product extends Model
 
     public function getProfitAttribute(){
         return ($this->price - $this->cost);
+    }
+
+    public function getHasActiveAdsAttribute(){
+        return ($this->ads()
+        ->where('ad_ref_status','ACTIVE')
+        ->where('ad_ref_effective_status','ACTIVE')->count()) ? true : false;
+
+    }
+
+    public function ads(){
+        return $this->hasMany(Ad::class);
     }
 
 }
