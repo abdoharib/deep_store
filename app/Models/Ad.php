@@ -59,7 +59,9 @@ class Ad extends Model
         if($type == 'completed'){
             return $query
             ->where('ad_ref_effective_status','ADSET_PAUSED')
-            ->where('end_date','>=',now()->toDateTimeString());
+            ->where('end_date','>=',now()->toDateTimeString())
+            ->whereDate('end_date','>=',now()->toDateString());
+
         }
 
         if($type == 'closed'){
@@ -70,7 +72,8 @@ class Ad extends Model
         if($type == 'active'){
             return $query
             ->where('ad_ref_status','ACTIVE')
-            ->where('ad_set_ref_status','ACTIVE');
+            ->where('ad_set_ref_status','ACTIVE')
+            ->whereDate('end_date','<=',now()->toDateString());
         }
         // if($type == 'no_stock'){
         //     return $query
