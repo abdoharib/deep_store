@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Log;
 
+use function Psy\debug;
+
 class updateAdsAction
 {
 
@@ -25,6 +27,7 @@ class updateAdsAction
 
 
         $ads_data = $this->getRunningAdsAction->invoke();
+        Log::debug("jhlhjkhk");
         foreach ($ads_data as $ad_data) {
 
             $ad = Ad::where('ad_ref_id',$ad_data['id'])->first();
@@ -94,12 +97,15 @@ class updateAdsAction
                 SupportCarbon::make($ad_data['adset']['end_time'])->toDateTimeString()
                 :null;
             //update existing one
+
                 $ad->update([
                     'ad_ref_status' => $ad_data['status'],
+                    'ad_set_ref_id' => $ad_data['adset']['id'],
                     'ad_set_ref_status' => $ad_data['adset']['status'],
                     'last_ad_update_at' => now()->toDateTimeString(),
                     'ad_ref_effective_status' => $ad_data['effective_status'],
                     'amount_spent' => ($ad_data['total_spent'] * 5),
+                    'cost_per_result' => $ad_data['cost_per_result'] * 5,
                     'start_date' => SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString(),
                     'end_date' => $end_time,
                     'product_id' => $ad_data['product_id'],
@@ -132,6 +138,8 @@ class updateAdsAction
                 //create new one
                 $ad = Ad::create([
                     'ad_ref_id' => $ad_data['id'],
+                    'ad_set_ref_id' => $ad_data['adset']['id'],
+
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_status' => $ad_data['adset']['status'],
                     "last_ad_update_at" => now()->toDateTimeString(),
@@ -140,6 +148,7 @@ class updateAdsAction
                     'product_name' => '',
 
                     'amount_spent' => ($ad_data['total_spent'] * 5),
+                    'cost_per_result' => $ad_data['cost_per_result'] * 5,
 
                     'start_date' => $ad_data['adset']['start_time'],
                     'end_date' => $end_time,
