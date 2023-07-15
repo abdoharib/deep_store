@@ -34,65 +34,75 @@ try {
 
         $ads = array_map(function ($item) use($facebook) {
 
-            $json_date = explode('{',$item['name']);
-            if(count($json_date)>1){
-                $json_date = $json_date[1];
 
-                // dd('{'.$json_date);
-                try{
-                    $json_date = json_decode('{'.$json_date,true);
-
-                } catch (\JsonException $exception) {
-                }
-
-            }else{
-                return false;
-                $json_date = [
-                    'product_id' => null,
-                    'warehouse_id' => null
-                ];
-            }
+            try {
 
 
-            $ad_insight = $facebook->get('/'.$item['id'].'/insights?fields=ad_id,cost_per_action_type,spend&time_range={"since":"2023-03-01","until":"'.Carbon::now()->format('Y-m-d').'"}');
-            $data = $ad_insight->getDecodedBody()['data'];
+                $json_date = explode('{',$item['name']);
+                    if(count($json_date)>1){
+                        $json_date = $json_date[1];
 
-            $spent = 0;
-            if(count($data)){
-               $spent =  $data[0]['spend'];
-            }
+                        // dd('{'.$json_date);
+                        try{
+                            $json_date = json_decode('{'.$json_date,true);
 
-            if(is_null($json_date)){
-                // throw new \Exception($item['name']);
+                        } catch (\JsonException $exception) {
+                        }
+
+                    }else{
+                        return false;
+                        $json_date = [
+                            'product_id' => null,
+                            'warehouse_id' => null
+                        ];
+                    }
+
+
+                    $ad_insight = $facebook->get('/'.$item['id'].'/insights?fields=ad_id,cost_per_action_type,spend&time_range={"since":"2023-03-01","until":"'.Carbon::now()->format('Y-m-d').'"}');
+                    $data = $ad_insight->getDecodedBody()['data'];
+
+                    $spent = 0;
+                    if(count($data)){
+                       $spent =  $data[0]['spend'];
+                    }
+
+                    if(is_null($json_date)){
+                        // throw new \Exception($item['name']);
+                        return null;
+                        Log::debug('error at '.$item['name'].' '.$item['id']);
+
+
+                    }
+
+                    $cpr = 0;
+                    $v = array_filter($data[0]['cost_per_action_type'],function($v){
+                        if($v['action_type'] == 'onsite_conversion.other'){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    });
+
+                    Log::debug(json_encode($v));
+                    if(count($v)){
+                        $cpr = $v[array_key_first($v)]['value'];
+                    }
+                    Log::debug($cpr);
+
+
+
+                    return array_merge($item,[
+                        'product_id' => $json_date['product_id'],
+                        'warehouse_id' => $json_date['warehouse_id'],
+                        'total_spent' => (float)$spent,
+                        'cost_per_result' => $cpr
+                    ]);
+            } catch (\Exception $e) {
+                Log::debug($e->getMessage());
                 return null;
-                Log::debug('error at '.$item['name'].' '.$item['id']);
-
-
             }
 
-            $cpr = 0;
-            $v = array_filter($data[0]['cost_per_action_type'],function($v){
-                if($v['action_type'] == 'onsite_conversion.other'){
-                    return true;
-                }else{
-                    return false;
-                }
-            });
 
-            Log::debug(json_encode($v));
-            if(count($v)){
-                $cpr = $v[array_key_first($v)]['value'];
-            }
-            Log::debug($cpr);
-
-
-
-            return array_merge($item,[
-                'product_id' => $json_date['product_id'],
-                'warehouse_id' => $json_date['warehouse_id'],
-                'total_spent' => (float)$spent,
-                'cost_per_result' => $cpr
-            ]);
         },$ads);
 
         $ads = array_filter($ads,function($item){
