@@ -69,7 +69,7 @@ try {
             }
 
             $cpr = 0;
-            $v = array_filter($data[0],function($v){
+            $v = array_filter($data[0]['cost_per_action_type'],function($v){
                 if($v['action_type'] == 'onsite_conversion.other'){
                     return true;
                 }else{
