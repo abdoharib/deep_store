@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\actions\getAdPreformanceStatusAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\App;
 
 class Ad extends Model
 {
@@ -19,6 +21,7 @@ class Ad extends Model
         'ad_ref_effective_status',
         'ad_set_ref_status',
         'last_ad_update_at',
+        'cost_per_message',
         'product_id',
         'closed_at',
         'start_date',
@@ -47,6 +50,40 @@ class Ad extends Model
     ];
 
 
+    public function scopeOfType($query, $type)
+    {
+        if($type == 'all'){
+            return $query;
+        }
+
+        if($type == 'completed'){
+            return $query
+            ->where('ad_ref_effective_status','ADSET_PAUSED')
+            ->where('end_date','>=',now()->toDateTimeString());
+        }
+
+        if($type == 'closed'){
+            return $query
+            ->where('closed_at','!=',null);
+        }
+
+        if($type == 'active'){
+            return $query
+            ->where('ad_ref_status','ACTIVE')
+            ->where('ad_set_ref_status','ACTIVE');
+        }
+        // if($type == 'no_stock'){
+        //     return $query
+        //     ->where('ad_ref_status','ACTIVE')
+        //     ->where('ad_set_ref_status','ACTIVE')
+        //     ->whereHas('product',function($q){
+        //         $q->whereHas('product_warehouse',function($q){
+
+        //         });
+        //     });
+        // }
+    }
+
 
 
     // public function setProductNameAttribute($value)
@@ -70,24 +107,7 @@ class Ad extends Model
     }
 
     public function getPreformanceStatusAttribute($value){
-        // dd($this->warehouses->pluck('warehouse')->pluck('name')->toArray());
-        $status = (((double)$this->completed_sales_profit - (double)$this->amount_spent) < 0) && ((double)$this->amount_spent > 50);
-
-        if($status){
-            $status = 'loser';
-        }
-
-        if( $status !== 'loser' ){
-            if((double)$this->completed_sales_profit - (double)$this->amount_spent < 80){
-                // mehh
-                $status = 'average';
-            }else{
-                // good
-                $status = 'success';
-            }
-        }
-
-        return $status;
+        return App::make(getAdPreformanceStatusAction::class)->invoke($this);
     }
 
     public function getProductNameAttribute($value){
