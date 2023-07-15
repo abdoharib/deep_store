@@ -76,6 +76,8 @@ try {
                     return false;
                 }
             });
+
+            Log::debug(json_encode($v));
             if(count($v)){
                 $cpr = $v[0]['value'];
             }
