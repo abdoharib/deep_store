@@ -48,7 +48,7 @@ class UpdateAdsCommand extends Command
     public function handle()
     {
         try {
-            Log::debug("first");
+            // Log::debug("first");
 
             $this->updateAdsAction->invoke();
             $this->adsRiskMangement->invoke();
