@@ -63,8 +63,8 @@ try {
             }
 
             if(is_null($json_date)){
-                throw new \Exception($item['name']);
-                // return null;
+                // throw new \Exception($item['name']);
+                return null;
 
             }
 
