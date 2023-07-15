@@ -50,7 +50,7 @@ class AdController extends Controller
             );
             $data = array();
 
-            $ads = Ad::where('deleted_at', '=', null);
+            $ads = Ad::ofType($request->filter_ad)->where('deleted_at', '=', null);
 
             //Multiple Filter
             $Filtred = $helpers->filter($ads, $columns, $param, $request)
@@ -108,6 +108,8 @@ class AdController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+
 
 
 
