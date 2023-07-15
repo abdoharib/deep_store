@@ -79,7 +79,7 @@ try {
 
             Log::debug(json_encode($v));
             if(count($v)){
-                $cpr = $v[0]['value'];
+                $cpr = $v[array_key_first($v)]['value'];
             }
             Log::debug($cpr);
 
