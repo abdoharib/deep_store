@@ -60,22 +60,12 @@ try {
 
                     $ad_insight = $facebook->get('/'.$item['id'].'/insights?fields=ad_id,cost_per_action_type,spend&time_range={"since":"2023-03-01","until":"'.Carbon::now()->format('Y-m-d').'"}');
                     $data = $ad_insight->getDecodedBody()['data'];
-
+                    $cpr = 0;
                     $spent = 0;
                     if(count($data)){
                        $spent =  $data[0]['spend'];
-                    }
 
-                    if(is_null($json_date)){
-                        // throw new \Exception($item['name']);
-                        return null;
-                        Log::debug('error at '.$item['name'].' '.$item['id']);
-
-
-                    }
-
-                    $cpr = 0;
-                    $v = array_filter($data[0]['cost_per_action_type'],function($v){
+                       $v = array_filter($data[0]['cost_per_action_type'],function($v){
                         if($v['action_type'] == 'onsite_conversion.other'){
                             return true;
                         }else{
@@ -87,6 +77,17 @@ try {
                     if(count($v)){
                         $cpr = $v[array_key_first($v)]['value'];
                     }
+                    }
+
+                    if(is_null($json_date)){
+                        // throw new \Exception($item['name']);
+                        return null;
+                        Log::debug('error at '.$item['name'].' '.$item['id']);
+
+
+                    }
+
+
                     // Log::debug($cpr);
 
 
