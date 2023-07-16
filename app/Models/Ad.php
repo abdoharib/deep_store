@@ -59,8 +59,7 @@ class Ad extends Model
         if($type == 'completed'){
             return $query
             ->where('ad_ref_effective_status','ADSET_PAUSED')
-            ->where('end_date','>=',now()->toDateTimeString())
-            ->whereDate('end_date','>=',now()->toDateString());
+            ->where('end_date','<=',now()->toDateTimeString());
 
         }
 
