@@ -97,12 +97,17 @@ class updateAdsAction
                 :null;
             //update existing one
 
+            $lifetime_budget = 0;
+            if(array_key_exists('lifetime_budget',$ad_data['adset'])){
+                $lifetime_budget = ((double)$ad_data['adset']['lifetime_budget']/100)*5;
+            }
                 $ad->update([
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
                     'ad_set_ref_status' => $ad_data['adset']['status'],
                     'last_ad_update_at' => now()->toDateTimeString(),
                     'ad_ref_effective_status' => $ad_data['effective_status'],
+                    'lifetime_budget' => $lifetime_budget,
                     'amount_spent' => ($ad_data['total_spent'] * 5),
                     'cost_per_result' => $ad_data['cost_per_result'] * 5,
                     'start_date' => SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString(),
@@ -135,10 +140,15 @@ class updateAdsAction
                 SupportCarbon::make($ad_data['adset']['end_time'])->toDateTimeString()
                 :null;
                 //create new one
+
+                $lifetime_budget = 0;
+                if(array_key_exists('lifetime_budget',$ad_data['adset'])){
+                    $lifetime_budget = ((double)$ad_data['adset']['lifetime_budget']/100)*5;
+                }
                 $ad = Ad::create([
                     'ad_ref_id' => $ad_data['id'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
-
+                    'lifetime_budget' => $lifetime_budget,
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_status' => $ad_data['adset']['status'],
                     "last_ad_update_at" => now()->toDateTimeString(),

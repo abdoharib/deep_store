@@ -22,6 +22,7 @@ class Ad extends Model
         'ad_set_ref_status',
         'last_ad_update_at',
         'cost_per_message',
+        'lifetime_budget',
         'product_id',
         'closed_at',
         'start_date',
