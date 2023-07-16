@@ -83,11 +83,11 @@ try {
                         }
                     });
 
-                    Log::debug(json_encode($v));
+                    // Log::debug(json_encode($v));
                     if(count($v)){
                         $cpr = $v[array_key_first($v)]['value'];
                     }
-                    Log::debug($cpr);
+                    // Log::debug($cpr);
 
 
 
