@@ -73,7 +73,7 @@ class Ad extends Model
             return $query
             ->where('ad_ref_status','ACTIVE')
             ->where('ad_set_ref_status','ACTIVE')
-            ->whereDate('end_date','<=',now()->toDateString());
+            ->where('end_date','>=',now()->toDateString());
         }
         // if($type == 'no_stock'){
         //     return $query
