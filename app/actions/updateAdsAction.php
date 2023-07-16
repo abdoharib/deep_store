@@ -109,7 +109,7 @@ class updateAdsAction
                     'ad_ref_effective_status' => $ad_data['effective_status'],
                     'lifetime_budget' => $lifetime_budget,
                     'amount_spent' => ($ad_data['total_spent'] * 5),
-                    'cost_per_result' => $ad_data['cost_per_result'] * 5,
+                    'cost_per_message' => $ad_data['cost_per_message'] * 5,
                     'start_date' => SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString(),
                     'end_date' => $end_time,
                     'product_id' => $ad_data['product_id'],
@@ -157,7 +157,7 @@ class updateAdsAction
                     'product_name' => '',
 
                     'amount_spent' => ($ad_data['total_spent'] * 5),
-                    'cost_per_result' => $ad_data['cost_per_result'] * 5,
+                    'cost_per_message' => $ad_data['cost_per_message'] * 5,
 
                     'start_date' => $ad_data['adset']['start_time'],
                     'end_date' => $end_time,
