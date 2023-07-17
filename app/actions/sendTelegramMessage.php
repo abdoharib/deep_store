@@ -18,7 +18,7 @@ class sendTelegramMessage
 
         try {
             $response = Http::post('https://api.telegram.org/bot6107962869:AAEnLYUlxM5Xqn4LqZ14nXzodkx7oZf8Q6A/sendMessage',[
-                'chat_id' => '-968418833',
+                'chat_id' => '-1001661327002',
                 'text' => $message,
             ]);
             $response->throw();
