@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\actions\createVanexShipmentAction;
 use App\actions\getVanexShipmentAction;
+use App\actions\sendTelegramMessage;
 use App\actions\sendWhatsAppMessage;
 use Twilio\Rest\Client as Client_Twilio;
 use App\Mail\SaleMail;
@@ -480,7 +481,7 @@ class SalesController extends BaseController
 
     //------------- UPDATE SALE -----------
 
-    public function update(Request $request, $id, sendWhatsAppMessage $sendWhatsAppMessage)
+    public function update(Request $request, $id, sendTelegramMessage $sendTelegramMessage)
     {
         $this->authorizeForUser($request->user(), 'update', Sale::class);
 
@@ -489,7 +490,7 @@ class SalesController extends BaseController
             'client_id' => 'required',
         ]);
 
-        \DB::transaction(function () use ($request, $id,$sendWhatsAppMessage) {
+        \DB::transaction(function () use ($request, $id,$sendTelegramMessage) {
 
             try {
                 $role = Auth::user()->roles()->first();
@@ -695,7 +696,11 @@ class SalesController extends BaseController
 
                     if($request['answer_status'] != $old_answer_status){
                         if($request['answer_status'] == 'no_answer'){
-                            // $sendWhatsAppMessage->invoke($current_Sale);
+                            $sendTelegramMessage->invoke(`
+                            لايوجد أستجابة ❌
+                            رقم الهاتف : `.$current_Sale->client->phone.`
+                            رقم الطلبية : `.$current_Sale->Ref.`
+                            `);
                         }
                     }
                 }
