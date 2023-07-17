@@ -12,7 +12,9 @@ use Symfony\Component\ErrorHandler\Debug;
 class sendTelegramMessage
 {
     public function invoke(string $message =''){
-        dd($message);
+        // dd($message);
+        Log::debug($message);
+
 
         try {
             $response = Http::post('https://api.telegram.org/bot6107962869:AAEnLYUlxM5Xqn4LqZ14nXzodkx7oZf8Q6A/sendMessage',[
