@@ -700,6 +700,8 @@ class SalesController extends BaseController
                             لايوجد أستجابة ❌
                             رقم الهاتف : '.$current_Sale->client->phone.'
                             رقم الطلبية : '.$current_Sale->Ref.'
+                            المستودع : '.$current_Sale->warehouse->name.'
+
                             ');
                         }
                     }
