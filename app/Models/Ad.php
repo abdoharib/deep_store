@@ -165,7 +165,7 @@ class Ad extends Model
 
 
 
-    public function getGrowtDatahAttribute($value){
+    public function getGrowtDataAttribute($value){
         if($this->completed_sales_profit >=  (2*$this->amount_spent)){
             return [
                 'status' => 'sucessful',
