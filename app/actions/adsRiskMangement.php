@@ -3,6 +3,7 @@
 namespace App\actions;
 
 use App\Models\Ad;
+use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +26,35 @@ class adsRiskMangement
             };
             $ads_manged_risk++;
         }
+
+        $LastEndingActiveAds = Ad::ofType('active')->where('deleted_at', '=', null)->sort('DESC','end_date')->first();
+        $FirstStartingActiveAds = Ad::ofType('active')->where('deleted_at', '=', null)->sort('ASC','start_date')->first();
+
+        $NoSales = Sale::where('deleted_at',null)
+        ->where('date','>=',$FirstStartingActiveAds->start_date)
+        ->where('date','<=',$LastEndingActiveAds->end_date)
+        ->count();
+
+
+        Log::debug('No of Sales Between'.$FirstStartingActiveAds->start_date.' and '.$LastEndingActiveAds->end_date);
+        $amountSpent = Ad::ofType('active')->where('deleted_at', '=', null)->get()->sum('amount_spent');
+        Log::debug('Amount Spent of All Active Ads'.$amountSpent);
+
+
+        if((float)$amountSpent > 150){
+            if($NoSales < 15 ){
+
+                foreach ( Ad::ofType('active')->where('deleted_at', '=', null)->get() as $activeAd ){
+                    if($activeAd->preformance_status == 'average'){
+                        $this->turnOffAd($activeAd);
+
+                    }
+                }
+
+            }
+        }
+
+
 
         Log::debug('looped over and checked '.$ads_manged_risk . ' for spend > profit');
     }
