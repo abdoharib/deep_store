@@ -27,8 +27,8 @@ class adsRiskMangement
             $ads_manged_risk++;
         }
 
-        $LastEndingActiveAds = Ad::ofType('active')->where('deleted_at', '=', null)->sort('DESC','end_date')->first();
-        $FirstStartingActiveAds = Ad::ofType('active')->where('deleted_at', '=', null)->sort('ASC','start_date')->first();
+        $LastEndingActiveAds = Ad::ofType('active')->where('deleted_at', '=', null)->orderBy('end_date','DESC')->first();
+        $FirstStartingActiveAds = Ad::ofType('active')->where('deleted_at', '=', null)->orderBy('start_date','ASC')->first();
 
         $NoSales = Sale::where('deleted_at',null)
         ->where('date','>=',$FirstStartingActiveAds->start_date)
