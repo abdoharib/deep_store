@@ -47,7 +47,8 @@ class Ad extends Model
         'preformance_status',
         'product_name',
         'warehouse_name',
-        'is_closed'
+        'is_closed',
+        'growth_data'
     ];
 
 
@@ -163,5 +164,24 @@ class Ad extends Model
     }
 
 
+
+    public function getGrowtDatahAttribute($value){
+        if($this->completed_sales_profit >=  (2*$this->amount_spent)){
+            return [
+                'status' => 'sucessful',
+                'next_milestone_budget'=>(2*$this->amount_spent)
+            ];
+        }elseif($this->completed_sales_profit >=  $this->amount_spent){
+            return [
+                'status' => 'steady',
+                'next_milestone_budget'=>($this->amount_spent)
+            ];
+        }else{
+            return [
+                'status' => 'failed',
+                'next_milestone_budget'=> 0
+            ];
+        }
+    }
 
 }
