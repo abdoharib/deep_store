@@ -15,7 +15,7 @@ class getAdPreformanceStatusAction
         $ad_is_spent_over_50_and_profit_less_then_ad_cost = ( $ad_net_profit < 0) && ((double)$ad->amount_spent > 50);
 
         $ad_cpr_is_grater_then_3_and_spent_more_then_30 = ( ((double)$ad->cost_per_result > 3.5) && ($ad->amount_spent > 30) );
-        return $ad->cost_per_result;
+        // return $ad->cost_per_result;
 
         if($ad_is_spent_over_50_and_profit_less_then_ad_cost){
             return 'loser';
