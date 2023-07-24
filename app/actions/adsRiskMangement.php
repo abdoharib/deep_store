@@ -30,29 +30,6 @@ class adsRiskMangement
         $LastEndingActiveAds = Ad::ofType('active')->where('deleted_at', '=', null)->orderBy('end_date','DESC')->first();
         $FirstStartingActiveAds = Ad::ofType('active')->where('deleted_at', '=', null)->orderBy('start_date','ASC')->first();
 
-        $NoSales = Sale::where('deleted_at',null)
-        ->where('date','>=',$FirstStartingActiveAds->start_date)
-        ->where('date','<=',$LastEndingActiveAds->end_date)
-        ->count();
-
-
-        Log::debug('No of Sales Between'.$FirstStartingActiveAds->start_date.' and '.$LastEndingActiveAds->end_date);
-        $amountSpent = Ad::ofType('active')->where('deleted_at', '=', null)->get()->sum('amount_spent');
-        Log::debug('Amount Spent of All Active Ads'.$amountSpent);
-
-
-        if((float)$amountSpent > 150){
-            if($NoSales < 15 ){
-
-                foreach ( Ad::ofType('active')->where('deleted_at', '=', null)->get() as $activeAd ){
-                    if($activeAd->preformance_status == 'average'){
-                        $this->turnOffAd($activeAd);
-
-                    }
-                }
-
-            }
-        }
 
 
 
