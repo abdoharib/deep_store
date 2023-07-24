@@ -46,7 +46,7 @@ class DailyCostPerSaleRiskMngCommand extends Command
     public function handle()
     {
 
-        Log::debug(Carbon::now()->toDateString());
+        Log::debug(Carbon::now()->toDateTimeString());
 
 
         // try {
