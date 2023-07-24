@@ -49,22 +49,22 @@ class DailyCostPerSaleRiskMngCommand extends Command
         Log::debug(Carbon::now()->toDateTimeString());
 
 
-        // try {
-        //     Log::debug("---------------------------------------------------------------------------------------");
-        //     Log::debug("---------------------------------------------------------------------------------------");
-        //     Log::debug("--------------------------- Starting Daily Ads Risk Mng -------------------------------");
-        //     Log::debug("Current Time ------------------> ".Carbon::now()->toDateTimeString());
+        try {
+            Log::debug("---------------------------------------------------------------------------------------");
+            Log::debug("---------------------------------------------------------------------------------------");
+            Log::debug("--------------------------- Starting Daily Ads Risk Mng -------------------------------");
+            Log::debug("Current Time ------------------> ".Carbon::now()->toDateTimeString());
 
-        //     $this->DailyRiskMangement->invoke();
+            $this->DailyRiskMangement->invoke();
 
-        //     Log::debug("--------------------------- Finished Daily Risk Mng -------------------------------");
-        //     Log::debug("---------------------------------------------------------------------------------------");
+            Log::debug("--------------------------- Finished Daily Risk Mng -------------------------------");
+            Log::debug("---------------------------------------------------------------------------------------");
 
-        //     return 0;
-        // } catch (\Exception $e) {
-        //     Log::debug("--------------------------- Error Durring  Daily Ads Risk Mng -------------------------------");
-        //     Log::debug($e->getMessage());
+            return 0;
+        } catch (\Exception $e) {
+            Log::debug("--------------------------- Error Durring  Daily Ads Risk Mng -------------------------------");
+            Log::debug($e->getMessage());
 
-        // }
+        }
     }
 }
