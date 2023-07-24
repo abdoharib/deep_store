@@ -1998,7 +1998,8 @@ class ReportController extends BaseController
                 'no_daily_sales' => $no_daily_sales,
                 'days' => $days_names,
                 'total_ads_spend' => array_sum($daily_ad_spend),
-                'daily_cost_per_sale'=>  $daily_cost_per_sale
+                'daily_cost_per_sale'=>  $daily_cost_per_sale,
+                'avg_cost_per_sale' => array_sum($daily_cost_per_sale) / count($daily_cost_per_sale)
         ];
     }
 
