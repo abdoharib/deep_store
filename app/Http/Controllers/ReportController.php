@@ -1931,7 +1931,8 @@ class ReportController extends BaseController
         $daily_net_profit = [];
         $daily_net_profit_x2 = [];
         $daily_completed_sales_revnue = [];
-
+        $daily_cost_per_sale = [];
+        $no_daily_sales = [];
 
         $days_names = [];
         // $weekly_ads = Ad::
@@ -1971,10 +1972,19 @@ class ReportController extends BaseController
             ->where('statut','completed')
             ->get();
 
+            $no_sales = Sale::where('deleted_at',null)
+            ->whereDate('date','>=',$start_of_day)
+            ->whereDate('date','<=',$end_of_day)
+            ->count();
+
+
+
             $net_profit =  $daily_completed_sales->sum('GrandTotal') - ($daily_completed_sales->sum('sale_cost') + $spend );
             $daily_completed_sales_revnue[] = $daily_completed_sales->sum('GrandTotal');
             $daily_net_profit[] = $net_profit;
             $daily_net_profit_x2[] = $spend*2;
+            $daily_cost_per_sale = $spend / $no_sales;
+            $no_daily_sales[] = $no_sales;
 
         }
 
@@ -1985,9 +1995,10 @@ class ReportController extends BaseController
                 'daily_net_profit' => $daily_net_profit,
                 'daily_ad_spend_x2' => $daily_net_profit_x2,
                 'daily_completed_sales_revnue'=>$daily_completed_sales_revnue,
+                'no_daily_sales' => $no_daily_sales,
                 'days' => $days_names,
-                'total_ads_spend' => array_sum($daily_ad_spend)
-
+                'total_ads_spend' => array_sum($daily_ad_spend),
+                'daily_cost_per_sale'=>  $daily_cost_per_sale
         ];
     }
 
