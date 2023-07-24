@@ -46,23 +46,25 @@ class DailyCostPerSaleRiskMngCommand extends Command
     public function handle()
     {
 
+        Log::debug(Carbon::now()->toDateString());
 
-        try {
-            Log::debug("---------------------------------------------------------------------------------------");
-            Log::debug("---------------------------------------------------------------------------------------");
-            Log::debug("--------------------------- Starting Daily Ads Risk Mng -------------------------------");
-            Log::debug("Current Time ------------------> ".Carbon::now()->toDateTimeString());
 
-            $this->DailyRiskMangement->invoke();
+        // try {
+        //     Log::debug("---------------------------------------------------------------------------------------");
+        //     Log::debug("---------------------------------------------------------------------------------------");
+        //     Log::debug("--------------------------- Starting Daily Ads Risk Mng -------------------------------");
+        //     Log::debug("Current Time ------------------> ".Carbon::now()->toDateTimeString());
 
-            Log::debug("--------------------------- Finished Daily Risk Mng -------------------------------");
-            Log::debug("---------------------------------------------------------------------------------------");
+        //     $this->DailyRiskMangement->invoke();
 
-            return 0;
-        } catch (\Exception $e) {
-            Log::debug("--------------------------- Error Durring  Daily Ads Risk Mng -------------------------------");
-            Log::debug($e->getMessage());
+        //     Log::debug("--------------------------- Finished Daily Risk Mng -------------------------------");
+        //     Log::debug("---------------------------------------------------------------------------------------");
 
-        }
+        //     return 0;
+        // } catch (\Exception $e) {
+        //     Log::debug("--------------------------- Error Durring  Daily Ads Risk Mng -------------------------------");
+        //     Log::debug($e->getMessage());
+
+        // }
     }
 }
