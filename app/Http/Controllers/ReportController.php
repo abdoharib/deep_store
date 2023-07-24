@@ -1983,7 +1983,7 @@ class ReportController extends BaseController
             $daily_completed_sales_revnue[] = $daily_completed_sales->sum('GrandTotal');
             $daily_net_profit[] = $net_profit;
             $daily_net_profit_x2[] = $spend*2;
-            $daily_cost_per_sale = $spend / $no_sales;
+            $daily_cost_per_sale[] = $spend / $no_sales;
             $no_daily_sales[] = $no_sales;
 
         }
