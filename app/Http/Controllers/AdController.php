@@ -59,8 +59,6 @@ class AdController extends Controller
                     return $query->when($request->filled('search'), function ($query) use ($request) {
                         return $query->where('id', 'LIKE', "%{$request->search}%")
                             ->orWhere('ad_ref_status', 'LIKE', "%{$request->search}%")
-                            // ->orWhere('preformance_status', 'LIKE', "%{$request->search}%")
-
                             ->orWhere(function ($query) use ($request) {
                                 return $query->whereHas('product', function ($q) use ($request) {
                                     $q->where('name', 'LIKE', "%{$request->search}%");
@@ -209,7 +207,25 @@ class AdController extends Controller
      */
     public function show(Ad $ad)
     {
-        //
+        $periods =[];
+        $spends =[];
+
+        foreach ($ad->product->ads as $ad ) {
+            $periods[] = Carbon::make($ad->start_date)->toDateString()." --> ".Carbon::make($ad->end_date)->toDateString();
+            $spends[] = $ad->amount_spent;
+        }
+
+
+        return response()->json([
+            'ad' => $ad,
+            'previous_ads' => $ad->product->ads,
+            'product_ads' => [
+                'periods' => $periods,
+                'spends' => $spends
+
+            ]
+
+        ]);
     }
 
     /**
