@@ -70,8 +70,8 @@ class AdController extends Controller
                                 });
                             })
                             ->orWhere('amount_spent', 'like', "%{$request->search}%")
-                            ->orWhereDate('start_date', $request->search)
-                            ->orWhereDate('end_date', $request->search);
+                            ->orWhere('start_date', $request->search)
+                            ->orWhere('end_date', $request->search);
                     });
                 });
 
