@@ -93,7 +93,7 @@ class Cycle extends Model
         $no_ads = $this->ads()->count();
 
         if($no_ads){
-            return ($no_winning_ads / $no_ads);
+            return round($no_winning_ads / $no_ads,2);
         }
         return 0;
     }
@@ -104,7 +104,7 @@ class Cycle extends Model
         $no_completed_sales = $this->ads->sum('no_completed_sales');
 
         if($no_sales){
-            return ($no_completed_sales / $no_sales);
+            return  round($no_completed_sales / $no_sales,2);
         }
         return 0;
     }
