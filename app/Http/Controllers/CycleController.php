@@ -40,10 +40,10 @@ class CycleController extends Controller
             );
             $data = array();
 
-            $cycles = Cycle::where('deleted_at', '=', null);
+            $cycles = Cycle::where('deleted_at', '=', null)->get();
 
             //Multiple Filter
-            $Filtred = $helpers->filter($cycles, $columns, $param, $request);
+            // $Filtred = $helpers->filter($cycles, $columns, $param, $request);
                 // Search With Multiple Param
             // ->where(function ($query) use ($request) {
             //         // return $query->when($request->filled('search'), function ($query) use ($request) {
