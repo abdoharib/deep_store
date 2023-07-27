@@ -40,7 +40,7 @@ class CycleController extends Controller
             );
             $data = array();
 
-            $cycles = Cycle::where('deleted_at', '=', null);
+            $cycles = Cycle::where('deleted_at', '=', null)->with('ads');
 
             //Multiple Filter
             $Filtred = $helpers->filter($cycles, $columns, $param, $request);
