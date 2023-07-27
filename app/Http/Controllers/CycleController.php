@@ -40,7 +40,7 @@ class CycleController extends Controller
             );
             $data = array();
 
-            $cycles = Cycle::where('deleted_at', '=', null)->get();
+            $cycles = Cycle::where('deleted_at', '=', null);
 
             //Multiple Filter
             // $Filtred = $helpers->filter($cycles, $columns, $param, $request);
@@ -72,7 +72,7 @@ class CycleController extends Controller
 
 
 
-            $cycles = $Filtred->offset($offSet)
+            $cycles = $cycles->offset($offSet)
                 ->limit($perPage)->orderBy($order, $dir)->get();
 
 
