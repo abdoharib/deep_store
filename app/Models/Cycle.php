@@ -103,9 +103,7 @@ class Cycle extends Model
     }
     public function getWinRateAttribute(){
 
-        $no_winning_ads = $this->ads->filter(function($ad){
-            return $ad->preformance_status == 'success';
-        })->count();
+        $no_winning_ads = $this->no_successful_ads;
         $no_ads = $this->ads()->count();
 
         if($no_ads){
