@@ -95,7 +95,7 @@ class Cycle extends Model
     }
     public function getNoUnsuccessfulAdsAttribute(){
         return $this->ads->filter(function($ad){
-            return $ad->preformance_status != 'success';
+            return ($ad->preformance_status != 'success') || ($ad->completed_sales_profit <= $ad->amount_spent);
         })->count();
     }
     public function getNetTotalAttribute(){
