@@ -31,6 +31,7 @@ class getRunningAdsAction
         //     }
         //     return false;
         // });
+        dd($ads);
 
 
 
