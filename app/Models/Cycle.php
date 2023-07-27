@@ -78,7 +78,7 @@ class Cycle extends Model
     }
 
     public function getNoClosedAdsAttribute(){
-        return $this->ads->where('is_closed','!=',null)->count();
+        return $this->ads->where('closed_at','!=',null)->count();
     }
 
     public function getNoSalesAttribute(){
