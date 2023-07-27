@@ -27,7 +27,7 @@ class Cycle extends Model
         'no_ads',
         'no_successful_ads',
         'no_unsuccessful_ads',
-        'total_lost',
+        'net_total',
         'win_rate',
         'maturity_rate',
         'total_budget',
@@ -80,10 +80,8 @@ class Cycle extends Model
             return $ad->preformance_status != 'success';
         })->count();
     }
-    public function getTotalLostAttribute(){
-        return round($this->ads->filter(function($ad){
-            return $ad->preformance_status != 'success';
-        })->sum('amount_spent'),2);
+    public function getNetTotalAttribute(){
+        return round($this->ads->sum('completed_sales_profit') - $this->ads->sum('amount_spent') ,2);
     }
     public function getWinRateAttribute(){
 
