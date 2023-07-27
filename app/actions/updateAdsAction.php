@@ -117,7 +117,7 @@ class updateAdsAction
                 $ad->update([
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
-                    'campaing_name' => $ad_data['campaign']['name'],
+                    'campaign_name' => $ad_data['campaign']['name'],
 
                     'campaing_start_date' => $start_time,
                     'campaing_end_date' => $stop_time,
@@ -178,7 +178,7 @@ class updateAdsAction
 
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
-                    'campaing_name' => $ad_data['campaign']['name'],
+                    'campaign_name' => $ad_data['campaign']['name'],
 
                     'campaing_start_date' => $start_time,
                     'campaing_end_date' => $stop_time,
