@@ -30,7 +30,8 @@ class Cycle extends Model
         'total_lost',
         'win_rate',
         'maturity_rate',
-        'total_budget'
+        'total_budget',
+        'estimated_end_date'
     ];
 
 
@@ -56,6 +57,10 @@ class Cycle extends Model
     public function getDaysLeftAttribute(){
         return Carbon::make($this->end_date)->diffInDays(Carbon::now());
     }
+    public function getEstimatedEndDateAttribute(){
+        return $this->ads()->orderBy('end_date','desc')->first()->end_date;
+    }
+
     public function getDaysSinceStartAttribute(){
         return Carbon::now()->diffInDays(Carbon::make($this->start_Date));
     }

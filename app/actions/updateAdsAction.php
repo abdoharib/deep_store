@@ -166,6 +166,9 @@ class updateAdsAction
                     $lifetime_budget = ((double)$ad_data['adset']['lifetime_budget']/100)*5;
                 }
 
+                $stop_time = null;
+                $start_time = null;
+
                 if(array_key_exists('start_time', $ad_data['campaign'])){
                     $start_time = $ad_data['campaign']['start_time'];
                 }
@@ -244,7 +247,7 @@ class updateAdsAction
                             'cycle_no' => $json_date['cycle_no'],
                             'name' => explode('{', $ad->campaign_name)[0],
                             'start_date' => $ad->campaing_start_date,
-                            'end_date' => $ad->campaing_end_time,
+                            'end_date' => $ad->campaing_end_date,
                         ]);
 
                         $ad->update([
