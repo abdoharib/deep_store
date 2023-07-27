@@ -226,7 +226,10 @@ class updateAdsAction
         Ad::all()->each(function ($ad) {
             $json_date = explode('{', $ad->campaign_name);
             if (count($json_date) > 1) {
+
                 $json_date = $json_date[1];
+
+                dd($json_date);
 
                 // dd('{'.$json_date);
                 try {
