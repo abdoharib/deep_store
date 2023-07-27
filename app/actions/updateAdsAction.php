@@ -247,7 +247,7 @@ class updateAdsAction
                             'end_date' => $ad->campaing_end_time,
                         ]);
 
-                        Ad::update([
+                        $ad->update([
                             'cycle_id' => $cycle->id
                         ]);
 
