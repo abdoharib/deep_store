@@ -81,9 +81,9 @@ class Cycle extends Model
         })->count();
     }
     public function getTotalLostAttribute(){
-        return $this->ads->filter(function($ad){
+        return round($this->ads->filter(function($ad){
             return $ad->preformance_status != 'success';
-        })->sum('amount_spent');
+        })->sum('amount_spent'),2);
     }
     public function getWinRateAttribute(){
 
@@ -111,7 +111,7 @@ class Cycle extends Model
 
     public function getTotalBudgetAttribute(){
 
-        return $this->ads->sum('lifetime_budget');
+        return round($this->ads->sum('lifetime_budget'),2);
     }
 
     public function ads(){
