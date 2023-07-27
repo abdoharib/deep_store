@@ -81,7 +81,7 @@ class Cycle extends Model
         });
     }
     public function getTotalLostAttribute(){
-        return $this->filter(function($ad){
+        return $this->ads->filter(function($ad){
             $ad->preformance_status != 'success';
         })->sum('amount_spent');
     }
