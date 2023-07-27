@@ -103,12 +103,24 @@ class updateAdsAction
             if(array_key_exists('lifetime_budget',$ad_data['adset'])){
                 $lifetime_budget = ((double)$ad_data['adset']['lifetime_budget']/100)*5;
             }
+
+            $stop_time = null;
+            $start_time = null;
+
+            if(array_key_exists('start_time', $ad_data['campaign'])){
+                $start_time = $ad_data['campaign']['start_time'];
+            }
+            if(array_key_exists('stop_time', $ad_data['campaign'])){
+                $stop_time = $ad_data['campaign']['stop_time'];
+            }
+
                 $ad->update([
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
                     'campaing_name' => $ad_data['campaign']['name'],
-                    'campaing_start_date' => $ad_data['campaign']['start_time'],
-                    'campaing_end_date' => $ad_data['campaign']['stop_time'],
+
+                    'campaing_start_date' => $start_time,
+                    'campaing_end_date' => $stop_time,
 
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
@@ -153,14 +165,23 @@ class updateAdsAction
                 if(array_key_exists('lifetime_budget',$ad_data['adset'])){
                     $lifetime_budget = ((double)$ad_data['adset']['lifetime_budget']/100)*5;
                 }
+
+                if(array_key_exists('start_time', $ad_data['campaign'])){
+                    $start_time = $ad_data['campaign']['start_time'];
+                }
+                if(array_key_exists('stop_time', $ad_data['campaign'])){
+                    $stop_time = $ad_data['campaign']['stop_time'];
+                }
+
                 $ad = Ad::create([
 
 
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
                     'campaing_name' => $ad_data['campaign']['name'],
-                    'campaing_start_date' => $ad_data['campaign']['start_time'],
-                    'campaing_end_date' => $ad_data['campaign']['stop_time'],
+
+                    'campaing_start_date' => $start_time,
+                    'campaing_end_date' => $stop_time,
 
                     'ad_ref_id' => $ad_data['id'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
