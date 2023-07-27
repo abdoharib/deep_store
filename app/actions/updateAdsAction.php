@@ -240,9 +240,9 @@ class updateAdsAction
                         $cycle = Cycle::updateOrCreate([
                             'cycle_no' => $json_date['cycle_no']
                         ], [
-                            'campaign_ref_id' => $ad->campaign_ref_id,
+                            'campaign_ref_id' => $ad->campaing_ref_id,
                             'cycle_no' => $json_date['cycle_no'],
-                            'name' => explode('{', $ad->name)[0],
+                            'name' => explode('{', $ad->campaign_name)[0],
                             'start_date' => $ad->campaing_start_date,
                             'end_date' => $ad->campaing_end_time,
                         ]);
