@@ -26,7 +26,6 @@ class DailyRiskMangement
         Log::debug('No of Sales Today : ' . $NoSales);
 
         $amountSpent = Ad::ofType('active')
-            ->where('date', '=', SupportCarbon::now()->toDateString())
             ->where('deleted_at', '=', null)
             ->get()
             ->sum('amount_spent');
