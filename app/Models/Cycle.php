@@ -18,6 +18,7 @@ class Cycle extends Model
         'name',
         'start_date',
         'end_date',
+
     ];
 
     protected $appends = [
