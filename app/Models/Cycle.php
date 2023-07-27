@@ -62,7 +62,7 @@ class Cycle extends Model
     }
 
     public function getDaysSinceStartAttribute(){
-        return Carbon::now()->diffInDays(Carbon::make($this->start_Date));
+        return Carbon::now()->diffInDays(Carbon::make($this->start_date));
     }
     public function getNoDaysAttribute(){
         return Carbon::make($this->end_date)->diffInDays(Carbon::make($this->start_date));
