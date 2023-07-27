@@ -229,7 +229,7 @@ class updateAdsAction
 
                 $json_date = $json_date[1];
 
-                dd($json_date);
+                // dd($json_date);
 
                 // dd('{'.$json_date);
                 try {
