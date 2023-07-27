@@ -224,7 +224,7 @@ class updateAdsAction
     public function getCyclesFromAds()
     {
         Ad::all()->each(function ($ad) {
-            $json_date = explode('{', $ad->name);
+            $json_date = explode('{', $ad->campaign_name);
             if (count($json_date) > 1) {
                 $json_date = $json_date[1];
 
