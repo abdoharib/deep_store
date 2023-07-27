@@ -25,6 +25,11 @@ class Cycle extends Model
         'no_days',
         'days_since_start',
         'no_ads',
+
+        'no_closed_ads',
+        'cost_per_sale',
+        'no_sales',
+
         'no_successful_ads',
         'no_unsuccessful_ads',
         'net_total',
@@ -70,6 +75,18 @@ class Cycle extends Model
     public function getNoAdsAttribute(){
         return $this->ads->count();
     }
+
+    public function getNoClosedAdsAttribute(){
+        return $this->ads->where('is_closed','!=',null)->count();
+    }
+
+    public function getNoSalesAttribute(){
+        return $this->ads->sum('no_sales');
+    }
+    public function getCostPerSaleAttribute(){
+        return $this->no_sales ? round($this->ads->sum('amount_spent') / $this->no_sales,2) : 0;
+    }
+
     public function getNoSuccessfulAdsAttribute(){
         return $this->ads->filter(function($ad){
             return $ad->preformance_status == 'success';
