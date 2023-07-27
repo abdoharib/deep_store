@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Cycle;
 use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,6 +24,16 @@ class CreateAdsTable extends Migration
             $table->string('warehouse_name')->nullable();
 
             $table->foreignIdFor(Product::class);
+
+            $table->foreignIdFor(Cycle::class);
+
+
+            $table->string('campaign_name');
+            $table->string('campaing_ref_id');
+            $table->dateTime('campaing_start_date');
+            $table->dateTime('campaing_end_date');
+
+
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->dateTime('closed_at')->nullable();

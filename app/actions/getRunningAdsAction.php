@@ -19,7 +19,7 @@ class getRunningAdsAction
         ]);
 
         try {
-            $response = $facebook->get('/act_724531662792327/ads?limit=100&fields=campaign{name,lifetime_budget,budget_remaining},name,effective_status,status,created_time,adset{id,name,budget_remaining,lifetime_budget,daily_budget,end_time,status,start_time}');
+            $response = $facebook->get('/act_724531662792327/ads?limit=100&fields=campaign{id,start_time,stop_time,name,lifetime_budget,budget_remaining},name,effective_status,status,created_time,adset{id,name,budget_remaining,lifetime_budget,daily_budget,end_time,status,start_time}');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

@@ -4,11 +4,13 @@ namespace App\actions;
 
 use App\Models\Ad;
 use App\Models\AdWarehouse;
+use App\Models\Cycle;
 use App\Models\Product;
 use App\Models\SaleDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\ErrorHandler\Debug;
 
 use function Psy\debug;
 
@@ -102,6 +104,12 @@ class updateAdsAction
                 $lifetime_budget = ((double)$ad_data['adset']['lifetime_budget']/100)*5;
             }
                 $ad->update([
+
+                    'campaing_ref_id' => $ad_data['campaign']['id'],
+                    'campaing_name' => $ad_data['campaign']['name'],
+                    'campaing_start_date' => $ad_data['campaign']['start_time'],
+                    'campaing_end_date' => $ad_data['campaign']['stop_time'],
+
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
                     'ad_set_ref_status' => $ad_data['adset']['status'],
@@ -146,6 +154,14 @@ class updateAdsAction
                     $lifetime_budget = ((double)$ad_data['adset']['lifetime_budget']/100)*5;
                 }
                 $ad = Ad::create([
+
+
+
+                    'campaing_ref_id' => $ad_data['campaign']['id'],
+                    'campaing_name' => $ad_data['campaign']['name'],
+                    'campaing_start_date' => $ad_data['campaign']['start_time'],
+                    'campaing_end_date' => $ad_data['campaign']['stop_time'],
+
                     'ad_ref_id' => $ad_data['id'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
                     'lifetime_budget' => $lifetime_budget,
@@ -180,5 +196,43 @@ class updateAdsAction
             }
         }
 
+
+        $this->getCyclesFromAds();
+    }
+
+    public function getCyclesFromAds()
+    {
+        Ad::all()->each(function ($ad) {
+            $json_date = explode('{', $ad->name);
+            if (count($json_date) > 1) {
+                $json_date = $json_date[1];
+
+                // dd('{'.$json_date);
+                try {
+                    $json_date = json_decode('{' . $json_date, true);
+
+                    if (array_key_exists('cycle_no', $json_date)) {
+
+                        $cycle = Cycle::updateOrCreate([
+                            'cycle_no' => $json_date['cycle_no']
+                        ], [
+                            'campaign_ref_id' => $ad->campaign_ref_id,
+                            'cycle_no' => $json_date['cycle_no'],
+                            'name' => explode('{', $ad->name)[0],
+                            'start_date' => $ad->campaing_start_date,
+                            'end_date' => $ad->campaing_end_time,
+                        ]);
+
+                        Ad::update([
+                            'cycle_id' => $cycle->id
+                        ]);
+
+                    }
+                } catch (\JsonException $exception) {
+                    Log::debug($exception->getMessage());
+                }
+            } else {
+            }
+        });
     }
 }

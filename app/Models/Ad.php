@@ -15,11 +15,22 @@ class Ad extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
+        'cycle_id',
+
+
+        'campaign_name',
+        'campaing_ref_id',
+
+        'campaing_start_date',
+        'campaing_end_date',
+
+
         'ad_ref_id',
         'ad_set_ref_id',
         'ad_ref_status',
         'ad_ref_effective_status',
         'ad_set_ref_status',
+
         'last_ad_update_at',
         'cost_per_message',
         'lifetime_budget',
@@ -89,14 +100,23 @@ class Ad extends Model
     }
 
 
-
-    // public function setProductNameAttribute($value)
+    // public function scopeOfPreformanceStatus($query, $status)
     // {
-    //     $this->attributes['product_name'] = $this->product->name;
-    // }
+    //     if($status == 'success'){
+    //         return $query;
+    //     }
 
-    // public function setWarehouseNameAttribute(){
-    //     $this->attributes['warehouse_name'] = implode(' / ',$this->warehouses->pluck('name')->toArray());
+    //     if($status == 'loser'){
+    //         return $query
+    //         ->where('ad_ref_effective_status','ADSET_PAUSED')
+    //         ->orWhere('end_date','<=',now()->toDateTimeString());
+
+    //     }
+
+    //     if($status == 'average'){
+    //         return $query
+    //         ->where('closed_at','!=',null);
+    //     }
     // }
 
 
