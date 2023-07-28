@@ -1929,6 +1929,7 @@ class ReportController extends BaseController
 
         $daily_ad_spend =[];
         $daily_net_profit = [];
+        $daily_sale_profit = [];
         $daily_net_profit_x2 = [];
         $daily_completed_sales_revnue = [];
         $daily_cost_per_sale = [];
@@ -1980,8 +1981,12 @@ class ReportController extends BaseController
 
 
             $net_profit =  $daily_completed_sales->sum('GrandTotal') - ($daily_completed_sales->sum('sale_cost') + $spend );
+            $sale_profit =  $daily_completed_sales->sum('GrandTotal') - ($daily_completed_sales->sum('sale_cost'));
+
             $daily_completed_sales_revnue[] = $daily_completed_sales->sum('GrandTotal');
             $daily_net_profit[] = $net_profit;
+            $daily_sale_profit[] = $sale_profit;
+
             $daily_net_profit_x2[] = $spend*2;
             $daily_cost_per_sale[] = $no_sales ? ($spend / $no_sales) : $spend;
             $no_daily_sales[] = $no_sales;
@@ -1993,6 +1998,7 @@ class ReportController extends BaseController
         return  [
                 'daily_ad_spend' => $daily_ad_spend,
                 'daily_net_profit' => $daily_net_profit,
+                'daily_sale_profit' => $daily_sale_profit,
                 'daily_ad_spend_x2' => $daily_net_profit_x2,
                 'daily_completed_sales_revnue'=>$daily_completed_sales_revnue,
                 'no_daily_sales' => $no_daily_sales,
