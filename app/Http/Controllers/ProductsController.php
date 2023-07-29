@@ -77,10 +77,13 @@ class ProductsController extends BaseController
             $item['code'] = $product->code;
             $item['name'] = $product->name;
             $item['has_active_ads'] = $product->has_active_ads;
+
             $item['category'] = $product['category']->name;
             $item['brand'] = $product['brand'] ? $product['brand']->name : 'N/D';
             $item['unit'] = $product['unit']->ShortName;
             $item['price'] = $product->price;
+            $item['profit'] = $product->profit;
+
             $item['vanex_storage_product_ref_id'] = $product->vanex_storage_product_ref_id;
 
 
