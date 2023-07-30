@@ -209,11 +209,11 @@ class AdController extends Controller
     {
         $periods =[];
         $spends =[];
-        dd($ad);
+        // dd($ad);
 
-        foreach ($ad->product->ads as $ad ) {
-            $periods[] = Carbon::make($ad->start_date)->toDateString()." --> ".Carbon::make($ad->end_date)->toDateString();
-            $spends[] = $ad->amount_spent;
+        foreach ($ad->product->ads as $pre_ad ) {
+            $periods[] = Carbon::make($pre_ad->start_date)->toDateString()." --> ".Carbon::make($pre_ad->end_date)->toDateString();
+            $spends[] = $pre_ad->amount_spent;
         }
 
 
