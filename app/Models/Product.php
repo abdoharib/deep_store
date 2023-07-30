@@ -88,13 +88,13 @@ class Product extends Model
     }
 
     public function getHasActiveAdsAttribute(){
-        return ($this->ads->filter(function($ad){
+        return (($this->ads->filter(function($ad){
             if($ad->running_status == 'on'){
                 return true;
             }else{
                 return false;
             }
-        }))->count() > 0;
+        }))->count() > 0);
 
     }
 
