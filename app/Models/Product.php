@@ -38,6 +38,11 @@ class Product extends Model
         return $this->belongsTo('App\Models\ProductVariant');
     }
 
+
+    public function product_warehouse(){
+        return $this->hasMany('App\Models\product_warehouse');
+    }
+
     public function PurchaseDetail()
     {
         return $this->belongsTo('App\Models\PurchaseDetail');
@@ -83,9 +88,13 @@ class Product extends Model
     }
 
     public function getHasActiveAdsAttribute(){
-        return ($this->ads()
-        ->where('ad_ref_status','ACTIVE')
-        ->where('ad_set_ref_status','ACTIVE')->count()) ? true : false;
+        return ($this->ads->filter(function($ad){
+            if($ad->running_status == 'on'){
+                return true;
+            }else{
+                return false;
+            }
+        }));
 
     }
 
