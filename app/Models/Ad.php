@@ -211,13 +211,13 @@ class Ad extends Model
         if($this->completed_sales_profit >=  (2*$this->amount_spent)){
             return [
                 'status' => 'sucessful',
-                'next_milestone_budget'=>(2*$this->amount_spent)
+                'next_milestone_budget'=>(2*($this->lifetime_budget?$this->lifetime_budget:$this->amount_spent))
             ];
         }elseif($this->completed_sales_profit >=  $this->amount_spent){
             return [
                 'status' => 'steady',
-                'next_milestone_budget'=>($this->amount_spent)
-            ];
+                'next_milestone_budget'=>(($this->lifetime_budget?$this->lifetime_budget:$this->amount_spent))
+             ];
         }else{
             return [
                 'status' => 'failed',
