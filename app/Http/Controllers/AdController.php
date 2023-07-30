@@ -207,7 +207,6 @@ class AdController extends Controller
      */
     public function show(request $request, Ad $ad)
     {
-        dd($ad);
         $periods =[];
         $spends =[];
 
@@ -216,6 +215,8 @@ class AdController extends Controller
             $spends[] = $ad->amount_spent;
         }
 
+
+        dd($ad);
 
         return response()->json([
             'ad' => $ad,
