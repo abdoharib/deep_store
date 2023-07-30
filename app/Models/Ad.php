@@ -56,13 +56,13 @@ class Ad extends Model
     ];
 
     protected $appends = [
-        // 'preformance_status',
-        // 'product_name',
-        // 'warehouse_name',
-        // 'is_closed',
-        // 'growth_data',
-        // 'no_muture_sales',
-        // 'running_status',
+        'preformance_status',
+        'product_name',
+        'warehouse_name',
+        'is_closed',
+        'growth_data',
+        'no_muture_sales',
+        'running_status',
     ];
 
 
