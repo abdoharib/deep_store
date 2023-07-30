@@ -90,4 +90,18 @@ class CycleController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+
+    public function show(request $request, Cycle $cycle ){
+        try {
+
+            return response()->json([
+                'cycle' => $cycle,
+                'ads'=> $cycle->ads
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
 }

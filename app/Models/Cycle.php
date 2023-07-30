@@ -30,6 +30,10 @@ class Cycle extends Model
         'no_closed_ads',
         'cost_per_sale',
         'no_sales',
+        'no_completed_sales',
+        'completed_sales_profit',
+        'total_ads_cost',
+
 
         'no_successful_ads',
         'no_unsuccessful_ads',
@@ -84,6 +88,16 @@ class Cycle extends Model
 
     public function getNoSalesAttribute(){
         return $this->ads->sum('no_sales');
+    }
+
+    public function getNoCompletedSalesAttribute(){
+        return $this->ads->sum('no_sales');
+    }
+    public function getCompletedSalesProfitAttribute(){
+        return $this->ads->sum('completed_sales_profit');
+    }
+    public function getTotalAdsCostAttribute(){
+        return $this->ads->sum('amount_spent');
     }
     public function getCostPerSaleAttribute(){
         return $this->no_sales ? round($this->ads->sum('amount_spent') / $this->no_sales,2) : 0;

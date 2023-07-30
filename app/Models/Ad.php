@@ -6,6 +6,7 @@ use App\actions\getAdPreformanceStatusAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 
 class Ad extends Model
@@ -59,7 +60,9 @@ class Ad extends Model
         'product_name',
         'warehouse_name',
         'is_closed',
-        'growth_data'
+        'growth_data',
+        'no_muture_sales',
+        'running_status',
     ];
 
 
@@ -99,6 +102,9 @@ class Ad extends Model
         // }
     }
 
+    public function getNoMutureSalesAttribute(){
+
+    }
 
     // public function scopeOfPreformanceStatus($query, $status)
     // {
@@ -132,6 +138,22 @@ class Ad extends Model
 
     public function getPreformanceStatusAttribute($value){
         return App::make(getAdPreformanceStatusAction::class)->invoke($this);
+    }
+
+    public function getRunningStatusAttribute($value){
+        if($this->ad_ref_status == 'ACTIVE'){
+            if($this->ad_set_ref_status == 'ACTIVE'){
+                if(Carbon::make($this->end_date)->lessThan(Carbon::now())){
+                    return 'on';
+                }else{
+                    return 'completed';
+                }
+            }else{
+                return 'off';
+            }
+        }else{
+            return 'off';
+        }
     }
 
     public function getProductNameAttribute($value){
