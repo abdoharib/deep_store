@@ -94,7 +94,7 @@ class Product extends Model
             }else{
                 return false;
             }
-        }));
+        }))->count() > 0;
 
     }
 
