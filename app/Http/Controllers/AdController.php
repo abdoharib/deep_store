@@ -209,6 +209,7 @@ class AdController extends Controller
     {
         $periods =[];
         $spends =[];
+        dd($ad);
 
         foreach ($ad->product->ads as $ad ) {
             $periods[] = Carbon::make($ad->start_date)->toDateString()." --> ".Carbon::make($ad->end_date)->toDateString();
@@ -216,7 +217,6 @@ class AdController extends Controller
         }
 
 
-        dd($ad);
 
         return response()->json([
             'ad' => $ad,
