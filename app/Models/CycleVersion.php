@@ -67,7 +67,7 @@ class CycleVersion extends Model
         }
     }
 
-    public function getNoAdsNeedUpdatinAttribute(){
+    public function getNoAdsNeedUpdatingAttribute(){
         return  $this->ads->filter(function($ad){
             if($ad->running_status != 'off'){
                 return false;
