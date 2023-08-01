@@ -74,7 +74,7 @@ class CycleVersion extends Model
             }
 
             if(
-                ($ad->product->ads()->where('cycleVersion',function($q){
+                ($ad->product->ads()->whereHas('cycleVersion',function($q){
                 $q->where('ver_no','>',$this->ver_no);
             })->count()
                 )
