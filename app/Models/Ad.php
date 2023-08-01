@@ -201,6 +201,10 @@ class Ad extends Model
         return $this->belongsTo(Product::class,'product_id');
     }
 
+    public function cycleVersion() {
+        return $this->belongsTo(CycleVersion::class);
+    }
+
     public function warehouses()  {
         return $this->hasMany(AdWarehouse::class);
     }

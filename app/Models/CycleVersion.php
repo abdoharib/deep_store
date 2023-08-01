@@ -41,7 +41,9 @@ class CycleVersion extends Model
         'win_rate',
         'maturity_rate',
         'total_budget',
-        'estimated_end_date'
+        'estimated_end_date',
+
+        'no_ads_need_updating'
     ];
 
 
@@ -63,6 +65,24 @@ class CycleVersion extends Model
                 ;
             });
         }
+    }
+
+    public function getNoAdsNeedUpdatinAttribute(){
+        return  $this->ads->filter(function($ad){
+            if($ad->running_status != 'off'){
+                return false;
+            }
+
+            if(
+                ($ad->product->ads()->where('cycleVersion',function($q){
+                $q->where('ver_no','>',$this->ver_no);
+            })->count()
+                )
+            ){
+                return false;
+            }
+            return true;
+        })->count();
     }
 
     public function getIsActiveAttribute(){
