@@ -251,7 +251,8 @@ class updateAdsAction
 
                         if($cycle){
                             $cycleVersion = CycleVersion::updateOrCreate([
-                                'ver_no' => $json_date['ver_no']
+                                'ver_no' => $json_date['ver_no'],
+                                'cycle_id' => $cycle->id,
                             ], [
                                 'cycle_id' => $cycle->id,
                                 'campaign_ref_id' => $ad->campaing_ref_id,
@@ -259,8 +260,6 @@ class updateAdsAction
                                 'campaign_name' => explode('{', $ad->campaign_name)[0],
                                 'start_date' => $ad->campaing_start_date,
                                 'end_date' => $ad->campaing_end_date,
-                            ],[
-
                             ]);
 
                             $ad->update([
