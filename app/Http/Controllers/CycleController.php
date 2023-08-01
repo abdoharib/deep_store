@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cycle;
+use App\Models\CycleVersion;
 use App\Models\Role;
 use App\utils\helpers;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class CycleController extends Controller
             );
             $data = array();
 
-            $cycles = Cycle::where('deleted_at', '=', null)->with('ads');
+            $cycles = Cycle::where('deleted_at', '=', null)->with('cycleVersions');
 
             //Multiple Filter
             $Filtred = $helpers->filter($cycles, $columns, $param, $request);
@@ -92,12 +93,13 @@ class CycleController extends Controller
     }
 
 
-    public function show(request $request, Cycle $cycle ){
+    public function show(request $request, CycleVersion $cycleVersion ){
         try {
+            dd($cycleVersion);
 
             return response()->json([
-                'cycle' => $cycle,
-                'ads'=> $cycle->ads
+                'cycleVersion' => $cycleVersion,
+                'ads'=> $cycleVersion->ads
             ]);
         } catch (\Exception $e) {
             dd($e);

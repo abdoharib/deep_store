@@ -16,7 +16,7 @@ class Ad extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'cycle_id',
+        'cycle_version_id',
 
 
         'campaign_name',
@@ -144,9 +144,9 @@ class Ad extends Model
         if($this->ad_ref_status == 'ACTIVE'){
             if($this->ad_set_ref_status == 'ACTIVE'){
                 if(Carbon::make($this->end_date)->lessThan(Carbon::now())){
-                    return 'on';
-                }else{
                     return 'completed';
+                }else{
+                    return 'on';
                 }
             }else{
                 return 'off';

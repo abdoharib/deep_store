@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Cycle;
+use App\Models\CycleVersion;
 use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -25,7 +26,7 @@ class CreateAdsTable extends Migration
 
             $table->foreignIdFor(Product::class);
 
-            $table->foreignIdFor(Cycle::class);
+            $table->foreignIdFor(CycleVersion::class);
 
 
             $table->string('campaign_name');

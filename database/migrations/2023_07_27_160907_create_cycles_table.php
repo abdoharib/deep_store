@@ -16,12 +16,7 @@ class CreateCyclesTable extends Migration
         Schema::create('cycles', function (Blueprint $table) {
             $table->id();
 
-            $table->string('campaign_ref_id');
-            $table->string('campaign_name');
             $table->string('cycle_no')->nullable();
-
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
 
 			$table->timestamps(6);
 			$table->softDeletes();

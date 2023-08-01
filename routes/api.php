@@ -300,6 +300,7 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
 
     Route::resource('ads', 'AdController');
     Route::resource('cycles', 'CycleController');
+    Route::resource('cycleVersions', 'CycleVersionController');
 
 
     //-------------------------------  Shipments --------------------------\\

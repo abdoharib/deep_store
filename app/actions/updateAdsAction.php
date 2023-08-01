@@ -5,6 +5,7 @@ namespace App\actions;
 use App\Models\Ad;
 use App\Models\AdWarehouse;
 use App\Models\Cycle;
+use App\Models\CycleVersion;
 use App\Models\Product;
 use App\Models\SaleDetail;
 use Carbon\Carbon;
@@ -114,13 +115,14 @@ class updateAdsAction
                 $stop_time = $ad_data['campaign']['stop_time'];
             }
 
+
                 $ad->update([
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
                     'campaign_name' => $ad_data['campaign']['name'],
 
-                    'campaing_start_date' => $start_time,
-                    'campaing_end_date' => $stop_time,
+                    'campaing_start_date' => $start_time ? SupportCarbon::make($start_time)->toDateTimeString() : null,
+                    'campaing_end_date' => $stop_time ? SupportCarbon::make($stop_time)->toDateTimeString(): null,
 
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
@@ -131,7 +133,7 @@ class updateAdsAction
                     'amount_spent' => ($ad_data['total_spent'] * 5),
                     'cost_per_message' => $ad_data['cost_per_message'] * 5,
                     'start_date' => SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString(),
-                    'end_date' => $end_time,
+                    'end_date' => $end_time ? SupportCarbon::make($end_time)->toDateTimeString() : null,
                     'product_id' => $ad_data['product_id'],
                     'product_name' => '',
                     'no_sales' => $no_sales,
@@ -139,6 +141,7 @@ class updateAdsAction
                     'completed_sales_profit' => $completed_sales_profit,
 
                 ]);
+
 
                 //delete all
                 $ad->warehouses()->delete();
@@ -183,8 +186,8 @@ class updateAdsAction
                     'campaing_ref_id' => $ad_data['campaign']['id'],
                     'campaign_name' => $ad_data['campaign']['name'],
 
-                    'campaing_start_date' => $start_time,
-                    'campaing_end_date' => $stop_time,
+                    'campaing_start_date' => $start_time ? SupportCarbon::make($start_time)->toDateTimeString() : null,
+                    'campaing_end_date' => $stop_time ? SupportCarbon::make($stop_time)->toDateTimeString(): null,
 
                     'ad_ref_id' => $ad_data['id'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
@@ -199,8 +202,9 @@ class updateAdsAction
                     'amount_spent' => ($ad_data['total_spent'] * 5),
                     'cost_per_message' => $ad_data['cost_per_message'] * 5,
 
-                    'start_date' => $ad_data['adset']['start_time'],
-                    'end_date' => $end_time,
+                    'start_date' => SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString(),
+                    'end_date' => $end_time ? SupportCarbon::make($end_time)->toDateTimeString() : null,
+
                     'no_sales' => $no_sales,
                     'no_completed_sales' => $no_completed_sales,
                     'completed_sales_profit' => $completed_sales_profit,
@@ -238,21 +242,35 @@ class updateAdsAction
                 try {
                     $json_date = json_decode('{' . $json_date, true);
 
-                    if (array_key_exists('cycle_no', $json_date)) {
+                    if (array_key_exists('cycle_no', $json_date) && array_key_exists('ver_no', $json_date)) {
 
                         $cycle = Cycle::updateOrCreate([
                             'cycle_no' => $json_date['cycle_no']
                         ], [
-                            'campaign_ref_id' => $ad->campaing_ref_id,
-                            'cycle_no' => $json_date['cycle_no'],
-                            'name' => explode('{', $ad->campaign_name)[0],
-                            'start_date' => $ad->campaing_start_date,
-                            'end_date' => $ad->campaing_end_date,
                         ]);
 
-                        $ad->update([
-                            'cycle_id' => $cycle->id
-                        ]);
+                        if($cycle){
+                            $cycleVersion = CycleVersion::updateOrCreate([
+                                'ver_no' => $json_date['ver_no']
+                            ], [
+                                'cycle_id' => $cycle->id,
+                                'campaign_ref_id' => $ad->campaing_ref_id,
+                                'cycle_no' => $json_date['cycle_no'],
+                                'campaign_name' => explode('{', $ad->campaign_name)[0],
+                                'start_date' => $ad->campaing_start_date,
+                                'end_date' => $ad->campaing_end_date,
+                            ],[
+
+                            ]);
+
+                            $ad->update([
+                                'cycle_version_id' => $cycleVersion->id
+                            ]);
+
+
+                        }
+
+
 
                     }
                 } catch (\JsonException $exception) {
