@@ -41,7 +41,9 @@ class CycleController extends Controller
             );
             $data = array();
 
-            $cycles = Cycle::where('deleted_at', '=', null)->with('cycleVersions');
+            $cycles = Cycle::where('deleted_at', '=', null)->with(['cycleVersions' => function($q){
+                $q->orderBy('ver_no','desc');
+            }]);
 
             //Multiple Filter
             $Filtred = $helpers->filter($cycles, $columns, $param, $request);
