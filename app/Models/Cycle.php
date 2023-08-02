@@ -38,8 +38,8 @@ class Cycle extends Model
         ->whereIn('cycle_version_id',$this->cycleVersions->pluck('id')->toArray())
         ->get();
 
-        return $ads
-        ->groupBy('product_name');
+        // return $ads
+        // ->groupBy('product_name');
 
         return $ads
         ->groupBy('product_name')
