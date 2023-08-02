@@ -39,6 +39,9 @@ class Cycle extends Model
         ->get();
 
         return $ads
+        ->groupBy('product_name');
+
+        return $ads
         ->groupBy('product_name')
         ->map(function($ad,$key){
             // if($key == 'منظف فنارات فلامنقو'){
