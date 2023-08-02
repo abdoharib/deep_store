@@ -40,7 +40,11 @@ class Cycle extends Model
 
         return $ads
         ->groupBy('product_name')
-        ->map(function($ad){
+        ->map(function($key,$ad){
+            if($key == 'منظف فنارات فلامنقو'){
+                dd($ad->sortBy('running_status'));
+            }
+
             $ad = $ad->sortBy('running_status')->first();
             return [
                 'name' => $ad->product_name,
