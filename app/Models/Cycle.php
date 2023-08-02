@@ -34,11 +34,17 @@ class Cycle extends Model
     }
 
     public function getProductsAttribute(){
-        return Ad::query()
+        return
+        $ads = Ad::query()
         ->whereIn('cycle_version_id',$this->cycleVersions->pluck('id')->toArray())
-        ->get()
-        ->unique('product_name')
+        ->get();
+
+        $ads->filter(function($ad){
+
+        })
+        ->groupBy('product_name')
         ->map(function($ad){
+            $ad = $ad->sort('running_status')->first();
             return [
                 'name' => $ad->product_name,
                 'is_on' => ($ad->running_status == 'on') ? true : false,
