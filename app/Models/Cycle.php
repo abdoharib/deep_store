@@ -41,7 +41,7 @@ class Cycle extends Model
         return $ads
         ->groupBy('product_name')
         ->map(function($ad){
-            $ad = $ad->sort('running_status')->first();
+            $ad = $ad->sortBy('running_status')->first();
             return [
                 'name' => $ad->product_name,
                 'is_on' => ($ad->running_status == 'on') ? true : false,
