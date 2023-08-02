@@ -68,9 +68,24 @@ class CycleVersion extends Model
     }
 
     public function getNoAdsNeedUpdatingAttribute(){
+        return  $this->ads->filter(function($ad){
+            if($ad->running_status != 'off'){
 
-        return $this->ads->filter(function($ad){
-          return $ad->needs_updating;
+                return false;
+
+            }
+
+            if(
+                ($ad->product->ads()->whereHas('cycleVersion',function($q){
+                $q->where('ver_no','>',$this->ver_no);
+            })->count()
+                )
+            ){
+                return false;
+            }
+
+            return true;
+
         })->count();
     }
 

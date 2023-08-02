@@ -63,7 +63,6 @@ class Ad extends Model
         'growth_data',
         'no_muture_sales',
         'running_status',
-        'needs_updating',
     ];
 
 
@@ -208,25 +207,6 @@ class Ad extends Model
 
     public function warehouses()  {
         return $this->hasMany(AdWarehouse::class);
-    }
-
-    public function getNeedsUpdatingAttribute() {
-        if($this->running_status != 'off'){
-
-            return false;
-
-        }
-
-        if(
-            ($this->product->ads()->whereHas('cycleVersion',function($q){
-            $q->where('ver_no','>',$this->cycleVersion->ver_no);
-        })->count()
-            )
-        ){
-            return false;
-        }
-
-        return true;
     }
 
 
