@@ -8,10 +8,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PaymentSale extends Model
 {
     use SoftDeletes;
+
+
+
+    static $RECIVED = 1;
+    static $CONFIRMED = 1;
+
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'sale_id', 'date', 'montant', 'Ref','change', 'Reglement', 'user_id', 'notes',
+        'sale_id', 'date', 'montant', 'Ref','change', 'Reglement', 'user_id', 'notes','status','sales_settlement_id'
     ];
 
     protected $casts = [
@@ -29,6 +35,11 @@ class PaymentSale extends Model
     public function sale()
     {
         return $this->belongsTo('App\Models\Sale');
+    }
+
+    public function SalesSettlement()
+    {
+        return $this->belongsTo(SalesSettlement::class);
     }
 
 }

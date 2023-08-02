@@ -13,11 +13,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\PaymentWithCreditCard;
+use App\Models\SalesSettlement;
 use Twilio\Rest\Client as Client_Twilio;
 use \Nwidart\Modules\Facades\Module;
 use App\Models\sms_gateway;
 use Stripe;
 use DB;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use PDF;
 
 class PaymentSalesController extends BaseController
@@ -186,7 +188,10 @@ class PaymentSalesController extends BaseController
                         $PaymentSale->montant = $request['montant'];
                         $PaymentSale->change = $request['change'];
                         $PaymentSale->notes = $request['notes'];
+                        $PaymentSale->status = $request['status'];
                         $PaymentSale->user_id = Auth::user()->id;
+                        $PaymentSale->sales_settlement_id = $request->has('sales_settlement_id') ? $request['sales_settlement_id'] : null;
+
                         $PaymentSale->save();
 
                         $sale->update([
@@ -237,9 +242,23 @@ class PaymentSalesController extends BaseController
             'sales.*' => 'required|exists:sales,id'
         ]);
 
-        foreach ($request->sales as $saleId) {
+        FacadesDB::beginTransaction();
 
-            $Sale = Sale::find($saleId);
+        $sales = Sale::whereIn('id',$request->sales)->get();
+        $courier = implode(' / ', $sales->pluck('warehouse.name')->unique()->toArray());
+
+        $salesSettlement = SalesSettlement::create([
+            'user_id' => Auth::user()->id,
+            'courier' => $courier,
+            'amount_recived' => $sales->sum('GrandTotal'),
+            'status' => SalesSettlement::$RECIVED,
+            'no_sales' => $sales->count(),
+            'date' => now()->toDateTimeString()
+        ]);
+
+        foreach ($sales as $Sale) {
+
+
 
             // $myRequest = new \Illuminate\Http\Request();
             // $myRequest->setMethod('POST');
@@ -250,10 +269,17 @@ class PaymentSalesController extends BaseController
             $request->request->add(['notes' => '']);
             $request->request->add(['received_amount' => $Sale->GrandTotal]);
             $request->request->add(['sale_id' => $Sale->id]);
+            $request->request->add(['sales_settlement_id' => $salesSettlement->id]);
+            $request->request->add(['status' => $salesSettlement->status]);
 
             $this->store($request);
 
         }
+
+
+        FacadesDB::commit();
+
+
 
         return response()->json(['success' => true, 'message' => 'Payment Create successfully'], 200);
 

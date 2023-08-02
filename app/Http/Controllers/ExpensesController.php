@@ -6,6 +6,8 @@ use App\Models\UserWarehouse;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Role;
+use App\Models\Transaction;
+use App\Models\Treasury;
 use App\Models\Warehouse;
 use App\utils\helpers;
 use Carbon\Carbon;
@@ -121,7 +123,7 @@ class ExpensesController extends BaseController
             'expense.amount' => 'required',
         ]);
 
-        Expense::create([
+        $expense = Expense::create([
             'user_id' => Auth::user()->id,
             'date' => $request['expense']['date'],
             'Ref' => $this->getNumberOrder(),
@@ -129,6 +131,14 @@ class ExpensesController extends BaseController
             'expense_category_id' => $request['expense']['category_id'],
             'details' => $request['expense']['details'],
             'amount' => $request['expense']['amount'],
+        ]);
+
+        Transaction::create([
+            'amount' => $expense->amount,
+            'treasury_id' => Treasury::first()->id,
+            'is_debit' => 1,
+            'document_type' => Expense::class,
+            'document_id' => $expense->id
         ]);
 
         return response()->json(['success' => true]);

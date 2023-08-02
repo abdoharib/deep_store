@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Mail;
 use Twilio\Rest\Client as Client_Twilio;
 use \Nwidart\Modules\Facades\Module;
 use App\Models\sms_gateway;
+use App\Models\Transaction;
+use App\Models\Treasury;
 use DB;
 use PDF;
 
@@ -141,7 +143,7 @@ class PaymentPurchasesController extends BaseController
                     $payment_statut = 'unpaid';
                 }
 
-                PaymentPurchase::create([
+                $paymentPurchase = PaymentPurchase::create([
                     'purchase_id' => $request['purchase_id'],
                     'Ref' => $this->getNumberOrder(),
                     'date' => $request['date'],
@@ -150,6 +152,14 @@ class PaymentPurchasesController extends BaseController
                     'change' => $request['change'],
                     'notes' => $request['notes'],
                     'user_id' => Auth::user()->id,
+                ]);
+
+                Transaction::create([
+                    'amount' => $paymentPurchase->montant,
+                    'treasury_id' => Treasury::first()->id,
+                    'is_debit' => 1,
+                    'document_type' => PaymentPurchase::class,
+                    'document_id' => $paymentPurchase->id
                 ]);
 
                 $purchase->update([

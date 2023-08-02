@@ -263,6 +263,13 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     Route::resource('warehouses', 'WarehouseController');
     Route::post('warehouses/delete/by_selection', 'WarehouseController@delete_by_selection');
 
+        //------------------------------- Treasuries --------------------------\\
+
+        Route::resource('treasuries', 'TreasuryController');
+        Route::resource('sales_settlements', 'SalesSettlementController');
+
+        // Route::post('warehouses/delete/by_selection', 'WarehouseController@delete_by_selection');
+
     //------------------------------- PURCHASES --------------------------\\
     //------------------------------------------------------------------\\
 
