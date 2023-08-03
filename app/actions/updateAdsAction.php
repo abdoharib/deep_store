@@ -31,7 +31,7 @@ class updateAdsAction
 
 
         $ads_data = $this->getRunningAdsAction->invoke();
-        Log::debug($ads_data);
+        // Log::debug($ads_data);
 
         foreach ($ads_data as $ad_data) {
 
@@ -118,9 +118,9 @@ class updateAdsAction
                 $stop_time = $ad_data['campaign']['stop_time'];
             }
 
-            if($ad->ad_ref_id ==  '23854395731770392'){
-                Log::debug($ad_data['adset']);
-            }
+            // if($ad->ad_ref_id ==  '23854395731770392'){
+            //     Log::debug($ad_data['adset']);
+            // }
             $ad_start_date = SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString();
 
 
