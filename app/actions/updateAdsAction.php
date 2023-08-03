@@ -243,9 +243,27 @@ class updateAdsAction
             $ad = $product->ads()->orderBy('start_date','desc')->first();
 
             if($ad){
-                $ad->update([
-                    'is_latest' => 1
-                ]);
+
+                $another_running_ad_q = Ad::query()
+                ->where('product_id',$ad->product_id)
+                ->whereHas('warehouses',function($q) use ($ad){
+                    $q->whereIn('warehouse_id',$ad->warehouses->pluck('id')->toArray());
+                })
+                ->where('running_status','on')
+                ->orderBy('start_date','desc');
+
+                if($another_running_ad_q->first()){
+                    $another_running_ad_q->update([
+                        'is_latest' => 1
+                    ]);
+                }else{
+                    $ad->update([
+                        'is_latest' => 1
+                    ]);
+                }
+
+
+
             }
 
         });
