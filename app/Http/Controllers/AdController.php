@@ -109,6 +109,52 @@ class AdController extends Controller
 
 
 
+    public function ads_report(request $request ){
+        try {
+
+            Ad::query();
+
+            $ads_need_upscaling = Ad::query()
+            ->where('growth_status','upscale')
+            ->where('running_status','completed')
+            ->where('is_latest',1)
+            ->get();
+
+
+            $ads_need_turning_on = Ad::query()
+            ->where('running_status','off')
+            ->where('is_latest',1)
+            ->where(function($q){
+                $q->where('preformance_status','success')
+                ->orWhere('preformance_status','average');
+            })
+            ->get();
+
+
+            $ads_need_content_update = Ad::query()
+            ->where('is_latest',1)
+            ->where('preformance_status','loser')
+            ->where(function($q){
+                $q->where('running_status','completed')
+                ->orWhere('preformance_status','off');
+            })
+            ->get();
+
+
+
+            return response()->json([
+                'ads_need_content_update' => $ads_need_content_update,
+                'ads_need_turning_on' => $ads_need_turning_on,
+                'ads_need_upscaling' => $ads_need_upscaling
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+
+
 
 
 

@@ -40,11 +40,17 @@ class Ad extends Model
         'start_date',
         'end_date',
 
+        'preformance_status',
+        'running_status',
+        'growth_status',
+
         'amount_spent',
         'completed_sales_profit',
 
         'no_sales',
         'revenue_sales',
+
+        'is_latest',
 
         'no_completed_sales',
         'revenue_completed_sales'
@@ -56,13 +62,10 @@ class Ad extends Model
     ];
 
     protected $appends = [
-        'preformance_status',
         'product_name',
         'warehouse_name',
         'is_closed',
-        'growth_data',
         'no_muture_sales',
-        'running_status',
     ];
 
 
@@ -136,25 +139,22 @@ class Ad extends Model
         return $this->closed_at ? true: false;
     }
 
-    public function getPreformanceStatusAttribute($value){
-        return App::make(getAdPreformanceStatusAction::class)->invoke($this);
-    }
 
-    public function getRunningStatusAttribute($value){
-        if($this->ad_ref_status == 'ACTIVE'){
-            if($this->ad_set_ref_status == 'ACTIVE'){
-                if(Carbon::make($this->end_date)->lessThan(Carbon::now())){
-                    return 'completed';
-                }else{
-                    return 'on';
-                }
-            }else{
-                return 'off';
-            }
-        }else{
-            return 'off';
-        }
-    }
+    // public function getRunningStatusAttribute($value){
+    //     if($this->ad_ref_status == 'ACTIVE'){
+    //         if($this->ad_set_ref_status == 'ACTIVE'){
+    //             if(Carbon::make($this->end_date)->lessThan(Carbon::now())){
+    //                 return 'completed';
+    //             }else{
+    //                 return 'on';
+    //             }
+    //         }else{
+    //             return 'off';
+    //         }
+    //     }else{
+    //         return 'off';
+    //     }
+    // }
 
     public function getProductNameAttribute($value){
         if($this->product){
@@ -211,23 +211,6 @@ class Ad extends Model
 
 
 
-    public function getGrowthDataAttribute($value){
-        if($this->completed_sales_profit >=  (2*$this->amount_spent)){
-            return [
-                'status' => 'sucessful',
-                'next_milestone_budget'=>(2*($this->lifetime_budget?$this->lifetime_budget:$this->amount_spent))
-            ];
-        }elseif($this->completed_sales_profit >=  $this->amount_spent){
-            return [
-                'status' => 'steady',
-                'next_milestone_budget'=>(($this->lifetime_budget?$this->lifetime_budget:$this->amount_spent))
-             ];
-        }else{
-            return [
-                'status' => 'failed',
-                'next_milestone_budget'=> 0
-            ];
-        }
-    }
+
 
 }

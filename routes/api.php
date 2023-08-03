@@ -306,6 +306,8 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------------------------------------------\\
 
     Route::resource('ads', 'AdController');
+    Route::get('ads_report', 'AdController@ads_report');
+
     Route::resource('cycles', 'CycleController');
     Route::resource('cycleVersions', 'CycleVersionController');
 
