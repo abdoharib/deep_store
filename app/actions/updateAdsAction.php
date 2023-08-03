@@ -239,6 +239,11 @@ class updateAdsAction
             }
         }
 
+
+
+        Ad::query()->update([
+            'is_latest' => null
+        ]);
         Product::all()->each(function($product){
             $ad = $product->ads()->orderBy('start_date','desc')->first();
 
