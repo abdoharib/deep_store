@@ -50,7 +50,11 @@ class AdController extends Controller
             );
             $data = array();
 
-            $ads = Ad::ofType($request->filter_ad)->where('deleted_at', '=', null);
+            $ads = Ad::query()
+            ->when( ($request->filled('filter_ad') && ($request->filter_ad == 'all') ),function($q) use($request){
+                $q->where('running_status',$request->filter_ad);
+            })
+            ->where('deleted_at', '=', null);
 
             //Multiple Filter
             $Filtred = $helpers->filter($ads, $columns, $param, $request)
