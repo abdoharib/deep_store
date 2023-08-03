@@ -134,13 +134,19 @@ class AdController extends Controller
             ->where('is_latest',1)
             ->where('running_status','completed')
             ->where('preformance_status','average')
-            ->where('growth_status','!=','upscale')
+            ->where(function($q){
+                $q->where('growth_status','!=','downscale')
+                ->orWhere('growth_status','!=','upscale');
+            })
             ->get();
 
 
             $ads_need_content_update = Ad::query()
             ->where('is_latest',1)
-            ->where('preformance_status','loser')
+            ->where(function($q){
+                $q->where('growth_status','downscale')
+                ->orWhere('preformance_status','loser');
+            })
             ->where(function($q){
                 $q->where('running_status','completed')
                 ->orWhere('running_status','off');
