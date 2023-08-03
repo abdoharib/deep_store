@@ -136,7 +136,7 @@ class AdController extends Controller
             ->where('preformance_status','average')
             ->where(function($q){
                 $q->where('growth_status','!=','downscale')
-                ->orWhere('growth_status','!=','upscale');
+                ->Where('growth_status','!=','upscale');
             })
             ->get();
 
