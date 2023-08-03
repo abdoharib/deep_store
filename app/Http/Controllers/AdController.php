@@ -116,7 +116,7 @@ class AdController extends Controller
 
             $ads_need_upscaling = Ad::query()
             ->where('growth_status','upscale')
-            ->where('running_status','completed')
+            // ->where('running_status','completed')
             ->where('is_latest',1)
             ->get();
 
@@ -134,6 +134,7 @@ class AdController extends Controller
             ->where('is_latest',1)
             ->where('running_status','completed')
             ->where('preformance_status','average')
+            ->where('growth_status','!=','upscale')
             ->get();
 
 
