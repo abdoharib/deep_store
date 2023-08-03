@@ -121,6 +121,7 @@ class updateAdsAction
                 Log::debug($ad_data['adset']);
             }
             $ad_start_date = SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString();
+
                 $ad->update([
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
@@ -141,7 +142,9 @@ class updateAdsAction
                     'lifetime_budget' => $lifetime_budget,
                     'amount_spent' => ($ad_data['total_spent'] * 5),
                     'cost_per_message' => $ad_data['cost_per_message'] * 5,
+
                     'start_date' => $ad_start_date,
+
                     'end_date' => $end_time ? SupportCarbon::make($end_time)->toDateTimeString() : null,
                     'product_id' => $ad_data['product_id'],
                     'product_name' => '',
@@ -151,6 +154,8 @@ class updateAdsAction
 
                 ]);
 
+
+                Log::debug($ad_start_date);
                 Log::debug($ad->start_date);
 
 
@@ -223,6 +228,7 @@ class updateAdsAction
                     'no_completed_sales' => $no_completed_sales,
                     'completed_sales_profit' => $completed_sales_profit,
                 ]);
+
 
 
 
