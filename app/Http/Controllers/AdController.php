@@ -122,15 +122,17 @@ class AdController extends Controller
 
 
             $ads_need_turning_on = Ad::query()
+            ->where('is_latest',1)
             ->where(function($q){
                 $q->where('running_status','off')
                 ->orWhere('running_status','completed');
             })
-            ->where('is_latest',1)
             ->where(function($q){
                 $q->where('preformance_status','success')
                 ->orWhere('preformance_status','average');
             })
+            ->where('growth_status','!=','upscale')
+
             ->get();
 
 
