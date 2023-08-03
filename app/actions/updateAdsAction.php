@@ -116,10 +116,10 @@ class updateAdsAction
                 $stop_time = $ad_data['campaign']['stop_time'];
             }
 
-            if($ad->ad_ref_id ==  '23856728194010392'){
-                Log::debug(SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString());
-                Log::debug($ad_data['adset']);
-            }
+            // if($ad->ad_ref_id ==  '23856728194010392'){
+                // Log::debug(SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString());
+                // Log::debug($ad_data['adset']);
+            // }
             $ad_start_date = SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString();
 
                 $ad->update([
@@ -155,8 +155,8 @@ class updateAdsAction
                 ]);
 
 
-                Log::debug($ad_start_date);
-                Log::debug($ad->start_date);
+                // Log::debug($ad_start_date);
+                // Log::debug($ad->start_date);
 
 
                 //delete all
