@@ -151,6 +151,8 @@ class updateAdsAction
 
                 ]);
 
+                Log::debug($ad->start_date);
+
 
                 //delete all
                 $ad->warehouses()->delete();
@@ -221,6 +223,7 @@ class updateAdsAction
                     'no_completed_sales' => $no_completed_sales,
                     'completed_sales_profit' => $completed_sales_profit,
                 ]);
+
 
 
 
