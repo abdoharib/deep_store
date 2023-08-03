@@ -116,7 +116,10 @@ class updateAdsAction
                 $stop_time = $ad_data['campaign']['stop_time'];
             }
 
-
+            if($ad->ad_ref_id ==  '23856728194010392'){
+                Log::debug(SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString());
+                Log::debug($ad_data['adset']);
+            }
                 $ad->update([
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
