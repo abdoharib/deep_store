@@ -57,29 +57,32 @@ class AdController extends Controller
             ->where('deleted_at', '=', null);
 
             //Multiple Filter
-            $Filtred = $helpers->filter($ads, $columns, $param, $request)
-                // Search With Multiple Param
-            ->where(function ($query) use ($request) {
-                    return $query->when($request->filled('search'), function ($query) use ($request) {
-                        return $query->where('id', 'LIKE', "%{$request->search}%")
-                            ->orWhere('ad_ref_status', 'LIKE', "%{$request->search}%")
-                            ->orWhere(function ($query) use ($request) {
-                                return $query->whereHas('product', function ($q) use ($request) {
-                                    $q->where('name', 'LIKE', "%{$request->search}%");
-                                });
-                            })
-                            ->orWhere(function ($query) use ($request) {
-                                return $query->whereHas('warehouses', function ($q) use ($request) {
-                                    $q->where('name', 'LIKE', "%{$request->search}%");
-                                });
-                            })
-                            ->orWhere('amount_spent', 'like', "%{$request->search}%")
-                            ->orWhere('start_date', $request->search)
-                            ->orWhere('end_date', $request->search);
-                    });
-                });
+            // $Filtred = $helpers->filter($ads, $columns, $param, $request)
+            //     // Search With Multiple Param
+            // ->where(function ($query) use ($request) {
+            //         return $query->when($request->filled('search'), function ($query) use ($request) {
+            //             return $query->where('id', 'LIKE', "%{$request->search}%")
+            //                 ->orWhere('ad_ref_status', 'LIKE', "%{$request->search}%")
+            //                 ->orWhere(function ($query) use ($request) {
+            //                     return $query->whereHas('product', function ($q) use ($request) {
+            //                         $q->where('name', 'LIKE', "%{$request->search}%");
+            //                     });
+            //                 })
+            //                 ->orWhere(function ($query) use ($request) {
+            //                     return $query->whereHas('warehouses', function ($q) use ($request) {
+            //                         $q->where('name', 'LIKE', "%{$request->search}%");
+            //                     });
+            //                 })
+            //                 ->orWhere('amount_spent', 'like', "%{$request->search}%")
+            //                 ->orWhere('start_date', $request->search)
+            //                 ->orWhere('end_date', $request->search);
+            //         });
+            //     });
 
-            $totalRows = $ads->count();
+
+
+
+                $totalRows = $ads->count();
             if ($perPage == "-1") {
                 $perPage = $totalRows;
             }
@@ -87,7 +90,7 @@ class AdController extends Controller
 
             // $updateAdsAction->invoke();
 
-            $ads = $Filtred->offset($offSet)
+            $ads = $ads->offset($offSet)
                 ->limit($perPage)->orderBy($order, $dir)->get();
 
 
