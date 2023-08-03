@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\SaleDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Carbon as SupportCarbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\ErrorHandler\Debug;
 
@@ -124,6 +125,10 @@ class updateAdsAction
                     'campaing_start_date' => $start_time ? SupportCarbon::make($start_time)->toDateTimeString() : null,
                     'campaing_end_date' => $stop_time ? SupportCarbon::make($stop_time)->toDateTimeString(): null,
 
+                    'running_status' => $this->getRunningStatus($ad),
+                    'preformance_status' => App::make(getAdPreformanceStatusAction::class)->invoke($ad),
+                    'growth_status' => $this->getGrowthData($ad),
+
                     'ad_ref_status' => $ad_data['status'],
                     'ad_set_ref_id' => $ad_data['adset']['id'],
                     'ad_set_ref_status' => $ad_data['adset']['status'],
@@ -210,6 +215,16 @@ class updateAdsAction
                     'completed_sales_profit' => $completed_sales_profit,
                 ]);
 
+
+
+
+                $ad->update([
+                    'running_status' => $this->getRunningStatus($ad),
+                    'preformance_status' => App::make(getAdPreformanceStatusAction::class)->invoke($ad),
+                    'growth_status' => $this->getGrowthData($ad)
+                ]);
+
+
                 foreach ($ad_data['warehouse_id'] as $ad_warehouse_id) {
 
                     AdWarehouse::create([
@@ -223,6 +238,12 @@ class updateAdsAction
 
             }
         }
+
+        Product::all()->each(function($product){
+            $product->ads()->orderBy('start_date','desc')->first()->update([
+                'is_latest' => 1
+            ]);
+        });
 
 
         $this->getCyclesFromAds();
@@ -278,5 +299,36 @@ class updateAdsAction
             } else {
             }
         });
+    }
+
+
+    public function getRunningStatus($ad){
+        if($ad->ad_ref_status == 'ACTIVE'){
+            if($ad->ad_set_ref_status == 'ACTIVE'){
+                    return 'on';
+            }else{
+                if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
+                    return 'completed';
+                }
+                return 'off';
+            }
+        }else{
+            if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
+                return 'completed';
+            }
+            return 'off';
+        }
+    }
+
+
+    public function getGrowthData($ad){
+        if($ad->completed_sales_profit >=  (2*$ad->amount_spent)){
+            return 'upscale';
+
+        }elseif($ad->completed_sales_profit >=  $ad->amount_spent){
+            return 'steady';
+        }else{
+            return 'downscale';
+        }
     }
 }
