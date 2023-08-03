@@ -240,9 +240,14 @@ class updateAdsAction
         }
 
         Product::all()->each(function($product){
-            $product->ads()->orderBy('start_date','desc')->first()->update([
-                'is_latest' => 1
-            ]);
+            $ad = $product->ads()->orderBy('start_date','desc')->first();
+
+            if($ad){
+                $ad->update([
+                    'is_latest' => 1
+                ]);
+            }
+
         });
 
 
