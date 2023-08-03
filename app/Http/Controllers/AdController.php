@@ -143,7 +143,7 @@ class AdController extends Controller
             ->where('preformance_status','loser')
             ->where(function($q){
                 $q->where('running_status','completed')
-                ->orWhere('preformance_status','off');
+                ->orWhere('running_status','off');
             })
             ->get();
 
