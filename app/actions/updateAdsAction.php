@@ -31,6 +31,8 @@ class updateAdsAction
 
 
         $ads_data = $this->getRunningAdsAction->invoke();
+        Log::debug($ads_data);
+
         foreach ($ads_data as $ad_data) {
 
             $ad = Ad::where('ad_ref_id',$ad_data['id'])->first();
