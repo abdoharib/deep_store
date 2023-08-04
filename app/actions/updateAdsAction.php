@@ -274,6 +274,10 @@ class updateAdsAction
                 })
                 ->where('running_status','on')
                 ->orderBy('start_date','desc');
+                if($product->id == 13){
+
+                    Log::debug($another_running_ad_q->first());
+                }
 
                 if($another_running_ad_q->first()){
                     $another_running_ad_q->update([
