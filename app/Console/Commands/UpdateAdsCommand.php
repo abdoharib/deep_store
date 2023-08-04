@@ -51,7 +51,7 @@ class UpdateAdsCommand extends Command
             // Log::debug("first");
 
             $this->updateAdsAction->invoke();
-            // $this->adsRiskMangement->invoke();
+            $this->adsRiskMangement->invoke();
             Log::debug("successfully updated");
         }catch(\Exception $e){
             Log::debug($e->getMessage());
