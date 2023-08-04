@@ -64,9 +64,9 @@ class UpdateAdsCommand extends Command
 
                     $another_running_ad_q = Ad::query()
                     ->where('product_id',$ad->product_id)
-                    // ->whereHas('warehouses',function($q) use ($ad){
-                    //     $q->whereIn('warehouse_id',$ad->warehouses->pluck('id')->toArray());
-                    // })
+                    ->whereHas('warehouses',function($q) use ($ad){
+                        $q->whereIn('warehouse_id',$ad->warehouses->pluck('warehouse_id')->toArray());
+                    })
                     ->where('running_status','on')
                     ->orderBy('start_date','desc');
                     if($product->id == 13){
