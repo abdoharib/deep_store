@@ -270,7 +270,7 @@ class updateAdsAction
                 $another_running_ad_q = Ad::query()
                 ->where('product_id',$ad->product_id)
                 ->whereHas('warehouses',function($q) use ($ad){
-                    $q->whereIn('warehouse_id',$ad->warehouses->pluck('id')->toArray());
+                    $q->whereIn('warehouse_id',$ad->warehouses->pluck('warehouse_id')->toArray());
                 })
                 ->where('running_status','on')
                 ->orderBy('start_date','desc');
