@@ -353,14 +353,19 @@ class updateAdsAction
             if($ad->ad_set_ref_status == 'ACTIVE'){
                     return 'on';
             }else{
-                if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
-                    return 'completed';
+                if($ad->end_date){
+                    if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
+                        return 'completed';
+                    }
                 }
+
                 return 'off';
             }
         }else{
-            if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
-                return 'completed';
+            if($ad->end_date){
+                if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
+                    return 'completed';
+                }
             }
             return 'off';
         }
