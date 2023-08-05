@@ -127,7 +127,7 @@ class Ad extends Model
         ->whereDate('date','<=',Carbon::make($this->end_date)->toDateTimeString())
         ->count();
 
-        return $no_sales ? (($no_muture_sales / $no_sales)*100) : 0;
+        return $no_sales ? ( round($no_muture_sales / $no_sales,2)*100) : 0;
     }
 
     // public function scopeOfPreformanceStatus($query, $status)
