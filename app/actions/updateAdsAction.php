@@ -263,28 +263,39 @@ class updateAdsAction
             'is_latest' => null
         ]);
         Product::all()->each(function($product){
-            $ad = $product->ads()->orderBy('start_date','desc')->first();
 
-            if($ad){
+            $ad_tripoli = $product->ads()
+            ->whereHas('warehouses',function($q){
+                $q->whereIn('warehouse_id',[1,3,4,5,7]);
+            })
+            ->orderBy('start_date','desc')->first();
 
-                $another_running_ad_q = Ad::query()
-                ->where('product_id',$ad->product_id)
-                ->whereHas('warehouses',function($q) use ($ad){
-                    $q->whereIn('warehouse_id',$ad->warehouses->pluck('warehouse_id')->toArray());
+            $ad_bengazi = $product->ads()
+            ->whereHas('warehouses',function($q){
+                $q->whereIn('warehouse_id',[6]);
+            })
+            ->orderBy('start_date','desc')->first();
+
+            if($ad_tripoli){
+
+                $another_tripoli_running_ad_q = Ad::query()
+                ->where('product_id',$ad_tripoli->product_id)
+                ->whereHas('warehouses',function($q) use ($ad_tripoli){
+                    $q->whereIn('warehouse_id',$ad_tripoli->warehouses->pluck('warehouse_id')->toArray());
                 })
                 ->where('running_status','on')
                 ->orderBy('start_date','desc');
                 if($product->id == 13){
 
-                    Log::debug($another_running_ad_q->first());
+                    Log::debug($another_tripoli_running_ad_q->first());
                 }
 
-                if($another_running_ad_q->first()){
-                    $another_running_ad_q->update([
+                if($another_tripoli_running_ad_q->first()){
+                    $another_tripoli_running_ad_q->update([
                         'is_latest' => 1
                     ]);
                 }else{
-                    $ad->update([
+                    $ad_tripoli->update([
                         'is_latest' => 1
                     ]);
                 }
@@ -292,6 +303,36 @@ class updateAdsAction
 
 
             }
+
+            if($ad_bengazi){
+
+                $another_bengazi_running_ad_q = Ad::query()
+                ->where('product_id',$ad_bengazi->product_id)
+                ->whereHas('warehouses',function($q) use ($ad_bengazi){
+                    $q->whereIn('warehouse_id',$ad_bengazi->warehouses->pluck('warehouse_id')->toArray());
+                })
+                ->where('running_status','on')
+                ->orderBy('start_date','desc');
+                if($product->id == 13){
+
+                    Log::debug($another_bengazi_running_ad_q->first());
+                }
+
+                if($another_bengazi_running_ad_q->first()){
+                    $another_bengazi_running_ad_q->update([
+                        'is_latest' => 1
+                    ]);
+                }else{
+                    $ad_bengazi->update([
+                        'is_latest' => 1
+                    ]);
+                }
+
+
+
+            }
+
+
 
         });
 
