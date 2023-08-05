@@ -140,7 +140,10 @@ class AdController extends Controller
             $ads_need_republishing = Ad::query()
             ->where('is_latest',1)
             ->where('running_status','completed')
-            ->where('preformance_status','average')
+            ->where(function($q){
+                $q->where('preformance_status','success')
+                ->orWhere('preformance_status','average');
+            })
             ->where(function($q){
                 $q->where('growth_status','!=','downscale')
                 ->Where('growth_status','!=','upscale');
