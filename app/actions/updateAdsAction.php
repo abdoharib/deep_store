@@ -353,26 +353,22 @@ class updateAdsAction
 
 
     public function getRunningStatus($ad){
+
+
+        if($ad->end_date){
+            if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
+                return 'completed';
+            }
+        }
+
         if($ad->ad_ref_status == 'ACTIVE'){
             if($ad->ad_set_ref_status == 'ACTIVE'){
                     return 'on';
-            }else{
-                if($ad->end_date){
-                    if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
-                        return 'completed';
-                    }
-                }
-
-                return 'off';
             }
-        }else{
-            if($ad->end_date){
-                if(Carbon::make($ad->end_date)->lessThan(Carbon::now())){
-                    return 'completed';
-                }
-            }
-            return 'off';
         }
+
+
+        return 'off';
     }
 
 
