@@ -112,12 +112,16 @@ class Ad extends Model
         })
         ->where('statut','completed')
         ->orWhere('statut','canceled')
+        ->where('date','>=',Carbon::make($this->start_date)->toDateTimeString())
+        ->where('date','<=',Carbon::make($this->end_date)->toDateTimeString())
         ->count();
 
         $no_sales  = Sale::query()
         ->whereHas('details',function($q){
             $q->where('product_id',$this->product_id);
         })
+        ->where('date','>=',Carbon::make($this->start_date)->toDateTimeString())
+        ->where('date','<=',Carbon::make($this->end_date)->toDateTimeString())
         ->count();
 
         return $no_sales ? (($no_muture_sales / $no_sales)*100) : 0;
