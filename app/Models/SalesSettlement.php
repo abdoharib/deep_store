@@ -10,7 +10,7 @@ class SalesSettlement extends Model
     use HasFactory;
 
 
-    static $RECIVED = 'نم ألأستلام';
+    static $RECIVED = 'تم ألأستلام';
     static $CONFIRMED = "تم التصديق";
 
 
