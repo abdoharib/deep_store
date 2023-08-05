@@ -116,6 +116,7 @@ class Ad extends Model
         ->where('date','<=',Carbon::make($this->end_date)->toDateTimeString())
         ->count();
 
+//
         $no_sales  = Sale::query()
         ->whereHas('details',function($q){
             $q->where('product_id',$this->product_id);
