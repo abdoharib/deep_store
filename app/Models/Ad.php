@@ -65,7 +65,7 @@ class Ad extends Model
         'product_name',
         'warehouse_name',
         'is_closed',
-        'no_muture_sales',
+        'muture_rate',
     ];
 
 
@@ -105,8 +105,22 @@ class Ad extends Model
         // }
     }
 
-    public function getNoMutureSalesAttribute(){
+    public function getMutureRateAttribute(){
+        $no_muture_sales  = Sale::query()
+        ->whereHas('details',function($q){
+            $q->where('product_id',$this->product_id);
+        })
+        ->where('statut','completed')
+        ->orWhere('statut','canceled')
+        ->count();
 
+        $no_sales  = Sale::query()
+        ->whereHas('details',function($q){
+            $q->where('product_id',$this->product_id);
+        })
+        ->count();
+
+        return $no_sales ? (($no_muture_sales / $no_sales)*100) : 0;
     }
 
     // public function scopeOfPreformanceStatus($query, $status)
