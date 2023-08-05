@@ -110,6 +110,7 @@ class Ad extends Model
         ->whereHas('details',function($q){
             $q->where('product_id',$this->product_id);
         })
+        ->whereIn('warehouse_id',$this->warehouses->pluck('warehouse_id')->toArray())
         ->whereDate('date','>=',Carbon::make($this->start_date)->toDateTimeString())
         ->whereDate('date','<=',Carbon::make($this->end_date)->toDateTimeString())
         ->where(function($q){
@@ -123,6 +124,7 @@ class Ad extends Model
         ->whereHas('details',function($q){
             $q->where('product_id',$this->product_id);
         })
+        ->whereIn('warehouse_id',$this->warehouses->pluck('warehouse_id')->toArray())
         ->whereDate('date','>=',Carbon::make($this->start_date)->toDateTimeString())
         ->whereDate('date','<=',Carbon::make($this->end_date)->toDateTimeString())
         ->count();
