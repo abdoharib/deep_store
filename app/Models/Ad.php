@@ -110,10 +110,12 @@ class Ad extends Model
         ->whereHas('details',function($q){
             $q->where('product_id',$this->product_id);
         })
-        ->where('statut','completed')
-        ->orWhere('statut','canceled')
-        ->where('date','>=',Carbon::make($this->start_date)->toDateTimeString())
-        ->where('date','<=',Carbon::make($this->end_date)->toDateTimeString())
+        ->whereDate('date','>=',Carbon::make($this->start_date)->toDateTimeString())
+        ->whereDate('date','<=',Carbon::make($this->end_date)->toDateTimeString())
+        ->where(function($q){
+            $q->where('statut','completed')
+            ->orWhere('statut','canceled');
+        })
         ->count();
 
 //
@@ -121,8 +123,8 @@ class Ad extends Model
         ->whereHas('details',function($q){
             $q->where('product_id',$this->product_id);
         })
-        ->where('date','>=',Carbon::make($this->start_date)->toDateTimeString())
-        ->where('date','<=',Carbon::make($this->end_date)->toDateTimeString())
+        ->whereDate('date','>=',Carbon::make($this->start_date)->toDateTimeString())
+        ->whereDate('date','<=',Carbon::make($this->end_date)->toDateTimeString())
         ->count();
 
         return $no_sales ? (($no_muture_sales / $no_sales)*100) : 0;
