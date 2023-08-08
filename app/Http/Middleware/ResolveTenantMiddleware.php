@@ -18,6 +18,7 @@ class ResolveTenantMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        dd("asfsaff");
 
         if(Auth::user()){
             $tenant = Tenant::find(Auth::user()->tenant_id);
