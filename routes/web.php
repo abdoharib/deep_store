@@ -33,6 +33,7 @@ Route::post('/login', [
     'middleware' => 'Is_Active',
 ]);
 
+
 Route::get('/update_tenant',function(){
     $columns = 'Tables_in_' . env('DB_DATABASE');//This is just to read the object by its key, DB_DATABASE is database name.
         $tables = DB::select('SHOW TABLES');
