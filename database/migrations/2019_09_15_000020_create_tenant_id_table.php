@@ -20,7 +20,7 @@ class CreateTenantIdTable extends Migration
 
         foreach ( $tables as $table ) {
             $table_name = $table->$columns;
-            if($table->$columns == 'domains' || $table->$columns == 'tenants'){
+            if($table->$columns == 'domains' || $table->$columns == 'tenants' || $table->$columns == 'permissions'){
 
             }else{
                 //todo add it to laravel jobs, process it will queue as it will take time.
