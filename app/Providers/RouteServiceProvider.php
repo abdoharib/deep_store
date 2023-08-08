@@ -37,9 +37,10 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         $this->routes(function () {
+
+            $this->mapDeliveryApiRoutes();
             $this->mapApiRoutes();
             $this->mapWebRoutes();
-            $this->mapDeliveryApiRoutes();
 
         });
     }
@@ -51,11 +52,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapDeliveryApiRoutes();
+        // $this->mapDeliveryApiRoutes();
 
-        $this->mapApiRoutes();
+        // $this->mapApiRoutes();
 
-        $this->mapWebRoutes();
+        // $this->mapWebRoutes();
 
 
         //
