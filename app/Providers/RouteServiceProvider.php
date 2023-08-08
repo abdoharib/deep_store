@@ -92,10 +92,15 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapDeliveryApiRoutes()
     {
-        Route::prefix('delivery_api')
+
+        foreach ($this->centralDomains() as $domain) {
+            Route::prefix('delivery_api')
             ->middleware('delivery_api')
+            ->domain($domain)
             ->namespace($this->namespace)
             ->group(base_path('routes/delivery_api.php'));
+        }
+
     }
 
 
