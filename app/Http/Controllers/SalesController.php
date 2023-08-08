@@ -49,6 +49,7 @@ class SalesController extends BaseController
 
     public function index(request $request, getVanexShipmentAction $getVanexShipmentAction)
     {
+        dd("asfsaf");
         $this->authorizeForUser($request->user(), 'view', Sale::class);
 
         $role = Auth::user()->roles()->first();
