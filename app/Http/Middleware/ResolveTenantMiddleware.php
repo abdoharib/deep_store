@@ -18,7 +18,6 @@ class ResolveTenantMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        abort(403);
 
         if(Auth::user()){
             $tenant = Tenant::find(Auth::user()->tenant_id);

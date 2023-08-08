@@ -35,7 +35,8 @@ Route::group([
 
 Route::post('getAccessToken', 'AuthController@getAccessToken');
 
-Route::group(function () {
+Route::middleware(['auth:sanctum'])
+->group(function () {
 
     Route::get("dashboard_data", "DashboardController@dashboard_data");
 
