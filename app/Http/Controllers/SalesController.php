@@ -175,7 +175,11 @@ class SalesController extends BaseController
             $item['delivery_note'] = $Sale['delivery_note'];
             $item['Ref'] = $Sale['Ref'];
             $item['answer_status'] = $Sale['answer_status'];
-            $item['created_by'] = $Sale['user']->username;
+            try {
+                $item['created_by'] = $Sale['user']->username;            } catch (\Throwable $th) {
+                dd($item);
+            }
+
             $item['created_at'] = $Sale['created_at'];
             $item['sale_details'] = $Sale->details->pluck('product');
             $item['statut'] = $Sale['statut'];
