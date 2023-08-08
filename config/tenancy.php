@@ -20,8 +20,6 @@ return [
     'central_domains' => [
         // '127.0.0.1',
         'app.deepstore.ly',
-        'delivery.deepstore.ly',
-        'deep_store.test',
 
     ],
 
