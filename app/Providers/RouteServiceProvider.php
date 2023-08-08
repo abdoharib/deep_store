@@ -95,8 +95,8 @@ class RouteServiceProvider extends ServiceProvider
 
         foreach ($this->centralDomains() as $domain) {
             Route::prefix('delivery_api')
-            ->middleware('delivery_api')
             ->domain($domain)
+            ->middleware('delivery_api')
             ->namespace($this->namespace)
             ->group(base_path('routes/delivery_api.php'));
         }
