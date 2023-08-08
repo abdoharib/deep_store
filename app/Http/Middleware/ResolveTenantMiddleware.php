@@ -18,9 +18,7 @@ class ResolveTenantMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        return response()->json([
-            'request' => 'asfsaf'
-        ],200);
+        abort(403);
 
         if(Auth::user()){
             $tenant = Tenant::find(Auth::user()->tenant_id);
