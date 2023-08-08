@@ -172,4 +172,16 @@
       1 => 'OscarAFDev\\MigrationsGenerator\\MigrationsGeneratorServiceProvider',
     ),
   ),
+  'stancl/tenancy' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Stancl\\Tenancy\\TenancyServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Tenancy' => 'Stancl\\Tenancy\\Facades\\Tenancy',
+      'GlobalCache' => 'Stancl\\Tenancy\\Facades\\GlobalCache',
+    ),
+  ),
 );
