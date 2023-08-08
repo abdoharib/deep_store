@@ -3,11 +3,17 @@
 use App\Http\Controllers\TenantController;
 use App\Http\Middleware\ResolveTenantMiddleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use App\Models\Tenant;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use function Clue\StreamFilter\fun;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +32,30 @@ Route::post('/login', [
     'uses' => 'Auth\LoginController@login',
     'middleware' => 'Is_Active',
 ]);
+
+Route::get('/update_tenant',function(){
+    $columns = 'Tables_in_' . env('DB_DATABASE');//This is just to read the object by its key, DB_DATABASE is database name.
+        $tables = DB::select('SHOW TABLES');
+
+        foreach ( $tables as $table ) {
+            $table_name = $table->$columns;
+            if($table->$columns == 'domains' || $table->$columns == 'tenants' || $table->$columns == 'permissions'){
+
+            }else{
+                //todo add it to laravel jobs, process it will queue as it will take time.
+                Schema::table($table->$columns, function (Blueprint $table) use($table_name) {
+
+                    if(!Schema::hasColumn($table_name,'tenant_id')){
+                        $table->foreignIdFor(Tenant::class)->nullable()->default(1);
+                    }
+                });
+
+            };
+        }
+        return response()->json([
+            'msg' => '100'
+        ],200);
+});
 
 //Tenant routes
 Route::get('/register',[TenantController::class,'create']);
