@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class PurchaseReturnDetails extends Model
 {
+    use BelongsToTenant;
+
 
     protected $fillable = [
         'id', 'product_id', 'purchase_return_id','purchase_unit_id', 'total', 'quantity', 'product_variant_id',

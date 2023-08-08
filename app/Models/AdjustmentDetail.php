@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class AdjustmentDetail extends Model
 {
+    use BelongsToTenant;
 
     protected $fillable = [
         'id', 'product_id', 'adjustment_id', 'quantity', 'type', 'product_variant_id',

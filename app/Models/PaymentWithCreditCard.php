@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class PaymentWithCreditCard extends Model
 {
+
+    use BelongsToTenant;
 
     protected $table = 'payment_with_credit_card';
 

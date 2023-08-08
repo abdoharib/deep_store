@@ -27655,7 +27655,8 @@ a.typo_link.text-gray-900:after {
 }
 
 .layout-sidebar-compact.sidenav-open .main-content-wrap {
-  width: calc( 100% - 76px - 220px);
+  width: calc(
+ 100% - 76px - 220px);
 }
 
 .layout-sidebar-compact.sidenav-open .sidebar-left {
@@ -27905,7 +27906,8 @@ a.typo_link.text-gray-900:after {
 .layout-sidebar-compact .sidebar-overlay {
   display: none;
   position: fixed;
-  width: calc( 100% - 76px - 220px);
+  width: calc(
+ 100% - 76px - 220px);
   height: calc(100vh - 80px);
   bottom: 0;
   right: 0;
@@ -28450,7 +28452,8 @@ a.typo_link.text-gray-900:after {
 .layout-sidebar-large .sidebar-overlay {
   display: none;
   position: fixed;
-  width: calc( 100% - 120px - 220px);
+  width: calc(
+ 100% - 120px - 220px);
   height: calc(100vh - 80px);
   bottom: 0;
   right: 0;
@@ -37984,7 +37987,7 @@ table {
   align-items: center;
   min-height: 100vh;
   background-size: cover;
-  background: url(/images/photo-wide-4.jpg?2e142cde64f1b8e128390567fc4bded6);
+  /* background: url(/images/photo-wide-4.jpg?2e142cde64f1b8e128390567fc4bded6); */
 }
 
 .auth-layout-wrap .auth-content {
@@ -38001,7 +38004,7 @@ table {
 }
 
 .auth-logo img {
-  width: 100px;
+  /* width: 100px; */
   height: 100px;
 }
 

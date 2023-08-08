@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ResolveTenantMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,7 @@ Route::post('/login', [
 ]);
 
 
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -45,7 +47,7 @@ Route::group([
 });
 
 Route::post('getAccessToken', 'AuthController@getAccessToken');
-Route::middleware(['auth:api', 'Is_Active'])->group(function () {
+Route::middleware(['auth:api', 'Is_Active',ResolveTenantMiddleware::class ])->group(function () {
 
     Route::get("dashboard_data", "DashboardController@dashboard_data");
 

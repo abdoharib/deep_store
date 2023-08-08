@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Ad extends Model
 {
-    use HasFactory;
+
+    use HasFactory,BelongsToTenant;
 
     protected $dates = ['deleted_at'];
 

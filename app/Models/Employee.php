@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Employee extends Model
 {
     use HasFactory;
+    use BelongsToTenant;
+
 
     protected $dates = ['deleted_at'];
 
@@ -51,7 +54,7 @@ class Employee extends Model
         return $this->hasOne('App\Models\OfficeShift', 'id', 'office_shift_id');
     }
 
-    
+
     public function attendance()
     {
         return $this->hasMany(Attendance::class);

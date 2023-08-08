@@ -74,6 +74,7 @@ class LoginController extends Controller
         ]);
     }
 
+
     private function authenticated(Request $request, $user)
     {
         if($user){

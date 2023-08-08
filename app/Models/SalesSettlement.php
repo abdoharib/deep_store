@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class SalesSettlement extends Model
 {
+    use BelongsToTenant;
+
     use HasFactory;
 
 
@@ -20,6 +23,7 @@ class SalesSettlement extends Model
         'amount_recived',
         'status',
         'no_sales',
+        'note',
         'date'
     ];
 

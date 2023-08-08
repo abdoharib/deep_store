@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class PosSetting extends Model
 {
+
+    use BelongsToTenant;
 
     protected $fillable = [
         'note_customer', 'show_note', 'show_barcode', 'show_discount', 'show_customer',

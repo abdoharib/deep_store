@@ -29,6 +29,7 @@ class SettingSeeder extends Seeder
                 'footer' => 'Stocky - Ultimate Inventory With POS',
                 'developed_by' => 'Stocky',
                 'logo' => 'logo-default.jpg',
+                'default_language' => 'ar'
             )
 
         );

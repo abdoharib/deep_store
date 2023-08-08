@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class CycleVersion extends Model
 {
     use HasFactory;
+    use BelongsToTenant;
+
 
     protected $fillable = [
         'cycle_id',

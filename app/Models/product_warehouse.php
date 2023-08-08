@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class product_warehouse extends Model
 {
+    use BelongsToTenant;
+
     protected $table = 'product_warehouse';
 
     protected $fillable = [

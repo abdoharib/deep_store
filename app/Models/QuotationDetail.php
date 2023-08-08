@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class QuotationDetail extends Model
 {
+    use BelongsToTenant;
 
     protected $fillable = [
         'id', 'product_id', 'quotation_id','sale_unit_id', 'total', 'quantity', 'product_variant_id',

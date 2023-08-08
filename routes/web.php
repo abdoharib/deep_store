@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\TenantController;
+use App\Http\Middleware\ResolveTenantMiddleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +27,83 @@ Route::post('/login', [
     'middleware' => 'Is_Active',
 ]);
 
+//Tenant routes
+Route::get('/register',[TenantController::class,'create']);
+Route::post('/register',[TenantController::class,'store']);
+
+
 Route::get('password/find/{token}', 'PasswordResetController@find');
+
+
+
+Route::group(['middleware' => ['auth', 'Is_Active']], function () {
+
+    Route::get('/login', function () {
+        $installed = Storage::disk('public')->exists('installed');
+        if ($installed === false) {
+            return redirect('/setup');
+        } else {
+            return redirect('/login');
+        }
+    });
+
+
+    Route::get(
+        '/{vue?}',
+        function () {
+            $installed = Storage::disk('public')->exists('installed');
+
+            if ($installed === false) {
+                return redirect('/setup');
+            } else {
+                return view('layouts.master');
+            }
+        }
+    )->where('vue', '^(?!api|setup|update|password).*$');
+});
+
+Auth::routes([
+    'register' => false,
+]);
+
+
+
+
+//------------------------------------------------------------------\\
+
+Route::group(['middleware' => ['auth', 'Is_Active']], function () {
+
+    Route::get('/update', 'UpdateController@viewStep1');
+
+    Route::get('/update/finish', function () {
+
+        return view('update.finishedUpdate');
+    });
+
+    Route::post('/update/lastStep', [
+        'as' => 'update_lastStep', 'uses' => 'UpdateController@lastStep',
+    ]);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //------------------------------------------------------------------\\
 
@@ -85,9 +167,9 @@ if ($installed === false) {
         'as' => 'lastStep', 'uses' => 'SetupController@lastStep',
     ]);
 
-//    Route::get('setup/lastStep', function () {
-//        return redirect('/setup', 301);
-//    });
+    //    Route::get('setup/lastStep', function () {
+    //        return redirect('/setup', 301);
+    //    });
 
 } else {
     Route::any('/setup/{vue}', function () {
@@ -96,54 +178,3 @@ if ($installed === false) {
 }
 
 //------------------------------------------------------------------\\
-
-Route::group(['middleware' => ['auth', 'Is_Active']], function () {
-
-    Route::get('/login', function () {
-        $installed = Storage::disk('public')->exists('installed');
-        if ($installed === false) {
-            return redirect('/setup');
-        } else {
-            return redirect('/login');
-        }
-    });
-
-
-    Route::get('/{vue?}',
-        function () {
-            $installed = Storage::disk('public')->exists('installed');
-
-            if ($installed === false) {
-                return redirect('/setup');
-            } else {
-                return view('layouts.master');
-            }
-        })->where('vue', '^(?!api|setup|update|password).*$');
-
-
-    });
-
-    Auth::routes([
-        'register' => false,
-    ]);
-
-
-//------------------------------------------------------------------\\
-
-Route::group(['middleware' => ['auth', 'Is_Active']], function () {
-
-    Route::get('/update', 'UpdateController@viewStep1');
-
-    Route::get('/update/finish', function () {
-
-        return view('update.finishedUpdate');
-    });
-
-    Route::post('/update/lastStep', [
-        'as' => 'update_lastStep', 'uses' => 'UpdateController@lastStep',
-    ]);
-
-});
-
-
-

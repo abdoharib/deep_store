@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class User extends Authenticatable
 {
+    use BelongsToTenant;
+
     use HasApiTokens, Notifiable;
     protected $dates = ['deleted_at'];
 

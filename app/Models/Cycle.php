@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Cycle extends Model
 {
+
     use HasFactory;
+    use BelongsToTenant;
+
 
     protected $dates = ['deleted_at'];
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ResolveTenantMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,7 +35,7 @@ Route::group([
 
 Route::post('getAccessToken', 'AuthController@getAccessToken');
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum',ResolveTenantMiddleware::class])->group(function () {
 
     Route::get("dashboard_data", "DashboardController@dashboard_data");
 
@@ -433,13 +434,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //-------------------------------  Print & PDF ------------------------\\
     //------------------------------------------------------------------\\
 
-    Route::get('sale_pdf/{id}', 'SalesController@Sale_PDF');
-    Route::get('quote_pdf/{id}', 'QuotationsController@Quotation_pdf');
-    Route::get('purchase_pdf/{id}', 'PurchasesController@Purchase_pdf');
-    Route::get('return_sale_pdf/{id}', 'SalesReturnController@Return_pdf');
-    Route::get('return_purchase_pdf/{id}', 'PurchasesReturnController@Return_pdf');
-    Route::get('payment_purchase_pdf/{id}', 'PaymentPurchasesController@Payment_purchase_pdf');
-    Route::get('payment_return_sale_pdf/{id}', 'PaymentSaleReturnsController@payment_return');
-    Route::get('payment_return_purchase_pdf/{id}', 'PaymentPurchaseReturnsController@payment_return');
-    Route::get('payment_sale_pdf/{id}', 'PaymentSalesController@payment_sale');
-    Route::get('sales_print_invoice/{id}', 'SalesController@Print_Invoice_POS');
+    // Route::get('sale_pdf/{id}', 'SalesController@Sale_PDF');
+    // Route::get('quote_pdf/{id}', 'QuotationsController@Quotation_pdf');
+    // Route::get('purchase_pdf/{id}', 'PurchasesController@Purchase_pdf');
+    // Route::get('return_sale_pdf/{id}', 'SalesReturnController@Return_pdf');
+    // Route::get('return_purchase_pdf/{id}', 'PurchasesReturnController@Return_pdf');
+    // Route::get('payment_purchase_pdf/{id}', 'PaymentPurchasesController@Payment_purchase_pdf');
+    // Route::get('payment_return_sale_pdf/{id}', 'PaymentSaleReturnsController@payment_return');
+    // Route::get('payment_return_purchase_pdf/{id}', 'PaymentPurchaseReturnsController@payment_return');
+    // Route::get('payment_sale_pdf/{id}', 'PaymentSalesController@payment_sale');
+    // Route::get('sales_print_invoice/{id}', 'SalesController@Print_Invoice_POS');

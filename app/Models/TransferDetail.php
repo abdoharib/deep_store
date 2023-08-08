@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class TransferDetail extends Model
 {
+    use BelongsToTenant;
+
     protected $table = 'transfer_details';
 
     protected $fillable = [
