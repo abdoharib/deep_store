@@ -266,7 +266,7 @@ class SalesController extends BaseController
         ];
 
         try {
-            \DB::transaction(function () use ($request, $createVanexShipmentAction,$shipping_provider_mapper, $shippingService) {
+            \DB::transaction(function () use ($request, $createVanexShipmentAction,$shipping_provider_mapper, ) {
                 $helpers = new helpers();
                 $order = new Sale;
 
