@@ -13,7 +13,7 @@ class createVanexShipmentAction
 {
 
     public $bengazi_account_token  = "141297|EOYQwmzYvSZsLbXvFk6ryvAIfS7xZOzYktOe6ztm";
-    public $tripoli_token  = "136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC";
+    public $tripoli_token  = env('VANEX_TOKEN');
     public $token = null;
     public $getVanexStorageProduct = null;
 
@@ -25,19 +25,24 @@ class createVanexShipmentAction
     public function invoke(Sale $sale)
     {
 
-       if($sale->warehouse->id == 1){
-        $token = $this->tripoli_token;
-       }elseif($sale->warehouse->id == 6){
-        $token = $this->bengazi_account_token;
-       }else{
-        throw new \Exception('المتودع غير مدعوم');
-       }
+        $token = null;
+        if(tenant('id') == 1){
+            if ($sale->warehouse->id == 1) {
+                $token = $this->tripoli_token;
+            } elseif ($sale->warehouse->id == 6) {
+                $token = $this->bengazi_account_token;
+            } else {
+                throw new \Exception('المستودع غير مدعوم');
+            }
+        }else{
+            $token = $this->tripoli_token;
+        }
 
        $total_amount = 0;
        $total_qty = 0;
 
        $products = [];
-       if($sale->warehouse->id == 6){
+       if($sale->warehouse->id == 6 && (tenant('id') == 1)){
         foreach ($sale->details as $detail) {
             $product = $this->getVanexStorageProduct->invoke($detail->product,$detail->quantity);
             $products[] = $product;

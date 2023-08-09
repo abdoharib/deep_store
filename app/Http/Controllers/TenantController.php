@@ -56,6 +56,10 @@ class TenantController extends Controller
             ]);
             $user = User::create(array_merge($input,[
                 'is_all_warehouses' => 1,
+
+                'firstname' => $input['first_name'],
+                'lastname' => $input['last_name'],
+
                 'role_id' => $role->id,
                 'password' => Hash::make($input['password'])
             ]));
@@ -81,6 +85,7 @@ class TenantController extends Controller
                     'footer' => '',
                     'developed_by' => 'منصة تجارة',
                     'logo' => '',
+                    'default_language' => 'ar'
                 ]
             );
 

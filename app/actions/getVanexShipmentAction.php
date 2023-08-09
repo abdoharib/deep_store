@@ -23,18 +23,26 @@ use Illuminate\Support\Facades\Request;
 class getVanexShipmentAction
 {
     public $bengazi_account_token  = "141297|EOYQwmzYvSZsLbXvFk6ryvAIfS7xZOzYktOe6ztm";
-    public $tripoli_token  = "136527|0YtNQw5nXBuJdvkaU1UqyfwpLgqImwFOJaipkNZC";
+    public $tripoli_token  = env('VANEX_TOKEN');
+
+
     public function invoke(Sale $sale) : array
     {
 
+
         $token = null;
-        if($sale->warehouse->id == 1){
+        if(tenant('id') == 1){
+            if ($sale->warehouse->id == 1) {
+                $token = $this->tripoli_token;
+            } elseif ($sale->warehouse->id == 6) {
+                $token = $this->bengazi_account_token;
+            } else {
+                throw new \Exception('المستودع غير مدعوم');
+            }
+        }else{
             $token = $this->tripoli_token;
-           }elseif($sale->warehouse->id == 6){
-            $token = $this->bengazi_account_token;
-           }else{
-            throw new \Exception('المستودع غير مدعوم');
-           }
+        }
+
         // $store = Store::find(Auth::user()->store_id);
 
         // if(!$store->vanex_api_token){
