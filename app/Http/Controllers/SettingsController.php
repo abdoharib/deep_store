@@ -95,6 +95,9 @@ class SettingsController extends Controller
 
             'vanex_api_key' => $request['vanex_api_key'],
             'facebook_user_token' => $request['facebook_user_token'],
+            'facebook_app_id' => $request['facebook_app_id'],
+            'facebook_app_secret' => $request['facebook_app_secret'],
+
         ]);
 
         $this->setEnvironmentValue([
@@ -211,6 +214,8 @@ class SettingsController extends Controller
             $item['invoice_footer'] = $settings->invoice_footer;
             $item['vanex_api_key'] = $settings->vanex_api_key;
             $item['facebook_user_token'] = $settings->facebook_user_token;
+            $item['facebook_app_secret'] = $settings->facebook_app_secret;
+            $item['facebook_app_id'] = $settings->facebook_app_id;
 
             $item['timezone'] = env('APP_TIMEZONE') == null?'UTC':env('APP_TIMEZONE');
 
