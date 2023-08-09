@@ -26,7 +26,7 @@
 
       </div>
 
-      <div class="loading"></div>
+      {{-- <div class="loading"></div> --}}
     </div>
     <div id="app">
     </div>
