@@ -14,6 +14,7 @@ class AuthController extends Controller
     {
         try {
 
+            // dd($request->all());
            $request->validate(
             [
                 'email' => 'required|email',

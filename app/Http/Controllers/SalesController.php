@@ -1289,7 +1289,7 @@ class SalesController extends BaseController
         return response()->json([
             'stripe_key' => $stripe_key,
             'clients' => $clients,
-            'shipping_providers' => ShippingProvider::with('shippingCompany')->get(),
+            // 'shipping_providers' => ShippingProvider::with('shippingCompany')->get(),
             'warehouses' => $warehouses,
         ]);
 
