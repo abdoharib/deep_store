@@ -14,7 +14,7 @@ class createVanexShipmentAction
 {
 
     public $bengazi_account_token  = "141297|EOYQwmzYvSZsLbXvFk6ryvAIfS7xZOzYktOe6ztm";
-    public $tripoli_token  = Setting::all()->first()->vanex_api_key;
+    public $tripoli_token  = '';
     public $token = null;
     public $getVanexStorageProduct = null;
 
@@ -25,6 +25,8 @@ class createVanexShipmentAction
 
     public function invoke(Sale $sale)
     {
+        $this->tripoli_token  = Setting::all()->first()->vanex_api_key;
+
 
         $token = null;
         if(tenant('id') == 1){

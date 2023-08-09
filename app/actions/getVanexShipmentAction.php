@@ -24,11 +24,13 @@ use Illuminate\Support\Facades\Request;
 class getVanexShipmentAction
 {
     public $bengazi_account_token  = "141297|EOYQwmzYvSZsLbXvFk6ryvAIfS7xZOzYktOe6ztm";
-    public $tripoli_token  = Setting::all()->first()->vanex_api_key;
+    public $tripoli_token  = '';
 
 
     public function invoke(Sale $sale) : array
     {
+
+        $this->tripoli_token = Setting::all()->first()->vanex_api_key
 
 
         $token = null;
