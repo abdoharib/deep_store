@@ -33,8 +33,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Stripe;
 use App\Models\PaymentWithCreditCard;
+use App\Models\ShippingProvider;
 use App\Notifications\NewSaleNotification;
 use App\Notifications\SaleStatusUpdateNotification;
+use App\Services\ShippingService;
 use DB;
 use PDF;
 use ArPHP\I18N\Arabic;
@@ -175,11 +177,7 @@ class SalesController extends BaseController
             $item['delivery_note'] = $Sale['delivery_note'];
             $item['Ref'] = $Sale['Ref'];
             $item['answer_status'] = $Sale['answer_status'];
-            try {
-                $item['created_by'] = $Sale['user']->username;            } catch (\Throwable $th) {
-                dd($item);
-            }
-
+            $item['created_by'] = $Sale['user']->username;
             $item['created_at'] = $Sale['created_at'];
             $item['sale_details'] = $Sale->details->pluck('product');
             $item['statut'] = $Sale['statut'];
@@ -244,7 +242,7 @@ class SalesController extends BaseController
 
     //------------- STORE NEW SALE-----------\\
 
-    public function store(Request $request, createVanexShipmentAction $createVanexShipmentAction)
+    public function store(Request $request, createVanexShipmentAction $createVanexShipmentAction, ShippingService $shippingService)
     {
 
 
@@ -268,7 +266,7 @@ class SalesController extends BaseController
         ];
 
         try {
-            \DB::transaction(function () use ($request, $createVanexShipmentAction,$shipping_provider_mapper) {
+            \DB::transaction(function () use ($request, $createVanexShipmentAction,$shipping_provider_mapper, $shippingService) {
                 $helpers = new helpers();
                 $order = new Sale;
 
@@ -460,6 +458,8 @@ class SalesController extends BaseController
                 }
 
                 //only create shippment if the provider is vanex
+                // $shippingService->createShipment($order);
+
                 if($request->shipping_provider == 2){
                     $createVanexShipmentAction->invoke($order);
                 }
@@ -1289,6 +1289,7 @@ class SalesController extends BaseController
         return response()->json([
             'stripe_key' => $stripe_key,
             'clients' => $clients,
+            'shipping_providers' => ShippingProvider::with('shippingCompany')->get(),
             'warehouses' => $warehouses,
         ]);
 
