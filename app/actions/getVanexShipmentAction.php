@@ -30,7 +30,7 @@ class getVanexShipmentAction
     public function invoke(Sale $sale) : array
     {
 
-        $this->tripoli_token = Setting::all()->first()->vanex_api_key
+        $this->tripoli_token = Setting::all()->first()->vanex_api_key;
 
 
         $token = null;
