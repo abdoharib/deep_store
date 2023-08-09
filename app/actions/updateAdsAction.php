@@ -19,11 +19,14 @@ use function Psy\debug;
 class updateAdsAction
 {
 
+    private $sendTelegramMessage = null;
     private $getRunningAdsAction;
 
-    public function __construct(getRunningAdsAction $getRunningAdsAction)
+    public function __construct(sendTelegramMessage $sendTelegramMessage, getRunningAdsAction $getRunningAdsAction)
     {
         $this->getRunningAdsAction = $getRunningAdsAction;
+        $this->sendTelegramMessage = $sendTelegramMessage;
+
     }
 
     public function invoke()
@@ -123,7 +126,7 @@ class updateAdsAction
             // }
             $ad_start_date = SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString();
 
-
+            $old_growth_status = $ad->growth_status;
                 $ad->update([
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
@@ -155,6 +158,17 @@ class updateAdsAction
                     'completed_sales_profit' => $completed_sales_profit,
 
                 ]);
+
+
+            // if($ad->growth_status == 'upscale' && ($old_growth_status != $ad->growth_status)){
+            //     $this->sendTelegramMessage->invoke('-1001929122624','
+            //  إعلان منتج 🚀✅ ( '.$ad->product_name.' ) في حالة نمو
+            // المصروف : '.$ad->amount_spent.'
+            // الربح :'.$ad->completed_sales_profit.'
+            // رقم الأعلان : '.$ad->ad_ref_id.'
+            // المستودع: '.$ad->warehouse_name.'
+            // ');
+            // }
 
 
                 // Log::debug($ad_start_date);
