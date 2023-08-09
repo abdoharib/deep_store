@@ -25,6 +25,13 @@ class adsRiskMangement
 
             if($ad->preformance_status == 'loser'){
                 Log::debug('ad '.$ad->ad_ref_id . ' is a loser');
+                $this->sendTelegramMessage->invoke('-1001929122624','
+                تم أغلاق إعلان منتج 🤦‍♂️💀 ( '.$ad->product_name.' )
+                المصروف : '.$ad->amount_spent.'
+                الربح :'.$ad->completed_sales_profit.'
+                رقم الأعلان : '.$ad->ad_ref_id.'
+                المستودع: '.$ad->warehouse_name.'
+                ');
                 if($ad->ad_ref_status == 'ACTIVE'){
                     Log::debug('ad '.$ad->ad_ref_id . ' is Active');
                     $this->turnOffAd($ad);
@@ -61,13 +68,13 @@ class adsRiskMangement
                 'closed_at' => SupportCarbon::now()->toDateTimeString()
             ]);
 
-            $this->sendTelegramMessage->invoke('-1001929122624','
-            تم أغلاق إعلان منتج 🤦‍♂️💀 ( '.$ad->product_name.' )
-            المصروف : '.$ad->amount_spent.'
-            الربح :'.$ad->completed_sales_profit.'
-            رقم الأعلان : '.$ad->ad_ref_id.'
-            المستودع: '.$ad->warehouse_name.'
-            ');
+            // $this->sendTelegramMessage->invoke('-1001929122624','
+            // تم أغلاق إعلان منتج 🤦‍♂️💀 ( '.$ad->product_name.' )
+            // المصروف : '.$ad->amount_spent.'
+            // الربح :'.$ad->completed_sales_profit.'
+            // رقم الأعلان : '.$ad->ad_ref_id.'
+            // المستودع: '.$ad->warehouse_name.'
+            // ');
 
 
 
