@@ -40,9 +40,9 @@ class adsRiskMangement
     public function turnOffAd(Ad $ad){
 
         $facebook = new \JoelButcher\Facebook\Facebook([
-            'app_id' => env('FACEBOOK_APP_ID', Setting::first()->facebook_app_id),
-            'app_secret' => env('FACEBOOK_APP_SECRET', Setting::first()->facebook_app_secret),
-            'default_access_token' => env('ACCESS_TOKEN', Setting::first()->facebook_user_token),
+            'app_id' => Setting::first()->facebook_app_id,
+            'app_secret' => Setting::first()->facebook_app_secret,
+            'default_access_token' => Setting::first()->facebook_user_token,
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
 
