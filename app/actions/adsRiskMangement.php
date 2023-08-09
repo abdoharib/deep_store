@@ -4,6 +4,7 @@ namespace App\actions;
 
 use App\Models\Ad;
 use App\Models\Sale;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Log;
@@ -39,9 +40,9 @@ class adsRiskMangement
     public function turnOffAd(Ad $ad){
 
         $facebook = new \JoelButcher\Facebook\Facebook([
-            'app_id' => env('FACEBOOK_APP_ID','193483383509873'),
-            'app_secret' => env('FACEBOOK_APP_SECRET','a5819237862894e7c0871fb1953a2bff'),
-            'default_access_token' => env('ACCESS_TOKEN'),
+            'app_id' => env('FACEBOOK_APP_ID', Setting::first()->facebook_app_id),
+            'app_secret' => env('FACEBOOK_APP_SECRET', Setting::first()->facebook_app_secret),
+            'default_access_token' => env('ACCESS_TOKEN', Setting::first()->facebook_user_token),
             'default_graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v16.0'),
         ]);
 
