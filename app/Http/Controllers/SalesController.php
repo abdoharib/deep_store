@@ -33,10 +33,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Stripe;
 use App\Models\PaymentWithCreditCard;
-use App\Models\ShippingProvider;
+// use App\Models\ShippingProvider;
 use App\Notifications\NewSaleNotification;
 use App\Notifications\SaleStatusUpdateNotification;
-use App\Services\ShippingService;
+// use App\Services\ShippingService;
 use DB;
 use PDF;
 use ArPHP\I18N\Arabic;
@@ -242,7 +242,7 @@ class SalesController extends BaseController
 
     //------------- STORE NEW SALE-----------\\
 
-    public function store(Request $request, createVanexShipmentAction $createVanexShipmentAction, ShippingService $shippingService)
+    public function store(Request $request, createVanexShipmentAction $createVanexShipmentAction)
     {
 
 
