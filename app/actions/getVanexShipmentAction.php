@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\SaleReturn;
+use App\Models\Setting;
 use App\Models\Shipment;
 use App\Models\Unit;
 use App\Models\User;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Request;
 class getVanexShipmentAction
 {
     public $bengazi_account_token  = "141297|EOYQwmzYvSZsLbXvFk6ryvAIfS7xZOzYktOe6ztm";
-    public $tripoli_token  = env('VANEX_TOKEN');
+    public $tripoli_token  = Setting::all()->first()->vanex_api_key;
 
 
     public function invoke(Sale $sale) : array

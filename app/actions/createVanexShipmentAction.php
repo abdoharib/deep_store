@@ -4,6 +4,7 @@ namespace App\actions;
 
 use App\Exceptions\VanexAPIShipmentException;
 use App\Models\Sale;
+use App\Models\Setting;
 use App\Models\Shipment;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ class createVanexShipmentAction
 {
 
     public $bengazi_account_token  = "141297|EOYQwmzYvSZsLbXvFk6ryvAIfS7xZOzYktOe6ztm";
-    public $tripoli_token  = env('VANEX_TOKEN');
+    public $tripoli_token  = Setting::all()->first()->vanex_api_key;
     public $token = null;
     public $getVanexStorageProduct = null;
 
