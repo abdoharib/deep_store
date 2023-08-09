@@ -92,14 +92,17 @@ class SettingsController extends Controller
             'invoice_footer' => $request['invoice_footer'],
             'sms_gateway' => $sms_gateway,
             'logo' => $filename,
+
+            'vanex_api_key' => $request['vanex_api_key'],
+            'facebook_user_token' => $request['facebook_user_token'],
         ]);
 
         $this->setEnvironmentValue([
             'APP_TIMEZONE' => $request['timezone'] !== null?'"' . $request['timezone'] . '"':'"UTC"',
         ]);
 
-        Artisan::call('config:cache');
-        Artisan::call('config:clear');
+        // Artisan::call('config:cache');
+        // Artisan::call('config:clear');
 
         return response()->json(['success' => true]);
     }
@@ -206,6 +209,9 @@ class SettingsController extends Controller
             $item['default_language'] = $settings->default_language;
             $item['is_invoice_footer'] = $settings->is_invoice_footer;
             $item['invoice_footer'] = $settings->invoice_footer;
+            $item['vanex_api_key'] = $settings->vanex_api_key;
+            $item['facebook_user_token'] = $settings->facebook_user_token;
+
             $item['timezone'] = env('APP_TIMEZONE') == null?'UTC':env('APP_TIMEZONE');
 
             $zones_array = array();
