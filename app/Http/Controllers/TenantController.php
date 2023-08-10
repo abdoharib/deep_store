@@ -53,6 +53,7 @@ class TenantController extends Controller
                 'name' => 'المالك',
                 'label' => 'مالك المتجر',
                 'status' => 1,
+                'tenant_id' => $tenant->id,
             ]);
             $user = User::create(array_merge($input,[
                 'is_all_warehouses' => 1,
@@ -61,9 +62,11 @@ class TenantController extends Controller
                 'lastname' => $input['last_name'],
 
                 'role_id' => $role->id,
-                'password' => Hash::make($input['password'])
+                'password' => Hash::make($input['password']),
+                'tenant_id' => $tenant->id,
             ]));
             role_user::create([
+                'tenant_id' => $tenant->id,
                 'user_id' => $user->id,
                 'role_id' => $role->id,
             ]);
@@ -72,6 +75,7 @@ class TenantController extends Controller
 
             Setting::create(
                 [
+                    'tenant_id' => $tenant->id,
                     'email' => $user->email,
                     'currency_id' => 1,
                     'client_id' => 1,
