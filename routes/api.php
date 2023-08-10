@@ -67,7 +67,7 @@ Route::middleware(['auth:api', 'Is_Active',ResolveTenantMiddleware::class ])->gr
     Route::get("report/provider_purchases", "ReportController@Purchases_Provider");
     Route::get("report/provider_payments", "ReportController@Payments_Provider");
     Route::get("report/provider_returns", "ReportController@Returns_Provider");
-    Route::get("report/sales", "ReportController@Reporget_Products_by_warehouset_Sales");
+    Route::get("report/sales", "ReportController@Report_Sales");
     Route::get("report/purchases", "ReportController@Report_Purchases");
     Route::get("report/get_last_sales", "ReportController@Get_last_Sales");
     Route::get("report/stock_alert", "ReportController@Products_Alert");
