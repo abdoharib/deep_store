@@ -46,8 +46,8 @@ Route::get('/update_tenant',function(){
                 //todo add it to laravel jobs, process it will queue as it will take time.
                 Schema::table($table->$columns, function (Blueprint $table) use($table_name) {
 
-                    if(!Schema::hasColumn($table_name,'tenant_id')){
-                        $table->string(Tenant::class)->change()->default(1);
+                    if(Schema::hasColumn($table_name,'tenant_id')){
+                        $table->string('tenant_id',191)->default(1)->change();
                     }
                 });
 
