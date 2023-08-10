@@ -47,7 +47,7 @@ Route::get('/update_tenant',function(){
                 Schema::table($table->$columns, function (Blueprint $table) use($table_name) {
 
                     if(!Schema::hasColumn($table_name,'tenant_id')){
-                        $table->string('tenant_id',191)->change()->default(1);
+                        $table->string('tenant_id',191)->default(1);
                     }
                 });
 
