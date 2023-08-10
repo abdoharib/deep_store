@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use LaravelLegends\EloquentFilter\Concerns\HasFilter;
 
 class Ad extends Model
 {
 
-    use HasFactory,BelongsToTenant;
+    use HasFactory,BelongsToTenant, HasFilter;
 
     protected $dates = ['deleted_at'];
 

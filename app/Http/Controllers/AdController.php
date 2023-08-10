@@ -56,7 +56,8 @@ class AdController extends Controller
             ->when( ( $request->filled('filter_ad') && ($request->filter_ad != 'all') ),function($q) use($request){
                 $q->where('running_status',$request->filter_ad);
             })
-            ->where('deleted_at', '=', null)->filter();
+            ->where('deleted_at', '=', null)
+            ->filter();
 
             if($request->has('search')){
                 $ads->where('ad_ref_id', 'LIKE', "%{$request->search}%")
