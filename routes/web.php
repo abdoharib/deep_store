@@ -40,14 +40,14 @@ Route::get('/update_tenant',function(){
 
         foreach ( $tables as $table ) {
             $table_name = $table->$columns;
-            if($table->$columns == 'domains' || $table->$columns == 'tenants' || $table->$columns == 'permissions'){
+            if($table->$columns == 'domains' || $table->$columns == 'tenants' || $table->$columns == 'permissions' || $table->$columns == 'shipping_companies' || $table->$columns == 'shipping_providers'){
 
             }else{
                 //todo add it to laravel jobs, process it will queue as it will take time.
                 Schema::table($table->$columns, function (Blueprint $table) use($table_name) {
 
                     if(!Schema::hasColumn($table_name,'tenant_id')){
-                        $table->string(Tenant::class)->change()->default(1);
+                        $table->string('tenant_id',191)->change()->default(1);
                     }
                 });
 
