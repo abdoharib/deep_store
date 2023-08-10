@@ -12,7 +12,7 @@ class product_warehouse extends Model
     protected $table = 'product_warehouse';
 
     protected $fillable = [
-        'product_id', 'warehouse_id', 'qte',
+        'product_id', 'warehouse_id','product_variant_id', 'qte',
     ];
 
     protected $casts = [
