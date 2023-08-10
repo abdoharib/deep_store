@@ -12,11 +12,6 @@ class Tenant extends BaseTenant
 {
     // use HasDatabase;
 
-    public function shouldGenerateId(): bool
-    {
-        return false;
-    }
-
 
     public function users(){
         return $this->hasMany(User::class);
