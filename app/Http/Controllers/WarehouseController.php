@@ -104,7 +104,10 @@ class WarehouseController extends Controller
                         ];
                     }
 
-                    product_warehouse::insert($product_warehouse);
+                    foreach ($product_warehouse as $v) {
+                        # code...
+                        product_warehouse::create($v);
+                    }
                 }
             }
 

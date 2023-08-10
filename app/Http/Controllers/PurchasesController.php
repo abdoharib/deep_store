@@ -240,7 +240,10 @@ class PurchasesController extends BaseController
                     }
                 }
             }
-            PurchaseDetail::insert($orderDetails);
+            foreach ($orderDetails as $value) {
+                # code...
+                PurchaseDetail::create($value);
+            }
         }, 10);
 
         return response()->json(['success' => true, 'message' => 'Purchase Created !!']);

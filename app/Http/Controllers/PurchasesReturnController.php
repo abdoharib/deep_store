@@ -243,7 +243,10 @@ class PurchasesReturnController extends BaseController
                 }
 
             }
-            PurchaseReturnDetails::insert($orderDetails);
+            foreach ($orderDetails as  $value) {
+                # code...
+                PurchaseReturnDetails::create($value);
+            }
         }, 10);
 
         return response()->json(['success' => true]);

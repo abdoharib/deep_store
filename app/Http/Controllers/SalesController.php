@@ -354,7 +354,10 @@ class SalesController extends BaseController
                         }
                     }
                 }
-                SaleDetail::insert($orderDetails);
+                foreach ($orderDetails as $orderDetail) {
+                    # code...
+                    SaleDetail::create($orderDetail);
+                }
 
                 $role = Auth::user()->roles()->first();
                 $view_records = Role::findOrFail($role->id)->inRole('record_view');

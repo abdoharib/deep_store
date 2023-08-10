@@ -179,7 +179,11 @@ class AdjustmentController extends BaseController
                     }
                 }
             }
-            AdjustmentDetail::insert($orderDetails);
+
+            foreach ($orderDetails as $value) {
+                # code...
+                AdjustmentDetail::create($value);
+            }
         }, 10);
 
         return response()->json(['success' => true]);

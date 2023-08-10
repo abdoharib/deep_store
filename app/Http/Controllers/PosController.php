@@ -113,7 +113,9 @@ class PosController extends BaseController
                 }
             }
 
-            SaleDetail::insert($orderDetails);
+            foreach ($orderDetails as $value) {
+                SaleDetail::create($orderDetails);
+            }
 
             $sale = Sale::findOrFail($order->id);
             // Check If User Has Permission view All Records

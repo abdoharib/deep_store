@@ -192,12 +192,16 @@ class ProductsController extends BaseController
                 // Store Variants Product
                 if ($request['is_variant'] == 'true') {
                     foreach ($request['variants'] as $variant) {
+
                         $Product_variants_data[] = [
                             'product_id' => $Product->id,
                             'name' => $variant,
                         ];
+
                     }
-                    ProductVariant::insert($Product_variants_data);
+                    foreach ($Product_variants_data as $value) {
+                        ProductVariant::create($value);
+                    }
                 }
 
                 //--Store Product Warehouse
@@ -206,6 +210,7 @@ class ProductsController extends BaseController
                     $Product_variants = ProductVariant::where('product_id', $Product->id)
                         ->where('deleted_at', null)
                         ->get();
+
                     foreach ($warehouses as $warehouse) {
                         if ($request['is_variant'] == 'true') {
                             foreach ($Product_variants as $product_variant) {
@@ -223,7 +228,10 @@ class ProductsController extends BaseController
                             ];
                         }
                     }
-                    product_warehouse::insert($product_warehouse);
+                    foreach ($product_warehouse as $value) {
+                        # code...
+                        product_warehouse::create($value);
+                    }
                 }
 
             }, 10);
@@ -367,7 +375,11 @@ class ProductsController extends BaseController
                                         ];
 
                                     }
-                                    product_warehouse::insert($product_warehouse);
+
+                                    foreach ($product_warehouse as $value) {
+                                        # code...
+                                        product_warehouse::create($value);
+                                    }
                                 }
                             } else {
                                 ProductVariant::where('id', $variant['id'])->update($ProductVariantUP);
@@ -400,7 +412,11 @@ class ProductsController extends BaseController
                                     ];
                                 }
 
-                                product_warehouse::insert($product_warehouse_DT);
+                                foreach ($product_warehouse_DT as $value) {
+                                    # code...
+                                    product_warehouse::create($value);
+                                }
+
                             }
                         }
 
@@ -430,7 +446,11 @@ class ProductsController extends BaseController
                                 ];
 
                             }
-                            product_warehouse::insert($product_warehouse);
+
+                            foreach ($product_warehouse as $value) {
+                                # code...
+                                product_warehouse::create($value);
+                            }
                         }
                     }
                 }
@@ -1121,7 +1141,10 @@ class ProductsController extends BaseController
                         }
                     }
                     if ($warehouses) {
-                        product_warehouse::insert($product_warehouse);
+                        foreach ($product_warehouse as $value) {
+                            # code...
+                            product_warehouse::create($value);
+                        }
                     }
                 }
             }, 10);

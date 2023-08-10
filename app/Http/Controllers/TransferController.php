@@ -269,7 +269,7 @@ class TransferController extends BaseController
                 $orderDetails['discount_method'] = $value['discount_Method'];
                 $orderDetails['total'] = $value['subtotal'];
 
-                TransferDetail::insert($orderDetails);
+                TransferDetail::create($orderDetails);
             }
 
         }, 10);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\actions\updateAdsAction;
 use App\Models\Ad;
+use App\Models\Product;
 use App\Models\Role;
 use App\Models\Sale;
 use App\Models\SaleDetail;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\utils\helpers;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Request as FacadesRequest;
+use LaravelLegends\EloquentFilter\Rules\Has;
 
 class AdController extends Controller
 {
@@ -32,8 +34,8 @@ class AdController extends Controller
             $pageStart = FacadesRequest::get('page', 1);
             // Start displaying items from this number;
             $offSet = ($pageStart * $perPage) - $perPage;
-            $order = 'ad_ref_status';
-            $dir = 'asc';
+            $order = $request->has('SortField') ? $request->SortField :'start_date' ;
+            $dir = 'desc';
             $helpers = new helpers();
             // Filter fields With Params to retrieve
             $param = array(
@@ -54,7 +56,14 @@ class AdController extends Controller
             ->when( ( $request->filled('filter_ad') && ($request->filter_ad != 'all') ),function($q) use($request){
                 $q->where('running_status',$request->filter_ad);
             })
-            ->where('deleted_at', '=', null);
+            ->where('deleted_at', '=', null)->filter();
+
+            if($request->has('search')){
+                $ads->where('ad_ref_id', 'LIKE', "%{$request->search}%")
+                ->orWhereHas('product', function ($q) use ($request) {
+                        $q->where('name', 'LIKE', "%{$request->search}%");
+                });
+            }
 
             //Multiple Filter
             // $Filtred = $helpers->filter($ads, $columns, $param, $request)
@@ -97,16 +106,17 @@ class AdController extends Controller
 
             // $ads = Ad::where('deleted_at',null)->get();
             $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
+            $products = Product::where('deleted_at', '=', null)
+            ->whereHas('ads')
+            ->get(['id', 'name']);
 
 
             return response()->json([
                 'totalRows' => $totalRows,
                 'ads' => $ads,
-                'status' => [
-                    'active',
-                    'inactive'
-                ],
                 'warehouses' => $warehouses,
+                'products' => $products,
+
             ]);
         } catch (\Exception $e) {
             dd($e);

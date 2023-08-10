@@ -184,7 +184,11 @@ class QuotationsController extends BaseController
                     'imei_number' => $value['imei_number'],
                 ];
             }
-            QuotationDetail::insert($orderDetails);
+
+            foreach ($orderDetails as $value) {
+                # code...
+                QuotationDetail::create($value);
+            }
         }, 10);
         return response()->json(['success' => true]);
     }
