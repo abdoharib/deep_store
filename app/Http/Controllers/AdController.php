@@ -300,10 +300,28 @@ class AdController extends Controller
         }
 
 
+        $previous_ads = $ad->product->ads()->orderBy('end_date','desc')->get();
+
+
+
 
         return response()->json([
             'ad' => $ad,
-            'previous_ads' => $ad->product->ads,
+            'previous_ads' => $previous_ads,
+            'previous_ads_chart'=>[
+                'labels' => $previous_ads->map(function($ad){
+                    return Carbon::make($ad->end_date)->format('Y-m-d');
+                }),
+                'costs' => $previous_ads->map(function($ad){
+                    return  round($ad->amount_spent,2);
+                }),
+                'nets' => $previous_ads->map(function($ad){
+                    return  round(($ad->completed_sales_profit - $ad->amount_spent),2);
+                }),
+                'profits' => $previous_ads->map(function($ad){
+                    return  round(($ad->completed_sales_profit),2);
+                }),
+            ],
             'product_ads' => [
                 'periods' => $periods,
                 'spends' => $spends
