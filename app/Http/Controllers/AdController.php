@@ -325,7 +325,7 @@ class AdController extends Controller
                     return ($ad->no_sales);
                 }),
                 'costs_vs_sales' =>
-                Ad::all()->map(function($ad){
+                $previous_ads->map(function($ad){
                     return [
                         'x' => round($ad->amount_spent,2),
                         'y' => ($ad->no_sales)
