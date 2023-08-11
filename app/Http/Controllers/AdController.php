@@ -321,6 +321,9 @@ class AdController extends Controller
                 'profits' => $previous_ads->map(function($ad){
                     return  round(($ad->completed_sales_profit),2);
                 }),
+                'no_sales' => $previous_ads->map(function($ad){
+                    return ($ad->no_sales);
+                }),
             ],
             'product_ads' => [
                 'periods' => $periods,
