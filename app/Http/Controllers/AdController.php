@@ -36,7 +36,6 @@ class AdController extends Controller
             $offSet = ($pageStart * $perPage) - $perPage;
             $order = ($request->has('SortField') && $request->SortField ) ? $request->SortField :'end_date' ;
             $dir = 'desc';
-            dd($order);
             $helpers = new helpers();
             // Filter fields With Params to retrieve
             $param = array(
