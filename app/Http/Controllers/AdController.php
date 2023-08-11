@@ -34,7 +34,7 @@ class AdController extends Controller
             $pageStart = FacadesRequest::get('page', 1);
             // Start displaying items from this number;
             $offSet = ($pageStart * $perPage) - $perPage;
-            $order = $request->has('SortField') ? $request->SortField :'start_date' ;
+            $order = ($request->has('SortField') && $request->SortField ?) $request->SortField :'end_date' ;
             $dir = 'desc';
             $helpers = new helpers();
             // Filter fields With Params to retrieve
