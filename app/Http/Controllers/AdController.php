@@ -137,6 +137,7 @@ class AdController extends Controller
             ->where('growth_status','upscale')
             ->where('running_status','completed')
             ->where('is_latest',1)
+            ->orderBy('end_date','desc')
             ->get();
 
 
@@ -147,6 +148,7 @@ class AdController extends Controller
                 $q->where('preformance_status','success')
                 ->orWhere('preformance_status','average');
             })
+            ->orderBy('end_date','desc')
             ->get();
 
             $ads_need_republishing = Ad::query()
@@ -160,6 +162,7 @@ class AdController extends Controller
                 $q->where('growth_status','!=','downscale')
                 ->Where('growth_status','!=','upscale');
             })
+            ->orderBy('end_date','desc')
             ->get();
 
 
@@ -173,6 +176,7 @@ class AdController extends Controller
                 $q->where('running_status','completed')
                 ->orWhere('running_status','off');
             })
+            ->orderBy('end_date','desc')
             ->get();
 
 
