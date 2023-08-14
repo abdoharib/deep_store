@@ -123,6 +123,13 @@ class SalesController extends BaseController
                             });
                         })
                         ->orWhere(function ($query) use ($request) {
+                            return $query->whereHas('details', function ($q) use ($request) {
+                                $q->whereHas('product', function ($query) use ($request) {
+                                    $query->where('name', 'LIKE', "%{$request->search}%");
+                                });
+                            });
+                        })
+                        ->orWhere(function ($query) use ($request) {
                             return $query->whereHas('warehouse', function ($q) use ($request) {
                                 $q->where('name', 'LIKE', "%{$request->search}%");
                             });
