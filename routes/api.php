@@ -306,9 +306,11 @@ Route::middleware(['auth:api', 'Is_Active',ResolveTenantMiddleware::class ])->gr
 
         //-------------------------------  Ads --------------------------\\
     //------------------------------------------------------------------\\
+    Route::get('update_ads_data', 'AdController@update_ads_data');
 
     Route::resource('ads', 'AdController');
     Route::get('ads_report', 'AdController@ads_report');
+
 
     Route::resource('cycles', 'CycleController');
     Route::resource('cycleVersions', 'CycleVersionController');
