@@ -195,6 +195,21 @@ class AdController extends Controller
     }
 
 
+    public function update_ads_data( updateAdsAction $updateAdsAction){
+        try {
+
+            $updateAdsAction->invoke();
+
+            return response()->json([
+                'message' => 'success',
+
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
 
 
 
