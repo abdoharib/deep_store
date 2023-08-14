@@ -313,10 +313,10 @@ class AdController extends Controller
         $spends =[];
         // dd($ad);
 
-        foreach ($ad->product->ads as $pre_ad ) {
-            $periods[] = Carbon::make($pre_ad->start_date)->toDateString()." --> ".Carbon::make($pre_ad->end_date)->toDateString();
-            $spends[] = $pre_ad->amount_spent;
-        }
+        // foreach ($ad->product->ads as $pre_ad ) {
+        //     $periods[] = Carbon::make($pre_ad->start_date)->toDateString()." --> ".Carbon::make($pre_ad->end_date)->toDateString();
+        //     $spends[] = $pre_ad->amount_spent;
+        // }
 
 
         $previous_ads = $ad->product->ads()->orderBy('end_date','desc')->get();
@@ -354,8 +354,8 @@ class AdController extends Controller
 
             ],
             'product_ads' => [
-                'periods' => $periods,
-                'spends' => $spends
+                'periods' => [],
+                'spends' => []
 
             ]
 
