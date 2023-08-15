@@ -96,7 +96,6 @@ class updateAdsAction
             $product = Product::where('id',$ad_data['product_id'])->first();
 
             $total_discount = 0;
-
             //summing up sale discount
             $total_discount += $completed_sales->pluck('sale')->sum('discount');
             //summing up sale details discount
@@ -135,6 +134,9 @@ class updateAdsAction
             $ad_start_date = SupportCarbon::make($ad_data['adset']['start_time'])->toDateTimeString();
 
             $old_growth_status = $ad->growth_status;
+
+
+
                 $ad->update([
 
                     'campaing_ref_id' => $ad_data['campaign']['id'],
@@ -166,6 +168,11 @@ class updateAdsAction
                     'completed_sales_profit' => $completed_sales_profit,
 
                 ]);
+
+
+                if($ad->ad_ref_id == '23857006804730392'){
+                    dd($ad->no_completed_sales);
+                }
 
 
             // if($ad->growth_status == 'upscale' && ($old_growth_status != $ad->growth_status)){
