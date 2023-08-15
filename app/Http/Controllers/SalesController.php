@@ -1026,10 +1026,14 @@ class SalesController extends BaseController
             $data['discount'] = $detail->discount;
 
             if ($detail->tax_method == '1') {
-                $data['Net_price'] = $detail->price - $data['DiscountNet'];
+                // $data['Net_price'] = $detail->price - $data['DiscountNet'];
+                $data['Net_price'] = $detail->price;
+
                 $data['taxe'] = $tax_price;
             } else {
-                $data['Net_price'] = ($detail->price - $data['DiscountNet']) / (($detail->TaxNet / 100) + 1);
+                // $data['Net_price'] = ($detail->price - $data['DiscountNet']) / (($detail->TaxNet / 100) + 1);
+                $data['Net_price'] = ($detail->price) / (($detail->TaxNet / 100) + 1);
+
                 $data['taxe'] = $detail->price - $data['Net_price'] - $data['DiscountNet'];
             }
 
@@ -1483,11 +1487,18 @@ class SalesController extends BaseController
                 $data['discount_Method'] = $detail->discount_method;
 
                 if ($detail->tax_method == '1') {
-                    $data['Net_price'] = $detail->price - $data['DiscountNet'];
+                    // $data['Net_price'] = $detail->price - $data['DiscountNet'];
+                    $data['Net_price'] = $detail->price;
+
                     $data['taxe'] = $tax_price;
-                    $data['subtotal'] = ($data['Net_price'] * $data['quantity']) + ($tax_price * $data['quantity']);
+                    // $data['subtotal'] = ($data['Net_price'] * $data['quantity']) + ($tax_price * $data['quantity']);
+                    $data['subtotal'] = ( ($data['Net_price'] * $data['quantity']) - $data['DiscountNet'])
+                     + ($tax_price * $data['quantity']);
+
                 } else {
-                    $data['Net_price'] = ($detail->price - $data['DiscountNet']) / (($detail->TaxNet / 100) + 1);
+                    // $data['Net_price'] = ($detail->price - $data['DiscountNet']) / (($detail->TaxNet / 100) + 1);
+                    $data['Net_price'] = ($detail->price) / (($detail->TaxNet / 100) + 1);
+
                     $data['taxe'] = $detail->price - $data['Net_price'] - $data['DiscountNet'];
                     $data['subtotal'] = ($data['Net_price'] * $data['quantity']) + ($tax_price * $data['quantity']);
                 }
