@@ -171,7 +171,7 @@ class updateAdsAction
 
 
                 if($ad->ad_ref_id == '23857006804730392'){
-                    dd($ad->no_completed_sales);
+                    Log::debug($ad->no_completed_sales);
                 }
 
 
