@@ -170,9 +170,9 @@ class updateAdsAction
                 ]);
 
 
-                if($ad->ad_ref_id == '23857006804730392'){
-                    Log::debug($ad->completed_sales_profit);
-                }
+                // if($ad->ad_ref_id == '23857006804730392'){
+                //     Log::debug($ad->completed_sales_profit);
+                // }
 
 
             // if($ad->growth_status == 'upscale' && ($old_growth_status != $ad->growth_status)){
