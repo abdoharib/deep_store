@@ -95,8 +95,16 @@ class updateAdsAction
             $completed_sales_profit = 0;
             $product = Product::where('id',$ad_data['product_id'])->first();
 
+            $total_discount = 0;
+
+            //summing up sale discount
+            $total_discount += $completed_sales->pluck('sale')->sum('discount');
+            //summing up sale details discount
+            $total_discount += $completed_sales->sum('discount');
+
+
             if($product){
-                $completed_sales_profit = ($no_completed_sales * $product->profit) - $completed_sales->pluck('sale')->sum('discount');
+                $completed_sales_profit = ($no_completed_sales * $product->profit) - $total_discount;
             }
 
             if($ad){
