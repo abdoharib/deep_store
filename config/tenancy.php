@@ -20,7 +20,7 @@ return [
     'central_domains' => [
         // '127.0.0.1',
         'app.tejarra.ly',
-        'deep_store.test'
+        // 'deep_store.test'
     ],
 
     /**
