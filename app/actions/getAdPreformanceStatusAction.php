@@ -21,7 +21,7 @@ class getAdPreformanceStatusAction
             return 'loser';
         }
 
-        if($ad_cpr_is_grater_then_3_and_spent_more_then_30){
+        if($ad_cpr_is_grater_then_3_and_spent_more_then_30 && ($ad_net_profit<0) ){
             return 'loser';
         }
 
