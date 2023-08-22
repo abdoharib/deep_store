@@ -36,6 +36,7 @@ class updateVanexSalesAction
                     Log::debug("Updating Sale Status 🔃");
 
                     $this->getVanexShipmentAction->handleSaleStatusUpdate($sale, $shipment['status_object']);
+                    $sale->save();
                     // Log::debug("Upadated Sale Status");
 
                     $sale->update([
