@@ -20,13 +20,18 @@ class updateVanexSalesAction
     {
 
         $shipments = $this->getVanexShipmentAction->getAllVanexShipments();
-        Log::debug('retived '.count($shipments).' shipment');
+        Log::debug('retived ' . count($shipments) . ' shipment');
         foreach ($shipments as $shipment) {
-
+            $package_code = explode('-', $shipment['package-code']);
+            array_shift($package_code);
+            $package_code = implode('-', $package_code);
+            // array_splice()
             try {
 
-                Log::debug("Trying to Update ".$shipment['package-code']);
+                Log::debug("Trying to Update " . $shipment['package-code']);
                 //code...
+
+
                 $sale = Sale::query()
                     ->where('vanex_shipment_code', $shipment['package-code'])
                     ->first();
@@ -43,8 +48,8 @@ class updateVanexSalesAction
                         'vanex_shipment_status' => $shipment['status_object']['status_name_cust'],
                         'last_vanex_update' => now()->toDateTimeString()
                     ]);
-                    Log::debug("Updated Sale" . $sale->Ref.' ✅');
-                }else{
+                    Log::debug("Updated Sale" . $sale->Ref . ' ✅');
+                } else {
                     Log::debug('Sale Was Not Found ❌');
                 }
             } catch (\Throwable $th) {
