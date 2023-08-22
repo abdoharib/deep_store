@@ -25,7 +25,7 @@ class updateVanexSalesAction
 
             try {
 
-                Log::debug("trying to update ".$shipment['package-code']);
+                Log::debug("Trying to Update ".$shipment['package-code']);
                 //code...
                 $sale = Sale::query()
                     ->where('vanex_shipment_code', $shipment['package-code'])
@@ -33,7 +33,7 @@ class updateVanexSalesAction
 
                 if ($sale) {
 
-                    Log::debug("Updating Sale Status");
+                    Log::debug("Updating Sale Status 🔃");
 
                     $this->getVanexShipmentAction->handleSaleStatusUpdate($sale, $shipment['status_object']);
                     // Log::debug("Upadated Sale Status");
@@ -42,9 +42,9 @@ class updateVanexSalesAction
                         'vanex_shipment_status' => $shipment['status_object']['status_name_cust'],
                         'last_vanex_update' => now()->toDateTimeString()
                     ]);
-                    Log::debug("Updated Sale" . $sale->Ref);
+                    Log::debug("Updated Sale" . $sale->Ref.' ✅');
                 }else{
-                    Log::debug('Sale Was Not Found');
+                    Log::debug('Sale Was Not Found ❌');
                 }
             } catch (\Throwable $th) {
                 //throw $th;
