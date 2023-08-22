@@ -159,6 +159,7 @@ class getVanexShipmentAction
 
     public function handleSaleStatusUpdate(Sale $sale, array $vanex_status ){
 
+        Log::debug('h1');
 
         if(!$sale->shipment){
             $shipment = new Shipment();
@@ -179,6 +180,8 @@ class getVanexShipmentAction
         }
 
         if (array_key_exists((int)$vanex_status['id'], $this->mapper)) {
+
+            Log::debug('h3');
 
             if($vanex_status['id'] == 1){
                 $sale->update([
@@ -234,6 +237,8 @@ class getVanexShipmentAction
             $sale->shipment->update([
                 'status' => 'shipped'
             ]);
+
+            Log::debug('h2');
 
             $this->updateSaleStatus($sale,'under_shipping');
         }
