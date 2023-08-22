@@ -163,8 +163,6 @@ class getVanexShipmentAction
 
         if(!$sale->shipment){
             $shipment = new Shipment();
-            dd($sale);
-
             $shipment->Ref = $sale->Ref;
             $shipment->user_id = 1;
             $shipment->sale_id = $sale->id;
@@ -176,6 +174,7 @@ class getVanexShipmentAction
         }
 
         if (!array_key_exists('id',$vanex_status)) {
+            Log::debug($vanex_status);
             return;
         }
 
