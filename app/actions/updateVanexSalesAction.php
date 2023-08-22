@@ -34,7 +34,7 @@ class updateVanexSalesAction
 
 
                 $sale = Sale::query()
-                    ->where('vanex_shipment_code', $shipment['package-code'])
+                    ->where('vanex_shipment_code','like', '%'.$shipment['package-code'].'%')
                     ->first();
 
                 if ($sale) {
