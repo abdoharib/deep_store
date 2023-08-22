@@ -20,6 +20,7 @@ class updateVanexSalesAction
     {
 
         $shipments = $this->getVanexShipmentAction->getAllVanexShipments();
+        Log::debug('retived '.count($shipments).' shipment');
         foreach ($shipments as $shipment) {
 
             try {
