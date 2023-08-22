@@ -113,7 +113,7 @@ class ClientController extends BaseController
 
         $this->validate($request, [
             'name' => 'required',
-                'phone' => 'required|unique:clients,phone'
+            // 'phone' => 'required|unique:clients,phone'
             ]
         );
 
@@ -121,7 +121,7 @@ class ClientController extends BaseController
             'name' => $request['name'],
             'code' => $this->getNumberOrder(),
             'adresse' => $request['adresse'],
-            'phone' => $request['phone'],
+            'phone' => $request['name'],
             'email' => $request['email'],
             'country' => $request['country'],
             'city' => $request['city'],
