@@ -94,7 +94,7 @@ class getVanexShipmentAction
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('https://app.vanex.ly/api/v1'. '/customer/package/sent?page=1&per-page=5&status=null');
+        ])->get('https://app.vanex.ly/api/v1'. '/customer/package/sent?page=1&per-page=1000&status=null');
         $res_body = $response->body();
         $res_code = $response->status();
 
