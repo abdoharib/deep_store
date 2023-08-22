@@ -24,6 +24,8 @@ class updateVanexSalesAction
         foreach ($shipments as $shipment) {
 
             try {
+
+                Log::debug("trying to update ".$shipment['package-code']);
                 //code...
                 $sale = Sale::query()
                     ->where('vanex_shipment_code', $shipment['package-code'])
