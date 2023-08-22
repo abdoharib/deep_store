@@ -25,6 +25,7 @@ class updateVanexSalesAction
             $package_code = explode('-', $shipment['package-code']);
             array_shift($package_code);
             $package_code = implode('-', $package_code);
+            $shipment['package-code'] = $package_code;
             // array_splice()
             try {
 
