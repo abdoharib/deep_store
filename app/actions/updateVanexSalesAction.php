@@ -30,16 +30,21 @@ class updateVanexSalesAction
                 $sale = Sale::query()
                     ->where('vanex_shipment_code', $shipment['package-code'])
                     ->first();
+
                 if ($sale) {
 
+                    Log::debug("Getting Sale Status");
+
                     $this->getVanexShipmentAction->handleSaleStatusUpdate($sale, $shipment['status_object']);
+                    Log::debug("Upadated Sale Status");
+
                     $sale->update([
                         'vanex_shipment_status' => $shipment['status_object']['status_name_cust'],
                         'last_vanex_update' => now()->toDateTimeString()
                     ]);
                     Log::debug("updated sale" . $sale->Ref);
                 }else{
-                    Log::debug('sale with code '.$shipment['package-code'].' was not found');
+                    Log::debug('Shipment Was Not Found');
                 }
             } catch (\Throwable $th) {
                 //throw $th;
