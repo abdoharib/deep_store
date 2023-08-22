@@ -33,18 +33,18 @@ class updateVanexSalesAction
 
                 if ($sale) {
 
-                    Log::debug("Getting Sale Status");
+                    Log::debug("Updating Sale Status");
 
                     $this->getVanexShipmentAction->handleSaleStatusUpdate($sale, $shipment['status_object']);
-                    Log::debug("Upadated Sale Status");
+                    // Log::debug("Upadated Sale Status");
 
                     $sale->update([
                         'vanex_shipment_status' => $shipment['status_object']['status_name_cust'],
                         'last_vanex_update' => now()->toDateTimeString()
                     ]);
-                    Log::debug("updated sale" . $sale->Ref);
+                    Log::debug("Updated Sale" . $sale->Ref);
                 }else{
-                    Log::debug('Shipment Was Not Found');
+                    Log::debug('Sale Was Not Found');
                 }
             } catch (\Throwable $th) {
                 //throw $th;
