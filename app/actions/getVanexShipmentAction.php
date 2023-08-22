@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 
 class getVanexShipmentAction
@@ -80,6 +81,76 @@ class getVanexShipmentAction
             $sale->save();
             return $package_details;
         }
+    }
+
+
+    public function getAllVanexShipments(){
+
+        $shipments = [];
+
+        $this->tripoli_token = Setting::all()->first()->vanex_api_key;
+        $token = $this->tripoli_token;
+
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get('https://app.vanex.ly/api/v1'. '/customer/package/sent?page=1&per-page=5&status=null');
+        $res_body = $response->body();
+        $res_code = $response->status();
+
+
+        if ($res_code != 200) {
+
+            $error_arr = (isset($response['errors'])) ? $response['errors'] : ['خطا غير معروف '];
+            // array_push($error_arr, ' لم تتم العملية بنجاح نظراً لوجود خطا في  إضافة شحنة لنظام VANEX  : ');
+            // throw new VanexAPIShipmentException($error_arr);
+            // dd($error_arr);
+            throw new \Exception(json_encode($error_arr));
+
+        } else {
+            // dd($response->json('data'));
+            $packages = $response->json('data');
+            if($packages['data']){
+                Log::debug('Retrived Tripoli Packages');
+                // $this->handleSaleStatusUpdate($sale,$package_details['status_object']);
+                array_push($shipments, ...$packages['data']);
+            }
+            // $sale->save();
+        }
+
+
+        if(tenant('id') == 1){
+            $token = $this->bengazi_account_token;
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->get('https://app.vanex.ly/api/v1'. '/customer/package/sent?page=1&per-page=1000&status=null');
+            $res_body = $response->body();
+            $res_code = $response->status();
+
+
+            if ($res_code != 200) {
+
+                $error_arr = (isset($response['errors'])) ? $response['errors'] : ['خطا غير معروف '];
+                // array_push($error_arr, ' لم تتم العملية بنجاح نظراً لوجود خطا في  إضافة شحنة لنظام VANEX  : ');
+                // throw new VanexAPIShipmentException($error_arr);
+                // dd($error_arr);
+                throw new \Exception(json_encode($error_arr));
+
+            } else {
+                $packages = $response->json('data');
+                if($packages['data']){
+                    Log::debug('Retrived Bengazi Packages');
+
+                    // $this->handleSaleStatusUpdate($sale,$package_details['status_object']);
+                    array_push($shipments, ...$packages['data']);
+                }
+                // $sale->save();
+            }
+        }
+
+        return $shipments;
+
     }
 
     public function handleSaleStatusUpdate(Sale $sale, array $vanex_status ){
