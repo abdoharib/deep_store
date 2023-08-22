@@ -92,6 +92,8 @@ class getVanexShipmentAction
         $token = $this->tripoli_token;
 
 
+        Log::debug('Retriving Tripoli Packages');
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->get('https://app.vanex.ly/api/v1'. '/customer/package/sent?page=1&per-page=1000&status=null');
@@ -121,6 +123,8 @@ class getVanexShipmentAction
 
         if(tenant('id') == 1){
             $token = $this->bengazi_account_token;
+
+            Log::debug('Retriving Bengazi Packages');
 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $token,
