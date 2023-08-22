@@ -121,7 +121,7 @@ class getVanexShipmentAction
         }
 
 
-        if(tenant('id') == 1){
+        // if(tenant('id') == 1){
             $token = $this->bengazi_account_token;
 
             Log::debug('Retriving Bengazi Packages');
@@ -151,7 +151,7 @@ class getVanexShipmentAction
                 }
                 // $sale->save();
             }
-        }
+        // }
 
         return $shipments;
 
