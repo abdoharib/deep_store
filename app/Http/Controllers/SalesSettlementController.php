@@ -20,7 +20,7 @@ class SalesSettlementController extends Controller
     {
         // $this->authorizeForUser($request->user(), 'view', SalesSettlement::class);
 
-        $perPage = $request->limit;
+        $perPage = 40;
 
         $pageStart = FacadesRequest::get('page', 1);
         // Start displaying items from this number;
