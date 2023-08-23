@@ -320,6 +320,7 @@ class AdController extends Controller
         ->groupBy('ad_id');
 
 
+        dd($previous_ads);
         $previous_ads->filter(function($v) use($ad){
             if($v->count() == $ad->products()->count()) {
                 return true;
