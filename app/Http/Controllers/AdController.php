@@ -327,9 +327,9 @@ class AdController extends Controller
                 return false;
             }
         });
+        dd($previous_ads);
 
         $previous_ads = $previous_ads->pluck('ad');
-        dd($previous_ads);
         // $previous_ads = $ad->product->ads()->orderBy('end_date','desc')->get();
 
 
