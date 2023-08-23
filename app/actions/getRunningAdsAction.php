@@ -91,6 +91,11 @@ class getRunningAdsAction
 
 
 
+                //convert int to array for backwards compatibility
+                if(!is_array($json_date['product_id'])){
+                    $json_date['product_id'] = [$json_date['product_id']];
+                }
+
                 return array_merge($item, [
                     'product_id' => $json_date['product_id'],
                     'warehouse_id' => $json_date['warehouse_id'],

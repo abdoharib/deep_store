@@ -66,6 +66,7 @@ class Ad extends Model
 
     protected $appends = [
         'product_name',
+        'product_image',
         'warehouse_name',
         'is_closed',
         'muture_rate',
@@ -183,8 +184,19 @@ class Ad extends Model
     // }
 
     public function getProductNameAttribute($value){
-        if($this->product){
-            return $this->product->name;
+        if($this->products){
+            return implode(' / ',$this->products->pluck('name')->toArray());
+
+            // return $this->products->name;
+        }else{
+            return '';
+        }
+    }
+    public function getProductImageAttribute($value){
+        if($this->products->first()){
+            return $this->products->first()->image;
+
+            // return $this->products->name;
         }else{
             return '';
         }
@@ -223,8 +235,8 @@ class Ad extends Model
 
     // }
 
-    public function product() {
-        return $this->belongsTo(Product::class,'product_id');
+    public function products() {
+        return $this->belongsToMany(Product::class,'product_ads');
     }
 
     public function cycleVersion() {

@@ -60,7 +60,7 @@ class AdController extends Controller
 
             if($request->has('search')){
                 $ads->where('ad_ref_id', 'LIKE', "%{$request->search}%")
-                ->orWhereHas('product', function ($q) use ($request) {
+                ->orWhereHas('products', function ($q) use ($request) {
                         $q->where('name', 'LIKE', "%{$request->search}%");
                 });
             }
