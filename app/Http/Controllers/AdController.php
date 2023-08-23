@@ -126,8 +126,6 @@ class AdController extends Controller
         }
     }
 
-
-
     public function ads_report(request $request ){
         try {
 
@@ -194,7 +192,6 @@ class AdController extends Controller
         }
     }
 
-
     public function update_ads_data( updateAdsAction $updateAdsAction){
         try {
 
@@ -209,10 +206,6 @@ class AdController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-
-
-
-
 
     public function weeklyChart(request $request){
 
@@ -260,7 +253,6 @@ class AdController extends Controller
             ]
         ]);
     }
-
 
     public function weeksBetweenTwoDates($start, $end)
     {

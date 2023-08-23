@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\actions\assignPermissionToRole;
+use App\Models\Provider;
 use App\Models\Role;
 use App\Models\role_user;
 use App\Models\Setting;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -67,15 +69,26 @@ class TenantController extends Controller
                 'user_id' => $user->id,
                 'role_id' => $role->id,
             ]);
+
+            Warehouse::create([
+                'name' => 'الرئسي (أفتراضي)',
+                'is_default' => 1
+            ]);
+
+            Provider::create([
+                'name' => 'مورد (أفتراضي)'
+            ]);
+
             $assignPermissionToRole->invoke($role);
 
 
             Setting::create(
                 [
                     'email' => $user->email,
-                    'currency_id' => 1,
+                    'currency_id' => 2,
                     'client_id' => 1,
                     'sms_gateway' => 1,
+                    'footer'=> '',
                     'is_invoice_footer' => 0,
                     'invoice_footer' => Null,
                     'warehouse_id' => Null,
@@ -85,7 +98,8 @@ class TenantController extends Controller
                     'footer' => '',
                     'developed_by' => 'منصة تجارة',
                     'logo' => '',
-                    'default_language' => 'ar'
+                    'default_language' => 'ar',
+
                 ]
             );
 

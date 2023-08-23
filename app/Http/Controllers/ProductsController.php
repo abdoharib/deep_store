@@ -231,7 +231,10 @@ class ProductsController extends BaseController
                     }
                     foreach ($product_warehouse as $value) {
                         # code...
-                        product_warehouse::create($value);
+                        $v = product_warehouse::create($value);
+                        if($v->warehouse->is_default && $request['initial_stock']){
+                            $v->increment('qte', ((int)$request['initial_stock']));
+                        }
                     }
                 }
 

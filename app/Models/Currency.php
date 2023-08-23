@@ -7,7 +7,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Currency extends Model
 {
-    use BelongsToTenant;
+    // use BelongsToTenant;
 
     protected $dates = ['deleted_at'];
 

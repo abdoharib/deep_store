@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\actions\getAdsAmountSpent;
+use App\Models\Ad;
 use App\Models\Client;
 use App\Models\Expense;
 use App\Models\Unit;
@@ -33,10 +35,17 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+
+    private $getAdsAmountSpent;
+
+    public function __construct(getAdsAmountSpent $getAdsAmountSpent) {
+        $this->getAdsAmountSpent = $getAdsAmountSpent;
+    }
 
     //----------------- dashboard_data -----------------------\\
 
@@ -59,23 +68,112 @@ class DashboardController extends Controller
 
 
 
-        $dataSales = $this->SalesChart($warehouse_id, $array_warehouses_id);
+        $sales_ads = $this->adsTimeFrameChart(SupportCarbon::now()->subDays(7), SupportCarbon::now(),'daily');
         $datapurchases = $this->PurchasesChart($warehouse_id, $array_warehouses_id);
         $Payment_chart = $this->Payment_chart($warehouse_id, $array_warehouses_id);
         $TopCustomers = $this->TopCustomers($warehouse_id, $array_warehouses_id);
         $Top_Products_Year = $this->Top_Products_Year($warehouse_id, $array_warehouses_id);
         $report_dashboard = $this->report_dashboard($warehouse_id, $array_warehouses_id);
+        $latest_active_ads = Ad::query()->orderBy('end_date','desc')->take(4)->get();
 
         return response()->json([
             'warehouses' => $warehouses,
-            'sales' => $dataSales,
+            'sales_ads' => $sales_ads,
             'purchases' => $datapurchases,
             'payments' => $Payment_chart,
             'customers' => $TopCustomers,
             'product_report' => $Top_Products_Year,
             'report_dashboard' => $report_dashboard,
+            'latest_active_ads' => $latest_active_ads
         ]);
 
+    }
+
+    public function adsTimeFrameChart(Carbon $start, Carbon $end, $timeframe = 'weekly'){
+
+        $helpers = new helpers();
+        $timeframe_periods = $helpers->getTimeframePeriods($start, $end, $timeframe);
+
+        $daily_ad_spend = [];
+        $daily_net_profit = [];
+        $daily_sale_profit = [];
+        $daily_net_profit_x2 = [];
+        $daily_completed_sales_revnue = [];
+        $daily_sales_revnue = [];
+        $daily_cost_per_sale = [];
+        $no_daily_sales = [];
+        $period_names = [];
+
+
+
+        foreach ($timeframe_periods as $period) {
+            $start_of_day = $period['start'];
+            $end_of_day = $period['end'];
+            $period_names[] = $period['period_name'];
+
+            // $weekly_ads = Ad::
+            // whereDate('start_date','>=',SupportCarbon::make($week['from']))
+            // ->whereDate('end_date','<=',SupportCarbon::make($week['to']))
+            // ->get();
+
+            $spend = (float)$this->getAdsAmountSpent->invoke($start_of_day->toDateString(),$start_of_day->toDateString());
+            // if($spend == false){
+            //     break;
+            // }
+
+            array_push($daily_ad_spend,$spend);
+
+
+
+
+
+
+            $daily_completed_sales = Sale::where('deleted_at',null)
+            ->whereDate('date','>=',$start_of_day)
+            ->whereDate('date','<=',$end_of_day)
+            ->where('statut','completed')
+            ->get();
+
+            $daily_sales = Sale::where('deleted_at',null)
+            ->whereDate('date','>=',$start_of_day)
+            ->whereDate('date','<=',$end_of_day)
+            ->get();
+
+            $no_sales = Sale::where('deleted_at',null)
+            ->whereDate('date','>=',$start_of_day)
+            ->whereDate('date','<=',$end_of_day)
+            ->count();
+
+
+
+            $net_profit =  $daily_completed_sales->sum('GrandTotal') - ($daily_completed_sales->sum('sale_cost') + $spend );
+            $sale_profit =  $daily_completed_sales->sum('GrandTotal') - ($daily_completed_sales->sum('sale_cost'));
+
+            $daily_completed_sales_revnue[] = $daily_completed_sales->sum('GrandTotal');
+            $daily_sales_revnue[] = $daily_sales->sum('GrandTotal');
+            $daily_net_profit[] = $net_profit;
+            $daily_sale_profit[] = $sale_profit;
+
+            $daily_net_profit_x2[] = $spend*2;
+            $daily_cost_per_sale[] = $no_sales ? ($spend / $no_sales) : $spend;
+            $no_daily_sales[] = $no_sales;
+
+        }
+
+
+        return  [
+                'period_ad_spend' => $daily_ad_spend,
+                'period_net_profit' => $daily_net_profit,
+                'period_sale_profit' => $daily_sale_profit,
+                'period_ad_spend_x2' => $daily_net_profit_x2,
+                'period_completed_sales_revnue'=>$daily_completed_sales_revnue,
+                'period_sales_revnue' => $daily_sales_revnue,
+                'no_period_sales' => $no_daily_sales,
+                'periods' => $period_names,
+                'total_ads_spend' => array_sum($daily_ad_spend),
+                'period_cost_per_sale'=>  $daily_cost_per_sale,
+                'avg_cost_per_sale' => array_sum($no_daily_sales) ? (array_sum($daily_ad_spend) / array_sum($no_daily_sales)) :array_sum($daily_ad_spend)
+        ];
     }
 
     //----------------- Sales Chart js -----------------------\\
@@ -437,7 +535,7 @@ class DashboardController extends Controller
                 }
             })
             ->orderBy('id', 'desc')
-            ->take(5)
+            ->take(6)
             ->get();
 
         foreach ($Sales as $Sale) {

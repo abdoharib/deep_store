@@ -42,6 +42,7 @@ use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use App\actions\getAdsAmountSpent;
+use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
 
 class ReportController extends BaseController
@@ -1657,7 +1658,11 @@ class ReportController extends BaseController
             $item['paiement_net'] = $item['payment_received'] - $item['payment_sent'];
             $item['total_revenue'] =  $item['sales']['sum'] -  $item['return_sales'];
 
-            $item['weekly_ads_chart'] = $this->dailyChart(SupportCarbon::make($request->from),SupportCarbon::make($request->to));
+            $item['weekly_ads_chart'] = $this->adsTimeFrameChart(
+                SupportCarbon::make($request->from),
+                SupportCarbon::make($request->to),
+                ($request->ads_chart_timeframe ? $request->ads_chart_timeframe : 'weekly')
+            );
 
         return response()->json(['data' => $item]);
 
@@ -1929,40 +1934,34 @@ class ReportController extends BaseController
 
      }
 
-     public function dailyChart(Carbon $start, Carbon $end){
+     public function adsTimeFrameChart(Carbon $start, Carbon $end, $timeframe = 'weekly'){
 
-        $days = $this->daysBetweenTwoDates($start, $end);
-        // dd($days->toArray());
+        $helpers = new helpers();
+        $timeframe_periods = $helpers->getTimeframePeriods($start, $end, $timeframe);
 
-        $daily_ad_spend =[];
+        $daily_ad_spend = [];
         $daily_net_profit = [];
         $daily_sale_profit = [];
         $daily_net_profit_x2 = [];
         $daily_completed_sales_revnue = [];
+        $daily_sales_revnue = [];
         $daily_cost_per_sale = [];
         $no_daily_sales = [];
-
-        $days_names = [];
-        // $weekly_ads = Ad::
-        //     whereDate('start_date','>=',Carbon::make('2023-05-01')->toDateTimeString())
-        //     ->whereDate('end_date','<=',Carbon::now()->toDateTimeString())
-        //     ->get();
-
-        //     dd($weekly_ads);
+        $period_names = [];
 
 
 
-        foreach ($days as $day) {
-            $start_of_day = $day->startOfDay();
-            $end_of_day = $day->endOfDay();
-            $days_names[] = $day->format('F jS, Y');
+        foreach ($timeframe_periods as $period) {
+            $start_of_day = $period['start'];
+            $end_of_day = $period['end'];
+            $period_names[] = $period['period_name'];
 
             // $weekly_ads = Ad::
             // whereDate('start_date','>=',SupportCarbon::make($week['from']))
             // ->whereDate('end_date','<=',SupportCarbon::make($week['to']))
             // ->get();
 
-            $spend = (float)$this->getAdsAmountSpent->invoke($start_of_day->toDateString(),$start_of_day->toDateString());
+            $spend = (float)$this->getAdsAmountSpent->invoke($start_of_day->toDateString(),$end_of_day->toDateString());
             // if($spend == false){
             //     break;
             // }
@@ -1980,6 +1979,11 @@ class ReportController extends BaseController
             ->where('statut','completed')
             ->get();
 
+            $daily_sales = Sale::where('deleted_at',null)
+            ->whereDate('date','>=',$start_of_day)
+            ->whereDate('date','<=',$end_of_day)
+            ->get();
+
             $no_sales = Sale::where('deleted_at',null)
             ->whereDate('date','>=',$start_of_day)
             ->whereDate('date','<=',$end_of_day)
@@ -1991,6 +1995,7 @@ class ReportController extends BaseController
             $sale_profit =  $daily_completed_sales->sum('GrandTotal') - ($daily_completed_sales->sum('sale_cost'));
 
             $daily_completed_sales_revnue[] = $daily_completed_sales->sum('GrandTotal');
+            $daily_sales_revnue[] = $daily_sales->sum('GrandTotal');
             $daily_net_profit[] = $net_profit;
             $daily_sale_profit[] = $sale_profit;
 
@@ -2001,32 +2006,44 @@ class ReportController extends BaseController
         }
 
 
-
         return  [
-                'daily_ad_spend' => $daily_ad_spend,
-                'daily_net_profit' => $daily_net_profit,
-                'daily_sale_profit' => $daily_sale_profit,
-                'daily_ad_spend_x2' => $daily_net_profit_x2,
-                'daily_completed_sales_revnue'=>$daily_completed_sales_revnue,
-                'no_daily_sales' => $no_daily_sales,
-                'days' => $days_names,
+                'period_ad_spend' => $daily_ad_spend,
+                'period_net_profit' => $daily_net_profit,
+                'period_sale_profit' => $daily_sale_profit,
+                'period_ad_spend_x2' => $daily_net_profit_x2,
+                'period_completed_sales_revnue'=>$daily_completed_sales_revnue,
+                'period_sales_revnue' => $daily_sales_revnue,
+                'no_period_sales' => $no_daily_sales,
+                'periods' => $period_names,
                 'total_ads_spend' => array_sum($daily_ad_spend),
-                'daily_cost_per_sale'=>  $daily_cost_per_sale,
+                'period_cost_per_sale'=>  $daily_cost_per_sale,
                 'avg_cost_per_sale' => array_sum($no_daily_sales) ? (array_sum($daily_ad_spend) / array_sum($no_daily_sales)) :array_sum($daily_ad_spend)
         ];
     }
 
 
-    public function daysBetweenTwoDates($start, $end)
-    {
-        if(now()->lessThan($end)){
-            $end = now();
-        }
-        // $end = now()->startOfDay();
-        // $days = [];
+    // public function getTimeframePeriods($start, $end, $timeframe)
+    // {
+    //     if(now()->lessThan($end)){
+    //         $end = now();
+    //     }
 
-        return CarbonPeriod::create($start->toDateString(),$end->toDateString());
-    }
+    //     if($timeframe == 'daily'){
+    //         return CarbonPeriod::create($start->toDateString(),$end->toDateString());
+    //     }
+
+    //     if($timeframe == 'weekly'){
+    //         return collect(SupportCarbon::make('2023-02-22')->range($end->toDateString(), CarbonInterval::week(),)
+    //         ->toArray())->map(function($v){return [
+    //             'start' => $v->startOfWeek(),
+    //             'end' => $v->endOfWeek(),
+    //             'period_name' => $v->format('M').' '.$v->weekOfMonth
+    //         ];
+    //     });
+    //     }
+
+
+    // }
 
 
     //-------------------- report_top_customers -------------\\
