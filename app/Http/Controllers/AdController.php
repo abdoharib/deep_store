@@ -321,7 +321,7 @@ class AdController extends Controller
 
 
         $previous_ads->filter(function($v) use($ad){
-            dd($v->count());
+            dd($ad->products()->count());
 
             if($v->count() == $ad->products()->count()) {
                 return true;
