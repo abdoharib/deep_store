@@ -313,6 +313,7 @@ class AdController extends Controller
 
 
         $previous_ads = ProductAd::query()
+        ->with('ad')
         ->where('ad_id','!=',$ad->id)
         ->whereIn('product_id',$ad->products->pluck('id')->toArray())
         ->get()
