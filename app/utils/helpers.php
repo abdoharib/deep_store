@@ -4,7 +4,12 @@ namespace App\utils;
 use App\Models\Currency;
 use App\Models\Role;
 use App\Models\Setting;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Carbon\CarbonInterval;
+use Carbon\CarbonPeriod;
+use Facade\FlareClient\Flare;
+use Illuminate\Support\Carbon as SupportCarbon;
 
 class helpers
 {
@@ -33,6 +38,103 @@ class helpers
 
         // Finally return the model
         return $model;
+    }
+
+    public function getTimeframePeriods($start, $end, $timeframe)
+    {
+        if(now()->lessThan($end)){
+            $end = now();
+        }
+
+        if($timeframe == 'daily'){
+            // return CarbonPeriod::create($start->toDateString(),$end->toDateString());
+            // dd($start);
+            return collect($start->range($end->toDateString(), CarbonInterval::day(),)
+            ->toArray())->map(function($v){
+                if(now()->lessThan($v)){
+                    return false;
+                }
+
+
+                return [
+                'start' => $v->startOfDay(),
+                'end' =>
+                (
+                    $v->endOfDay()->subMinute()->lessThan(now())
+                    ?
+                    $v->endOfDay()->subMinute()
+                    :
+                    now()
+
+                ),
+                $v->endOfDay()->subMinute(),
+                'period_name' => $v->format('M d')
+            ];
+        })->filter(function($v){ return $v; });
+        }
+
+
+
+
+        if($timeframe == 'weekly'){
+            return collect($start->range($end->toDateString(), CarbonInterval::week(),)
+            ->toArray())->map(function($v){
+
+                if(now()->lessThan($v)){
+                    return false;
+                }
+
+                return [
+                'start' => $v->startOfWeek()->toDateString(),
+                'end' => (
+                    $v->endOfWeek()->lessThan(now())
+                    ?
+                    $v->endOfWeek()->toDateString()
+                    :
+                    now()->toDateString()
+
+                ),
+                'period_name' => $v->format('M').' Week '.$v->weekOfMonth
+            ];
+        })->filter(function($v){ return $v; })->map(function($v){
+            return [
+                'start' => Carbon::make($v['start']),
+                'end' => Carbon::make($v['end']),
+                'period_name' => $v['period_name']
+            ];
+        });
+        }
+
+        if($timeframe == 'monthly'){
+            return collect($start->range($end->toDateString(), CarbonInterval::month(),)
+            ->toArray())->map(function($v){
+
+                if(now()->lessThan($v)){
+                    return false;
+                }
+
+                return [
+                'start' => $v->startOfMonth()->toDateString(),
+                'end' => (
+                    $v->startOfMonth()->lessThan(now())
+                    ?
+                    $v->endOfMonth()->toDateString()
+                    :
+                    now()->toDateString()
+
+                ),
+                'period_name' => $v->format('M')
+            ];
+        })->filter(function($v){ return $v; })->map(function($v){
+            return [
+                'start' => Carbon::make($v['start']),
+                'end' => Carbon::make($v['end']),
+                'period_name' => $v['period_name']
+            ];
+        });
+        }
+
+
     }
 
     //  Check If Hass Permission Show All records
