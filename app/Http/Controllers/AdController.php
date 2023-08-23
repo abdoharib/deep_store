@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\actions\updateAdsAction;
 use App\Models\Ad;
 use App\Models\Product;
+use App\Models\ProductAd;
 use App\Models\Role;
 use App\Models\Sale;
 use App\Models\SaleDetail;
@@ -311,7 +312,22 @@ class AdController extends Controller
         // }
 
 
-        $previous_ads = $ad->product->ads()->orderBy('end_date','desc')->get();
+        $previous_ads = ProductAd::query()
+        ->where('ad_id','!=',$ad->id)
+        ->whereIn('product_id',$ad->products->pluck('id')->toArray())
+        ->get()
+        ->groupBy('ad_id');
+
+
+        $previous_ads->filter(function($v) use($ad){
+            if(count($v) == $ad->products()->count()) {
+                return true;
+            }else{
+                return false;
+            }
+        });
+
+        // $previous_ads = $ad->product->ads()->orderBy('end_date','desc')->get();
 
 
 
