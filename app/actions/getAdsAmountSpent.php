@@ -22,6 +22,7 @@ class getAdsAmountSpent
             $response = $facebook->get('/act_724531662792327/insights?time_range={"since":"'.$date_start.'","until":"'.$date_end.'"}');
             $date = $response->getDecodedBody()['data'];
             if(count($date)){
+                dd($date[0]['spend']);
                 return (float) $date[0]['spend'] *5;
             }else{
                 return 0;
