@@ -74,6 +74,9 @@ class SalesController extends BaseController
             5 => '=',
             6 => 'like',
             7 => '=',
+            8 => '=',
+            9 => '=',
+            10 => '=',
 
         );
         $columns = array(
@@ -84,7 +87,10 @@ class SalesController extends BaseController
             4 => 'warehouse_id',
             5 => 'date',
             6 => 'shipping_status',
-            7 => 'created_at'
+            7 => 'created_at',
+            8 => 'answer_status',
+            9 => 'has_stock',
+            10 => 'shipping_provider',
         );
         $data = array();
 
@@ -976,6 +982,14 @@ class SalesController extends BaseController
         $sale_details['payment_status'] = $sale_data->payment_statut;
         $sale_details['shipping_provider'] = $sale_data['shipping_provider'];
         $sale_details['vanex_shipment_code'] = $sale_data['vanex_shipment_code'];
+        $sale_details['has_stock'] = $sale_data['has_stock'];
+        $sale_details['answer_status'] = $sale_data['answer_status'];
+        $sale_details['delivery_note'] = $sale_data['delivery_note'];
+        $sale_details['address'] = $sale_data['address'];
+        $sale_details['created_at'] = $sale_data['created_at'];
+        $sale_details['updated_at'] = $sale_data['updated_at'];
+        $sale_details['updated_by'] = $sale_data['updated_by'];
+
 
         if (SaleReturn::where('sale_id', $id)->where('deleted_at', '=', null)->exists()) {
             $sellReturn = SaleReturn::where('sale_id', $id)->where('deleted_at', '=', null)->first();
