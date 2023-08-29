@@ -19,10 +19,9 @@ class getAdsAmountSpent
         ]);
 
         try {
-            $response = $facebook->get('/act_724531662792327/insights?time_range={"since":"'.$date_start.'","until":"'.$date_end.'"}');
+            $response = $facebook->get('/act_724531662792327/insights?time_range={"since":"'.$date_start.'","until":"'.$date_end.'"}&filtering=[{"field":"ad.effective_status","operator":"IN","value":["ACTIVE","PAUSED","PENDING_REVIEW","DISAPPROVED","PREAPPROVED","PENDING_BILLING_INFO","CAMPAIGN_PAUSED","ADSET_PAUSED"]}]');
             $date = $response->getDecodedBody()['data'];
             if(count($date)){
-                dd($date[0]['spend']);
                 return (float) $date[0]['spend'] *5;
             }else{
                 return 0;
