@@ -9,6 +9,7 @@ class getAdsAmountSpent
 {
     public function invoke($date_start, $date_end)
     {
+        dd($date_start);
 
 
         $facebook = new \JoelButcher\Facebook\Facebook([
