@@ -1651,6 +1651,7 @@ class ReportController extends BaseController
 
             $item['profit_fifo'] = $item['completed_sales']['sum'] - $cogs;
             $item['profit_average_cost'] = $item['completed_sales']['sum'] - $total_average_cost;
+            $item['net_profit'] = (float)$item['profit_average_cost'] - (float)$item['expenses']['sum'];
 
 
             $item['payment_received'] = $item['paiement_sales']['sum'] + $item['PaymentPurchaseReturns']['sum'];
