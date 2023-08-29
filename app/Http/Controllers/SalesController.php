@@ -680,6 +680,7 @@ class SalesController extends BaseController
 
                     $old_status = $current_Sale->statut;
                     $old_answer_status = $current_Sale->answer_status;
+                    $old_delivery_note = $current_Sale->delivery_note;
 
                     $current_Sale->update([
                         'date' => $request['date'],
@@ -725,6 +726,25 @@ class SalesController extends BaseController
 
                             ');
                         }
+                    }
+
+                    if ($request['delivery_note'] != $old_delivery_note) {
+
+                        $sendTelegramMessage->invoke(
+                            '-1001661327002',
+                            '
+                             :📝 ملاحظة مندوب
+                             '
+                             .
+                             $current_Sale->delivery_note
+                             .
+                             '
+                            رقم الهاتف : ' . $current_Sale->client->phone . '
+                            رقم الطلبية : ' . $current_Sale->Ref . '
+                            المستودع : ' . $current_Sale->warehouse->name . '
+
+                            '
+                        );
                     }
                 }
             } catch (\Exception $e) {
