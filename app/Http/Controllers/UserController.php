@@ -109,7 +109,7 @@ class UserController extends BaseController
                 $q->whereIn('warehouse_id', $assignedWarehouses);
             }
         })
-        ->get()->sum('due');
+        ->sum('due');
 
         $permissions = Auth::user()->roles()->first()->permissions->pluck('name');
         $products_alerts = product_warehouse::join('products', 'product_warehouse.product_id', '=', 'products.id')
