@@ -233,7 +233,7 @@ class SalesController extends BaseController
         }
 
         $stripe_key = config('app.STRIPE_KEY');
-        $customers = client::where('deleted_at', '=', null)->get(['id', 'name']);
+        // $customers = client::where('deleted_at', '=', null)->get(['id', 'name']);
 
        //get warehouses assigned to user
        $user_auth = auth()->user();
@@ -248,7 +248,7 @@ class SalesController extends BaseController
             'stripe_key' => $stripe_key,
             'totalRows' => $totalRows,
             'sales' => $data,
-            'customers' => $customers,
+            'customers' => [],
             'warehouses' => $warehouses,
         ]);
     }
