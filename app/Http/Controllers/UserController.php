@@ -101,15 +101,25 @@ class UserController extends BaseController
 
         $user['warehouses'] = $assignedWarehouses;
 
-        $user['due_payments_total'] = Sale::where('statut','completed')
+        $GrandTotals = Sale::where('statut','completed')
         ->where('deleted_at', '=', null)
         ->where('payment_statut','unpaid')
         ->where(function($q) use($assignedWarehouses) {
             if(Auth::user()->hasRole('Delivery')){
                 $q->whereIn('warehouse_id', $assignedWarehouses);
             }
-        })
-        ->sum('due');
+        })->sum('GrandTotal');
+
+        $PaidTotals = Sale::where('statut','completed')
+        ->where('deleted_at', '=', null)
+        ->where('payment_statut','unpaid')
+        ->where(function($q) use($assignedWarehouses) {
+            if(Auth::user()->hasRole('Delivery')){
+                $q->whereIn('warehouse_id', $assignedWarehouses);
+            }
+        })->sum('paid_amount');
+
+        $user['due_payments_total'] = number_format($GrandTotals - $PaidTotals,2,'.', '');
 
         $permissions = Auth::user()->roles()->first()->permissions->pluck('name');
         $products_alerts = product_warehouse::join('products', 'product_warehouse.product_id', '=', 'products.id')
