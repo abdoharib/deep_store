@@ -47,7 +47,13 @@ class createVanexShipmentAction
        $products = [];
        if($sale->warehouse->id == 6 && (tenant('id') == 1)){
         foreach ($sale->details as $detail) {
-            $product = $this->getVanexStorageProduct->invoke($detail->product,$detail->quantity);
+            // $product = $this->getVanexStorageProduct->invoke($detail->product,$detail->quantity);
+
+            $product['qty'] = $detail->quantity;
+            $product['total_price'] = ($detail->product->price * $detail->quantity);
+            $product['unit_price'] = $detail->product->price;
+            $product['id'] = $detail->product->vanex_storage_product_ref_id ? $detail->product->vanex_storage_product_ref_id :  throw('asfasf');
+
             $products[] = $product;
             $total_amount = $total_amount + $product['total_price'];
             $total_qty = $total_qty + $product['qty'];
