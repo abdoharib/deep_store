@@ -59,7 +59,7 @@ class createVanexShipmentAction
 
             $products[] = $product;
             $total_amount = $total_amount + $product['total_price'];
-            $discount =  $sale->GrandTotal - $total_amount;
+            $discount =  $total_amount - $sale->GrandTotal;
             $total_amount = $total_amount - $discount;
             $total_qty = $total_qty + $product['qty'];
         }
