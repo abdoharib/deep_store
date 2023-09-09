@@ -52,7 +52,10 @@ class createVanexShipmentAction
             $product['qty'] = $detail->quantity;
             $product['total_price'] = ($detail->product->price * $detail->quantity);
             $product['unit_price'] = $detail->product->price;
-            $product['id'] = $detail->product->vanex_storage_product_ref_id ? $detail->product->vanex_storage_product_ref_id :  throw('asfasf');
+            if(!$detail->product->vanex_storage_product_ref_id){
+                throw new Exception("المنتج ليي لديه كود");
+            }
+            $product['id'] = $detail->product->vanex_storage_product_ref_id;
 
             $products[] = $product;
             $total_amount = $total_amount + $product['total_price'];
