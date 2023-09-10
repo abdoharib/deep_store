@@ -23,9 +23,10 @@ use Illuminate\Support\Facades\Route;
     $customers = Sale::query()
     ->whereIn('statut',['pending','postponed'])
     ->where('answer_status','no_answer')
-    ->get('profile_url')->pluck('profile_url')->toArray();
-
-    response()->json($customers);
+    ->where('profile_url','!=', null)
+    ->get('profile_url')
+    ->pluck('profile_url')->toArray();
+    return response()->json($customers);
  });
 
 Route::withoutMiddleware('api')
