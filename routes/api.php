@@ -21,12 +21,12 @@ use Illuminate\Support\Facades\Route;
 
  Route::get('unanswered_customers', function () {
 
-    $customers = Client::query()
+    $customers = Sale::query()
     ->whereIn('statut',['pending','postponed'])
     ->where('answer_status','no_answer')
     ->with('client')
     ->get()
-    ->pluck('phone')->toArray();
+    ->pluck('client.phone')->toArray();
     return response()->json($customers);
  });
 
