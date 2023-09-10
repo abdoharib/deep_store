@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
     ->whereIn('statut',['pending','postponed'])
     ->where('answer_status','no_answer')
     ->with('client')
-    ->get('client.phone')
+    ->get()
     ->pluck('phone')->toArray();
     return response()->json($customers);
  });
