@@ -122,6 +122,8 @@ class ClientController extends BaseController
             'code' => $this->getNumberOrder(),
             'adresse' => $request['adresse'],
             'phone' => $request['name'],
+            'backup_phone' => $request['backup_phone'],
+
             'email' => $request['email'],
             'country' => $request['country'],
             'city' => $request['city'],

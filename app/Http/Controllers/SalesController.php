@@ -269,6 +269,7 @@ class SalesController extends BaseController
             'vanex_city_id' => 'required_if:shippig_provider,2',
             'vanex_sub_city_id' => 'nullable',
             'vanex_shipment_sticker_notes' => 'required_if:shippig_provider,2',
+            // 'dont_create_shipment' => 'required_if:shippig_provider,2|integer'
 
         ]);
 
@@ -477,7 +478,9 @@ class SalesController extends BaseController
                 // $shippingService->createShipment($order);
 
                 if($request->shipping_provider == 2){
-                    $createVanexShipmentAction->invoke($order);
+                    // if(!$request->input('dont_create_shipment')){
+                        $createVanexShipmentAction->invoke($order);
+                    // }
                 }
 
                 $order->warehouse->assignedUsers->each(function(User $user) use($order){

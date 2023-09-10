@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ResolveTenantMiddleware;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,16 @@ use Illuminate\Support\Facades\Route;
  */
 
 
+
+ Route::get('unanswered_customers', function () {
+
+    $customers = Sale::query()
+    ->whereIn('statut',['pending','postponed'])
+    ->where('answer_status','no_answer')
+    ->get('profile_url')->pluck('profile_url')->toArray();
+
+    response()->json($customers);
+ });
 
 Route::withoutMiddleware('api')
     ->middleware('delivery_api')
