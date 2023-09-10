@@ -1000,6 +1000,8 @@ class SalesController extends BaseController
         $sale_details['TaxNet'] = $sale_data->TaxNet;
         $sale_details['client_name'] = $sale_data['client']->name;
         $sale_details['client_phone'] = $sale_data['client']->phone;
+        $sale_details['backup_phone'] = $sale_data['client']->backup_phone;
+
         $sale_details['client_adr'] = $sale_data['client']->adresse;
         $sale_details['client_email'] = $sale_data['client']->email;
         $sale_details['client_tax'] = $sale_data['client']->tax_number;
