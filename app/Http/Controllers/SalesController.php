@@ -705,6 +705,10 @@ class SalesController extends BaseController
                         'payment_statut' => $payment_statut,
                     ]);
 
+                    $current_Sale->client->update([
+                        'backup_phone' => $request['backup_phone'],
+                    ]);
+
 
                     //status updated
                     if($old_status !== $request['statut'] ){
@@ -1434,6 +1438,7 @@ class SalesController extends BaseController
           $sale['address'] = $Sale_data->address;
           $sale['answer_status'] = $Sale_data->answer_status;
           $sale['has_stock'] = $Sale_data->has_stock;
+          $sale['backup_phone'] = $Sale_data->client->backup_phone;
 
           $sale['cancel_reason'] = $Sale_data->cancel_reason;
 
