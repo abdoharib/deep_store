@@ -93,7 +93,7 @@ class createVanexShipmentAction
             'store_pkg_details' => json_encode($sale->details),
             'qty' => $total_qty,
             'phone' => $sale->client->phone,
-            'phone_b' => $sale->client->phone,
+            'phone_b' => $sale->client->backup_phone ? $sale->client->backup_phone : $sale->client->phone,
             'price' => $total_amount,
             'sticker_notes' => $sale->vanex_shipment_sticker_notes,
             'description' => $description ,
