@@ -117,7 +117,6 @@ class createVanexShipmentAction
             $payload['products'] = json_encode($products);
         }
 
-        dd($payload);
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
