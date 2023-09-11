@@ -48,7 +48,6 @@ class createVanexShipmentAction
        if($sale->warehouse->id == 6 && (tenant('id') == 1)){
         foreach ($sale->details as $detail) {
             $product = $this->getVanexStorageProduct->invoke($detail->product,$detail->quantity);
-            dd($product);
 
             // $product['qty'] = $detail->quantity;
             // $product['total_price'] = ($detail->product->price * $detail->quantity);
@@ -117,6 +116,8 @@ class createVanexShipmentAction
         if(count($products)){
             $payload['products'] = json_encode($products);
         }
+
+        dd($payload);
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
