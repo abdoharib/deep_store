@@ -68,6 +68,7 @@ class createVanexShipmentAction
 
        }else{
         $total_amount = $sale->GrandTotal;
+        dd($total_amount);
         $total_qty = $sale->details->sum('quantity');
        }
 
